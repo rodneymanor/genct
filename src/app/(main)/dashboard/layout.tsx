@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { FloatingActionButton } from "@/components/ui/floating-action-button";
 import { users } from "@/data/users";
 import { getSidebarVariant, getSidebarCollapsible, getContentLayout } from "@/lib/layout-preferences";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           </div>
         </header>
         <div className="p-4 md:p-6">{children}</div>
+        <FloatingActionButton />
       </SidebarInset>
     </SidebarProvider>
   );
