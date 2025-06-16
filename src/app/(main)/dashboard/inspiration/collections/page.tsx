@@ -1,30 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  FolderOpen, 
-  Plus, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
+
+import {
+  FolderOpen,
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Trash2,
   Share2,
   BookmarkPlus,
   Image,
   Video,
   FileText,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 
 const sampleCollections = [
   {
@@ -37,8 +38,8 @@ const sampleCollections = [
     items: [
       { type: "video", title: "Morning routine transformation", source: "TikTok" },
       { type: "image", title: "Before/after workout results", source: "Instagram" },
-      { type: "text", title: "5 productivity hacks that work", source: "Note" }
-    ]
+      { type: "text", title: "5 productivity hacks that work", source: "Note" },
+    ],
   },
   {
     id: 2,
@@ -50,8 +51,8 @@ const sampleCollections = [
     items: [
       { type: "video", title: "Explaining complex topics simply", source: "YouTube" },
       { type: "text", title: "Step-by-step tutorial format", source: "Note" },
-      { type: "image", title: "Infographic design inspiration", source: "Pinterest" }
-    ]
+      { type: "image", title: "Infographic design inspiration", source: "Pinterest" },
+    ],
   },
   {
     id: 3,
@@ -63,8 +64,8 @@ const sampleCollections = [
     items: [
       { type: "video", title: "My content creation process", source: "Instagram" },
       { type: "image", title: "Workspace setup reveal", source: "TikTok" },
-      { type: "text", title: "Failure stories that inspire", source: "Note" }
-    ]
+      { type: "text", title: "Failure stories that inspire", source: "Note" },
+    ],
   },
   {
     id: 4,
@@ -76,24 +77,25 @@ const sampleCollections = [
     items: [
       { type: "text", title: "Engagement rate optimization", source: "Note" },
       { type: "video", title: "Algorithm hack that worked", source: "TikTok" },
-      { type: "image", title: "Analytics screenshot examples", source: "Note" }
-    ]
-  }
+      { type: "image", title: "Analytics screenshot examples", source: "Note" },
+    ],
+  },
 ];
 
 const typeIcons = {
   video: Video,
   image: Image,
-  text: FileText
+  text: FileText,
 };
 
 export default function CollectionsPage() {
   const [selectedCollection, setSelectedCollection] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredCollections = sampleCollections.filter(collection =>
-    collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    collection.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCollections = sampleCollections.filter(
+    (collection) =>
+      collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      collection.description.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleCreateCollection = () => {
@@ -116,30 +118,25 @@ export default function CollectionsPage() {
     }
   };
 
-  const selectedCollectionData = selectedCollection 
-    ? sampleCollections.find(c => c.id === selectedCollection)
-    : null;
+  const selectedCollectionData = selectedCollection ? sampleCollections.find((c) => c.id === selectedCollection) : null;
 
   if (selectedCollection && selectedCollectionData) {
     return (
       <div className="@container/main flex flex-col gap-4 md:gap-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setSelectedCollection(null)}
-            >
+            <Button variant="ghost" size="sm" onClick={() => setSelectedCollection(null)}>
               ← Back to Collections
             </Button>
             <div className="flex flex-col gap-1">
               <h1 className="text-2xl font-bold tracking-tight">{selectedCollectionData.name}</h1>
               <p className="text-muted-foreground">
-                {selectedCollectionData.itemCount} items • Updated {new Date(selectedCollectionData.lastUpdated).toLocaleDateString()}
+                {selectedCollectionData.itemCount} items • Updated{" "}
+                {new Date(selectedCollectionData.lastUpdated).toLocaleDateString()}
               </p>
             </div>
           </div>
-          
+
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
               <BookmarkPlus className="mr-2 h-4 w-4" />
@@ -161,18 +158,18 @@ export default function CollectionsPage() {
               {selectedCollectionData.items.map((item, index) => {
                 const IconComponent = typeIcons[item.type as keyof typeof typeIcons];
                 return (
-                  <div 
+                  <div
                     key={index}
-                    className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+                    className="hover:bg-muted/50 flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors"
                   >
                     <div className="flex-shrink-0">
-                      <IconComponent className="h-4 w-4 text-muted-foreground" />
+                      <IconComponent className="text-muted-foreground h-4 w-4" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">{item.source}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{item.title}</p>
+                      <p className="text-muted-foreground text-xs">{item.source}</p>
                     </div>
-                    <ExternalLink className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                    <ExternalLink className="text-muted-foreground h-3 w-3 flex-shrink-0" />
                   </div>
                 );
               })}
@@ -188,9 +185,7 @@ export default function CollectionsPage() {
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold tracking-tight">Collections</h1>
-          <p className="text-muted-foreground">
-            Organize and save inspiring content from across the web.
-          </p>
+          <p className="text-muted-foreground">Organize and save inspiring content from across the web.</p>
         </div>
         <Button onClick={handleCreateCollection}>
           <Plus className="mr-2 h-4 w-4" />
@@ -213,12 +208,14 @@ export default function CollectionsPage() {
         <Card>
           <CardContent className="p-6">
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FolderOpen className="h-12 w-12 text-muted-foreground mb-3" />
+              <FolderOpen className="text-muted-foreground mb-3 h-12 w-12" />
               <p className="text-muted-foreground text-sm">
                 {searchQuery ? "No collections match your search" : "No collections yet"}
               </p>
-              <p className="text-muted-foreground text-xs mt-1">
-                {searchQuery ? "Try adjusting your search terms" : "Create your first collection to organize inspiration"}
+              <p className="text-muted-foreground mt-1 text-xs">
+                {searchQuery
+                  ? "Try adjusting your search terms"
+                  : "Create your first collection to organize inspiration"}
               </p>
             </div>
           </CardContent>
@@ -226,23 +223,21 @@ export default function CollectionsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 @md/main:grid-cols-2 @5xl/main:grid-cols-3">
           {filteredCollections.map((collection) => (
-            <Card 
-              key={collection.id} 
-              className="group hover:shadow-md transition-shadow cursor-pointer"
+            <Card
+              key={collection.id}
+              className="group cursor-pointer transition-shadow hover:shadow-md"
               onClick={() => setSelectedCollection(collection.id)}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${collection.color}`} />
+                    <div className={`h-3 w-3 rounded-full ${collection.color}`} />
                     <div className="flex-1">
                       <CardTitle className="text-base">{collection.name}</CardTitle>
-                      <CardDescription className="text-xs">
-                        {collection.itemCount} items
-                      </CardDescription>
+                      <CardDescription className="text-xs">{collection.itemCount} items</CardDescription>
                     </div>
                   </div>
-                  
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                       <Button variant="ghost" size="sm">
@@ -258,7 +253,7 @@ export default function CollectionsPage() {
                         <Share2 className="mr-2 h-4 w-4" />
                         Share
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
                         onClick={() => handleCollectionAction("delete", collection)}
                         className="text-destructive"
                       >
@@ -270,32 +265,28 @@ export default function CollectionsPage() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {collection.description}
-                </p>
-                
+                <p className="text-muted-foreground line-clamp-2 text-sm">{collection.description}</p>
+
                 <div className="space-y-2">
                   {collection.items.slice(0, 2).map((item, index) => {
                     const IconComponent = typeIcons[item.type as keyof typeof typeIcons];
                     return (
-                      <div key={index} className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div key={index} className="text-muted-foreground flex items-center gap-2 text-xs">
                         <IconComponent className="h-3 w-3" />
                         <span className="truncate">{item.title}</span>
                       </div>
                     );
                   })}
                   {collection.items.length > 2 && (
-                    <p className="text-xs text-muted-foreground">
-                      +{collection.items.length - 2} more items
-                    </p>
+                    <p className="text-muted-foreground text-xs">+{collection.items.length - 2} more items</p>
                   )}
                 </div>
-                
+
                 <div className="flex items-center justify-between pt-2">
                   <Badge variant="outline" className="text-xs">
                     {collection.itemCount} items
                   </Badge>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-muted-foreground text-xs">
                     {new Date(collection.lastUpdated).toLocaleDateString()}
                   </span>
                 </div>
@@ -306,4 +297,4 @@ export default function CollectionsPage() {
       )}
     </div>
   );
-} 
+}

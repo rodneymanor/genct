@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { SerializedEditorState } from "lexical"
+import { useState } from "react";
 
-import { Editor } from "@/components/blocks/editor-00/editor"
+import { SerializedEditorState } from "lexical";
 
-export const initialValue = {
+import { Editor } from "@/components/blocks/editor-00/editor";
+
+const initialValue = {
   root: {
     children: [
       {
@@ -33,15 +34,9 @@ export const initialValue = {
     type: "root",
     version: 1,
   },
-} as unknown as SerializedEditorState
+} as unknown as SerializedEditorState;
 
 export default function EditorPage() {
-  const [editorState, setEditorState] =
-    useState<SerializedEditorState>(initialValue)
-  return (
-    <Editor
-      editorSerializedState={editorState}
-      onSerializedChange={(value) => setEditorState(value)}
-    />
-  )
+  const [editorState, setEditorState] = useState<SerializedEditorState>(initialValue);
+  return <Editor editorSerializedState={editorState} onSerializedChange={(value) => setEditorState(value)} />;
 }

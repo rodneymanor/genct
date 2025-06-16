@@ -2,9 +2,7 @@ import Link from "next/link";
 
 import { Command } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-
-import { LoginFormV1 } from "./_components/login-form";
+import { LoginForm } from "@/components/auth/login-form";
 
 export default function LoginV1() {
   return (
@@ -30,10 +28,7 @@ export default function LoginV1() {
             </div>
           </div>
           <div className="space-y-4">
-            <LoginFormV1 />
-            <Button className="w-full" variant="outline">
-              Continue with Google
-            </Button>
+            <LoginForm />
             <p className="text-muted-foreground text-center text-xs font-medium">
               Don&apos;t have an account?{" "}
               <Link href="register" className="text-primary font-semibold">

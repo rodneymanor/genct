@@ -12,6 +12,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
 
 const searchItems = [
   { group: "Dashboards", icon: ChartPie, label: "Default" },
@@ -26,6 +28,8 @@ const searchItems = [
 
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false);
+  const { state } = useSidebar();
+  
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
@@ -37,18 +41,31 @@ export function SearchDialog() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  const isCollapsed = state === "collapsed";
+
   return (
     <>
-      <div
-        className="text-muted-foreground flex cursor-pointer items-center gap-2 text-sm"
+      <Button
+        variant="ghost"
+        size={isCollapsed ? "icon" : "sm"}
         onClick={() => setOpen(true)}
+        className={`${
+          isCollapsed 
+            ? "w-8 h-8 p-0" 
+            : "w-full justify-start text-muted-foreground hover:text-foreground"
+        } transition-all duration-200`}
       >
-        <Search className="size-4" />
-        Search
-        <kbd className="bg-muted inline-flex h-5 items-center gap-1 rounded border px-1.5 text-[10px] font-medium select-none">
-          <span className="text-xs">⌘</span>J
-        </kbd>
-      </div>
+        <Search className={`${isCollapsed ? "h-4 w-4" : "h-4 w-4 mr-2"}`} />
+        {!isCollapsed && (
+          <>
+            <span className="flex-1 text-left">Search</span>
+            <kbd className="bg-muted inline-flex h-5 items-center gap-1 rounded border px-1.5 text-[10px] font-medium select-none ml-auto">
+              <span className="text-xs">⌘</span>J
+            </kbd>
+          </>
+        )}
+      </Button>
+      
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search dashboards, users, and more…" />
         <CommandList>

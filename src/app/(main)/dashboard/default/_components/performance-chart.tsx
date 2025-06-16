@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+
 import { Music, Instagram } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -32,7 +33,7 @@ const chartConfig = {
     color: "var(--chart-1)",
   },
   instagram: {
-    label: "Instagram", 
+    label: "Instagram",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
@@ -42,10 +43,10 @@ export function PerformanceChart() {
 
   const getVisibleData = () => {
     if (platform === "tiktok") {
-      return followerData.map(item => ({ ...item, instagram: 0 }));
+      return followerData.map((item) => ({ ...item, instagram: 0 }));
     }
     if (platform === "instagram") {
-      return followerData.map(item => ({ ...item, tiktok: 0 }));
+      return followerData.map((item) => ({ ...item, tiktok: 0 }));
     }
     return followerData;
   };
@@ -54,9 +55,7 @@ export function PerformanceChart() {
     <Card className="@container/card">
       <CardHeader>
         <CardTitle>Follower Growth</CardTitle>
-        <CardDescription>
-          Track your social media audience growth over time
-        </CardDescription>
+        <CardDescription>Track your social media audience growth over time</CardDescription>
         <CardAction>
           <ToggleGroup
             type="single"
@@ -102,12 +101,7 @@ export function PerformanceChart() {
               minTickGap={32}
               tickFormatter={(value) => value}
             />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => `${value / 1000}k`}
-            />
+            <YAxis tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => `${value / 1000}k`} />
             <ChartTooltip
               cursor={false}
               content={
@@ -115,19 +109,13 @@ export function PerformanceChart() {
                   labelFormatter={(value) => value}
                   formatter={(value, name) => [
                     `${value.toLocaleString()} followers`,
-                    name === "tiktok" ? "TikTok" : "Instagram"
+                    name === "tiktok" ? "TikTok" : "Instagram",
                   ]}
                 />
               }
             />
             {platform !== "instagram" && (
-              <Area
-                dataKey="tiktok"
-                type="natural"
-                fill="url(#fillTiktok)"
-                stroke="var(--color-tiktok)"
-                stackId="a"
-              />
+              <Area dataKey="tiktok" type="natural" fill="url(#fillTiktok)" stroke="var(--color-tiktok)" stackId="a" />
             )}
             {platform !== "tiktok" && (
               <Area
@@ -143,4 +131,4 @@ export function PerformanceChart() {
       </CardContent>
     </Card>
   );
-} 
+}

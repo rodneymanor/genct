@@ -1,4 +1,15 @@
-import { TrendingUp, Users, Eye, Play, MessageCircle, Heart, Share } from "lucide-react";
+import {
+  TrendingUp,
+  Users,
+  Eye,
+  Play,
+  MessageCircle,
+  Heart,
+  Share,
+  Instagram,
+  Music,
+  ExternalLink,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -98,7 +109,7 @@ export function SocialStatsSection() {
                 <CardDescription>Instagram • 12.4K followers</CardDescription>
               </div>
               <div className="ml-auto">
-                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                <ExternalLink className="text-muted-foreground h-4 w-4" />
               </div>
             </div>
           </CardHeader>
@@ -124,7 +135,7 @@ export function SocialStatsSection() {
                 <CardDescription>TikTok • 12.1K followers</CardDescription>
               </div>
               <div className="ml-auto">
-                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                <ExternalLink className="text-muted-foreground h-4 w-4" />
               </div>
             </div>
           </CardHeader>
@@ -141,4 +152,4 @@ export function SocialStatsSection() {
       </div>
     </div>
   );
-} 
+}

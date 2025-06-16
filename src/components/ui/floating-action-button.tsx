@@ -94,7 +94,7 @@ export function FloatingActionButton({ className }: FloatingActionButtonProps) {
     if (action === 'note') {
       router.push('/dashboard/note-editor?id=new');
     } else {
-      router.push('/dashboard/capture/recordings?trigger=quick');
+      router.push('/dashboard/capture/record');
     }
   };
 

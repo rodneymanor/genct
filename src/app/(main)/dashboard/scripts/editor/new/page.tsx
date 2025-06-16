@@ -1,65 +1,51 @@
 "use client";
 
-import { useState } from "react";
-import { 
-  Download, 
-  Copy, 
-  Save, 
-  Eye, 
-  EyeOff, 
-  Bold, 
-  Italic, 
-  List, 
-  Link,
-  Type,
-  Sparkles,
-  ArrowLeft
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Download, Copy, Save, Eye, Type, Sparkles, ArrowLeft, Loader2, RefreshCw, Search, FileText, Zap } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-const initialScript = `# 5 Morning Habits That Changed My Life
-
-**Hook:** What if I told you that 5 simple morning habits could completely transform your productivity?
-
-## Introduction
-
-In this video, I'll walk you through the exact 5-step morning routine that helped me increase my productivity by 300% and how you can implement it starting tomorrow. These aren't just random tips - they're scientifically-backed strategies that top performers use every single day.
-
-## The 5 Habits
-
-### Habit 1: Wake up at the same time every day
-Your circadian rhythm loves consistency. When you wake up at the same time, your body naturally prepares for peak performance.
-
-### Habit 2: Hydrate immediately
-After 8 hours without water, your body is dehydrated. Start with 16-20oz of water to kickstart your metabolism.
-
-### Habit 3: Move your body for 10 minutes
-Whether it's stretching, yoga, or jumping jacks - movement increases blood flow and mental clarity.
-
-### Habit 4: Practice gratitude
-Write down 3 things you're grateful for. This simple practice rewires your brain for positivity and focus.
-
-### Habit 5: Plan your top 3 priorities
-Before checking emails or social media, decide on your 3 most important tasks for the day.
-
-## Conclusion
-
-These 5 habits take less than 30 minutes but will transform your entire day.
-
-**Call to Action:** What's your current morning routine? Drop it in the comments below!`;
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { ScriptComponentSelectors } from "@/components/ui/script-component-selector";
+import { useScriptwriting } from "@/hooks/use-scriptwriting";
 
 export default function ScriptEditorPage() {
-  const [scriptTitle, setScriptTitle] = useState("5 Morning Habits That Changed My Life");
-  const [scriptContent, setScriptContent] = useState(initialScript);
+  const searchParams = useSearchParams();
+  const promptFromUrl = searchParams.get("prompt");
+  
+  const [scriptTitle, setScriptTitle] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState("Just now");
+
+  const {
+    state,
+    startScriptwriting,
+    updateSelectedComponent,
+    generateFinalScript,
+    reset,
+    backToSelection,
+    canGenerateScript,
+    isGenerating,
+    hasError,
+    isComplete,
+    currentStep,
+    sourcesCount,
+    extractedSourcesCount
+  } = useScriptwriting();
+
+  // Initialize scriptwriting process when prompt is provided
+  useEffect(() => {
+    if (promptFromUrl && state.step === 'idle') {
+      setScriptTitle("New Script");
+      startScriptwriting(promptFromUrl);
+    }
+  }, [promptFromUrl, state.step, startScriptwriting]);
 
   const handleSave = () => {
     setIsSaving(true);
@@ -70,48 +56,317 @@ export default function ScriptEditorPage() {
   };
 
   const handleExport = (format: "pdf" | "txt") => {
-    // In a real app, this would trigger file download
     alert(`Exporting as ${format.toUpperCase()}...`);
   };
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(scriptContent);
+    const contentToCopy = state.finalScript || "No script generated yet";
+    navigator.clipboard.writeText(contentToCopy);
     alert("Script copied to clipboard!");
   };
 
-  const insertMarkdown = (syntax: string) => {
-    const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = scriptContent.substring(start, end);
-    
-    let replacement = "";
-    switch (syntax) {
-      case "bold":
-        replacement = `**${selectedText || "bold text"}**`;
-        break;
-      case "italic":
-        replacement = `*${selectedText || "italic text"}*`;
-        break;
-      case "list":
-        replacement = `\n- ${selectedText || "list item"}`;
-        break;
-      case "link":
-        replacement = `[${selectedText || "link text"}](url)`;
-        break;
-      default:
-        replacement = selectedText;
-    }
-    
-    const newContent = scriptContent.substring(0, start) + replacement + scriptContent.substring(end);
-    setScriptContent(newContent);
+  const handleComponentSelect = (type: string, component: any) => {
+    updateSelectedComponent(type as any, component);
   };
 
-  const aiSuggestions = [
-    { type: "rephrase", text: "Make the introduction more engaging" },
-    { type: "expand", text: "Add more details to Habit 3" },
-    { type: "shorten", text: "Condense the conclusion" },
-  ];
+  const handleStartOver = () => {
+    reset();
+    setScriptTitle("");
+  };
+
+  // Get progress percentage based on current step
+  const getProgressPercentage = () => {
+    switch (state.step) {
+      case 'idle': return 0;
+      case 'gathering-sources': return 20;
+      case 'extracting-content': return 40;
+      case 'generating-components': return 60;
+      case 'selecting-components': return 80;
+      case 'generating-script': return 90;
+      case 'complete': return 100;
+      default: return 0;
+    }
+  };
+
+  // Get step description
+  const getStepDescription = () => {
+    switch (state.step) {
+      case 'gathering-sources': return 'Finding relevant research sources...';
+      case 'extracting-content': return `Extracting content from ${sourcesCount} sources...`;
+      case 'generating-components': return 'Creating script components from research...';
+      case 'selecting-components': return 'Ready for component selection';
+      case 'generating-script': return 'Assembling final script...';
+      case 'complete': return 'Script generation complete!';
+      default: return 'Ready to start';
+    }
+  };
+
+  // Render different phases of the scriptwriting process
+  const renderContent = () => {
+    switch (state.step) {
+      case 'gathering-sources':
+        return (
+          <Card className="flex h-[500px] flex-col items-center justify-center">
+            <CardContent className="text-center space-y-6 max-w-md">
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
+                  <Search className="w-5 h-5" />
+                  Gathering Research Sources
+                </h3>
+                <p className="text-muted-foreground">
+                  Finding relevant articles, studies, and expert insights for your video idea...
+                </p>
+              </div>
+              <Progress value={getProgressPercentage()} className="w-full" />
+              <p className="text-sm text-muted-foreground">{getStepDescription()}</p>
+            </CardContent>
+          </Card>
+        );
+
+      case 'extracting-content':
+        return (
+          <Card className="flex h-[500px] flex-col items-center justify-center">
+            <CardContent className="text-center space-y-6 max-w-md">
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Extracting Content
+                </h3>
+                <p className="text-muted-foreground">
+                  Analyzing and extracting valuable information from {sourcesCount} research sources...
+                </p>
+                <div className="flex justify-center gap-4 text-sm">
+                  <span className="text-muted-foreground">
+                    Sources found: <span className="font-medium text-foreground">{sourcesCount}</span>
+                  </span>
+                  <span className="text-muted-foreground">
+                    Extracted: <span className="font-medium text-foreground">{extractedSourcesCount}</span>
+                  </span>
+                </div>
+              </div>
+              <Progress value={getProgressPercentage()} className="w-full" />
+              <p className="text-sm text-muted-foreground">{getStepDescription()}</p>
+            </CardContent>
+          </Card>
+        );
+
+      case 'generating-components':
+        return (
+          <Card className="flex h-[500px] flex-col items-center justify-center">
+            <CardContent className="text-center space-y-6 max-w-md">
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
+                  <Zap className="w-5 h-5" />
+                  Generating Script Components
+                </h3>
+                <p className="text-muted-foreground">
+                  Creating hooks, bridges, golden nuggets, and calls-to-action based on your research...
+                </p>
+                <div className="text-sm text-muted-foreground">
+                  Using insights from {extractedSourcesCount} research sources
+                </div>
+              </div>
+              <Progress value={getProgressPercentage()} className="w-full" />
+              <p className="text-sm text-muted-foreground">{getStepDescription()}</p>
+            </CardContent>
+          </Card>
+        );
+
+      case 'selecting-components':
+        return (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                  Choose Your Script Components
+                </CardTitle>
+                <CardDescription>
+                  Select the best options for each part of your script. These components were generated using insights from {extractedSourcesCount} research sources. We've pre-selected our recommendations, but feel free to explore other options.
+                </CardDescription>
+                {state.sources.length > 0 && (
+                  <div className="mt-4">
+                    <h4 className="text-sm font-medium mb-2">Research Sources Used:</h4>
+                    <div className="space-y-2">
+                      {state.sources.slice(0, 3).map((source, index) => (
+                        <div key={index} className="text-xs p-3 bg-muted rounded border-l-2 border-primary/20 overflow-hidden">
+                          <div className="font-medium truncate mb-1">{source.title}</div>
+                          <div className="text-muted-foreground line-clamp-2 break-words">{source.snippet}</div>
+                        </div>
+                      ))}
+                      {state.sources.length > 3 && (
+                        <div className="text-xs text-muted-foreground text-center py-1">
+                          +{state.sources.length - 3} more sources
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </CardHeader>
+            </Card>
+            
+            {state.components && (
+              <ScriptComponentSelectors
+                components={state.components}
+                selectedComponents={state.selectedComponents}
+                onComponentSelect={handleComponentSelect}
+                onGenerateScript={generateFinalScript}
+                canGenerate={canGenerateScript}
+                isGenerating={isGenerating}
+              />
+            )}
+          </div>
+        );
+
+      case 'generating-script':
+        return (
+          <Card className="flex h-[500px] flex-col items-center justify-center">
+            <CardContent className="text-center space-y-6 max-w-md">
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">Assembling Your Script</h3>
+                <p className="text-muted-foreground">
+                  Combining your selected components into a cohesive, engaging script...
+                </p>
+              </div>
+              <Progress value={getProgressPercentage()} className="w-full" />
+              <p className="text-sm text-muted-foreground">{getStepDescription()}</p>
+            </CardContent>
+          </Card>
+        );
+
+      case 'complete':
+        return (
+          <div className="space-y-4">
+            {/* Script Analysis */}
+            {state.analysis && (
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Script Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">{state.analysis.wordCount}</div>
+                      <div className="text-xs text-muted-foreground">Words</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">{state.analysis.estimatedDuration}s</div>
+                      <div className="text-xs text-muted-foreground">Duration</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">{state.analysis.readabilityScore}</div>
+                      <div className="text-xs text-muted-foreground">Readability</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">{state.analysis.hookStrength}</div>
+                      <div className="text-xs text-muted-foreground">Hook Strength</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Script Editor */}
+            <Card className="flex h-[600px] flex-col">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 space-y-2">
+                    <Label htmlFor="title">Script Title</Label>
+                    <Input
+                      id="title"
+                      value={scriptTitle}
+                      onChange={(e) => setScriptTitle(e.target.value)}
+                      className="text-lg font-semibold"
+                    />
+                  </div>
+
+                  <div className="ml-4 flex items-center gap-2">
+                    <Button variant="ghost" size="sm" onClick={backToSelection}>
+                      <RefreshCw className="mr-2 h-4 w-4" />
+                      Edit Components
+                    </Button>
+                    <Button variant={isPreview ? "ghost" : "default"} size="sm" onClick={() => setIsPreview(false)}>
+                      <Type className="mr-2 h-4 w-4" />
+                      Edit
+                    </Button>
+                    <Button variant={isPreview ? "default" : "ghost"} size="sm" onClick={() => setIsPreview(true)}>
+                      <Eye className="mr-2 h-4 w-4" />
+                      Preview
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="flex-1 p-0">
+                {isPreview ? (
+                  <div className="prose prose-sm h-full max-w-none overflow-y-auto p-6">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: state.finalScript
+                          .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+                          .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+                          .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+                          .replace(/\*\*(.*)\*\*/gim, "<strong>$1</strong>")
+                          .replace(/\*(.*)\*/gim, "<em>$1</em>")
+                          .replace(/\n/gim, "<br/>"),
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <Textarea
+                    value={state.finalScript}
+                    onChange={(e) => {
+                      // Allow manual editing of the final script
+                      // You could update the state here if needed
+                    }}
+                    className="h-full resize-none border-0 p-6 text-base leading-relaxed focus-visible:ring-0"
+                    placeholder="Your generated script will appear here..."
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      case 'error':
+        return (
+          <Card className="flex h-[500px] flex-col items-center justify-center">
+            <CardContent className="text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Something went wrong</h3>
+                <p className="text-muted-foreground">{state.error}</p>
+              </div>
+              <Button onClick={handleStartOver} variant="outline">
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Try Again
+              </Button>
+            </CardContent>
+          </Card>
+        );
+
+      default:
+        return (
+          <Card className="flex h-[500px] flex-col items-center justify-center">
+            <CardContent className="text-center space-y-4">
+              <Sparkles className="w-16 h-16 text-muted-foreground mx-auto" />
+              <div>
+                <h3 className="text-lg font-semibold">Ready to Create</h3>
+                <p className="text-muted-foreground">
+                  Enter a video idea in the search bar above to get started with AI-powered script generation.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+    }
+  };
 
   return (
     <div className="@container/main flex flex-col gap-4 md:gap-6">
@@ -123,207 +378,54 @@ export default function ScriptEditorPage() {
             Back
           </Button>
           <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-bold tracking-tight">Script Editor</h1>
-            <p className="text-sm text-muted-foreground">
-              Last saved: {lastSaved}
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold tracking-tight">Script Editor</h1>
+              {state.videoIdea && (
+                <Badge variant="secondary" className="text-xs">
+                  {state.videoIdea}
+                </Badge>
+              )}
+            </div>
+            <p className="text-muted-foreground text-sm">
+              {state.step === 'complete' ? `Last saved: ${lastSaved}` : 'AI-powered script generation with research'}
             </p>
           </div>
         </div>
-        
+
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleCopyToClipboard}>
-            <Copy className="mr-2 h-4 w-4" />
-            Copy
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => handleExport("txt")}>
-            <Download className="mr-2 h-4 w-4" />
-            TXT
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => handleExport("pdf")}>
-            <Download className="mr-2 h-4 w-4" />
-            PDF
-          </Button>
-          <Button onClick={handleSave} disabled={isSaving} size="sm">
-            <Save className="mr-2 h-4 w-4" />
-            {isSaving ? "Saving..." : "Save"}
-          </Button>
+          {state.step === 'complete' && (
+            <>
+              <Button variant="outline" size="sm" onClick={handleCopyToClipboard}>
+                <Copy className="mr-2 h-4 w-4" />
+                Copy
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleExport("txt")}>
+                <Download className="mr-2 h-4 w-4" />
+                TXT
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleExport("pdf")}>
+                <Download className="mr-2 h-4 w-4" />
+                PDF
+              </Button>
+              <Button onClick={handleSave} disabled={isSaving} size="sm">
+                <Save className="mr-2 h-4 w-4" />
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+            </>
+          )}
+          {state.step !== 'idle' && state.step !== 'complete' && (
+            <Button variant="outline" size="sm" onClick={handleStartOver}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Start Over
+            </Button>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 @5xl/main:grid-cols-4">
-        {/* Main Editor */}
-        <div className="@5xl/main:col-span-3">
-          <Card className="h-[700px] flex flex-col">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor="title">Script Title</Label>
-                  <Input
-                    id="title"
-                    value={scriptTitle}
-                    onChange={(e) => setScriptTitle(e.target.value)}
-                    className="text-lg font-semibold"
-                  />
-                </div>
-                
-                <div className="flex items-center gap-2 ml-4">
-                  <Button
-                    variant={isPreview ? "ghost" : "default"}
-                    size="sm"
-                    onClick={() => setIsPreview(false)}
-                  >
-                    <Type className="mr-2 h-4 w-4" />
-                    Edit
-                  </Button>
-                  <Button
-                    variant={isPreview ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setIsPreview(true)}
-                  >
-                    <Eye className="mr-2 h-4 w-4" />
-                    Preview
-                  </Button>
-                </div>
-              </div>
-
-              {/* Toolbar */}
-              {!isPreview && (
-                <div className="flex items-center gap-1 pt-2 border-t">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => insertMarkdown("bold")}
-                  >
-                    <Bold className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => insertMarkdown("italic")}
-                  >
-                    <Italic className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => insertMarkdown("list")}
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => insertMarkdown("link")}
-                  >
-                    <Link className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </CardHeader>
-            
-            <CardContent className="flex-1 p-0">
-              {isPreview ? (
-                <div className="h-full overflow-y-auto p-6 prose prose-sm max-w-none">
-                  <div dangerouslySetInnerHTML={{
-                    __html: scriptContent
-                      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-                      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-                      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-                      .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-                      .replace(/\*(.*)\*/gim, '<em>$1</em>')
-                      .replace(/\n/gim, '<br/>')
-                  }} />
-                </div>
-              ) : (
-                <Textarea
-                  value={scriptContent}
-                  onChange={(e) => setScriptContent(e.target.value)}
-                  placeholder="Start writing your script..."
-                  className="h-full resize-none border-0 focus-visible:ring-0 font-mono text-sm"
-                />
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Script Stats */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Script Stats</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Words</span>
-                <Badge variant="secondary">{scriptContent.split(' ').length}</Badge>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Characters</span>
-                <Badge variant="secondary">{scriptContent.length}</Badge>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Est. Reading Time</span>
-                <Badge variant="secondary">{Math.ceil(scriptContent.split(' ').length / 200)} min</Badge>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* AI Writing Tools */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Sparkles className="h-4 w-4" />
-                AI Rewrite Tools
-              </CardTitle>
-              <CardDescription className="text-xs">
-                Select text and click to improve
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {aiSuggestions.map((suggestion, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start h-auto py-2 px-3"
-                  onClick={() => alert(`AI suggestion: ${suggestion.text}`)}
-                >
-                  <div className="text-left">
-                    <div className="font-medium text-xs capitalize">{suggestion.type}</div>
-                    <div className="text-xs text-muted-foreground">{suggestion.text}</div>
-                  </div>
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Version History */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Version History</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium">Current Version</p>
-                  <p className="text-xs text-muted-foreground">Just now</p>
-                </div>
-                <Badge variant="outline">Latest</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium">Draft v2</p>
-                  <p className="text-xs text-muted-foreground">2 hours ago</p>
-                </div>
-                <Button variant="ghost" size="sm" className="text-xs">
-                  Restore
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Main Content */}
+      <div className="@5xl/main:col-span-3">
+        {renderContent()}
       </div>
     </div>
   );
-} 
+}

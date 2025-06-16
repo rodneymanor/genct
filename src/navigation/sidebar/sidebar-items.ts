@@ -48,6 +48,11 @@ export const sidebarItems: NavGroup[] = [
     id: 2,
     items: [
       {
+        title: "Scripts",
+        url: "/dashboard/scripts",
+        icon: ScrollText,
+      },
+      {
         title: "Capture",
         url: "/dashboard/capture",
         icon: PenTool,
@@ -55,11 +60,6 @@ export const sidebarItems: NavGroup[] = [
           { title: "Notes", url: "/dashboard/capture/notes", icon: FileText },
           { title: "Recordings", url: "/dashboard/capture/recordings", icon: Mic },
         ],
-      },
-      {
-        title: "Scripts",
-        url: "/dashboard/scripts",
-        icon: ScrollText,
       },
       {
         title: "Inspiration",

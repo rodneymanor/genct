@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 
 import { Toaster } from "@/components/ui/sonner";
 import { APP_CONFIG } from "@/config/app-config";
+import { AuthProvider } from "@/contexts/auth-context";
 
 import "./globals.css";
 
@@ -22,8 +23,10 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en" className="light" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableSystem={false}>
-          {children}
-          <Toaster />
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

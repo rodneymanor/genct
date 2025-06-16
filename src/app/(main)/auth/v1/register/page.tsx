@@ -2,9 +2,7 @@ import Link from "next/link";
 
 import { Command } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-
-import { RegisterFormV1 } from "./_components/register-form";
+import { SignUpForm } from "@/components/auth/signup-form";
 
 export default function RegisterV1() {
   return (
@@ -18,10 +16,7 @@ export default function RegisterV1() {
             </div>
           </div>
           <div className="space-y-4">
-            <RegisterFormV1 />
-            <Button className="w-full" variant="outline">
-              Continue with Google
-            </Button>
+            <SignUpForm />
             <p className="text-muted-foreground text-center text-xs font-medium">
               Already have an account?{" "}
               <Link href="login" className="text-primary font-semibold">

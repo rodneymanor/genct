@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  ScrollText, 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreHorizontal, 
+
+import {
+  ScrollText,
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
   Edit,
   Copy,
   Download,
@@ -14,12 +15,11 @@ import {
   Eye,
   Calendar,
   TrendingUp,
-  Clock
+  Clock,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -27,14 +27,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const sampleScripts = [
   {
@@ -46,7 +40,7 @@ const sampleScripts = [
     words: 342,
     views: 12400,
     engagement: 4.8,
-    platform: "TikTok"
+    platform: "TikTok",
   },
   {
     id: 2,
@@ -57,7 +51,7 @@ const sampleScripts = [
     words: 287,
     views: 0,
     engagement: 0,
-    platform: "Instagram"
+    platform: "Instagram",
   },
   {
     id: 3,
@@ -68,7 +62,7 @@ const sampleScripts = [
     words: 195,
     views: 8900,
     engagement: 3.2,
-    platform: "TikTok"
+    platform: "TikTok",
   },
   {
     id: 4,
@@ -79,7 +73,7 @@ const sampleScripts = [
     words: 456,
     views: 25600,
     engagement: 6.1,
-    platform: "Instagram"
+    platform: "Instagram",
   },
   {
     id: 5,
@@ -90,21 +84,21 @@ const sampleScripts = [
     words: 298,
     views: 18200,
     engagement: 5.4,
-    platform: "TikTok"
-  }
+    platform: "TikTok",
+  },
 ];
 
 const statusConfig = {
   draft: { label: "Draft", variant: "secondary" as const },
   "in-progress": { label: "In Progress", variant: "default" as const },
-  completed: { label: "Completed", variant: "outline" as const }
+  completed: { label: "Completed", variant: "outline" as const },
 };
 
 export default function ScriptsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
 
-  const filteredScripts = sampleScripts.filter(script => {
+  const filteredScripts = sampleScripts.filter((script) => {
     const matchesSearch = script.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = selectedStatus === "all" || script.status === selectedStatus;
     return matchesSearch && matchesStatus;
@@ -137,11 +131,9 @@ export default function ScriptsPage() {
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold tracking-tight">Scripts</h1>
-          <p className="text-muted-foreground">
-            Manage all your generated scripts in one place.
-          </p>
+          <p className="text-muted-foreground">Manage all your generated scripts in one place.</p>
         </div>
-        <Button onClick={() => window.location.href = "/dashboard/new-script"}>
+        <Button onClick={() => (window.location.href = "/dashboard/new-script")}>
           <Plus className="mr-2 h-4 w-4" />
           New Script
         </Button>
@@ -152,90 +144,76 @@ export default function ScriptsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Scripts</CardTitle>
-            <ScrollText className="h-4 w-4 text-muted-foreground" />
+            <ScrollText className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{sampleScripts.length}</div>
-            <p className="text-xs text-muted-foreground">
-              +2 from last week
-            </p>
+            <p className="text-muted-foreground text-xs">+2 from last week</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <Eye className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">65.1K</div>
-            <p className="text-xs text-muted-foreground">
-              +12% from last week
-            </p>
+            <p className="text-muted-foreground text-xs">+12% from last week</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg. Engagement</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4.9%</div>
-            <p className="text-xs text-muted-foreground">
-              +0.3% from last week
-            </p>
+            <p className="text-muted-foreground text-xs">+0.3% from last week</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">80%</div>
-            <p className="text-xs text-muted-foreground">
-              4 of 5 scripts completed
-            </p>
+            <p className="text-muted-foreground text-xs">4 of 5 scripts completed</p>
           </CardContent>
         </Card>
       </div>
-      
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Script Library</CardTitle>
             <div className="flex items-center gap-2">
               <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
                 <Input
                   placeholder="Search scripts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 w-64"
+                  className="w-64 pl-8"
                 />
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
                     <Filter className="mr-2 h-4 w-4" />
-                    {selectedStatus === "all" ? "All" : statusConfig[selectedStatus as keyof typeof statusConfig]?.label}
+                    {selectedStatus === "all"
+                      ? "All"
+                      : statusConfig[selectedStatus as keyof typeof statusConfig]?.label}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("all")}>
-                    All Scripts
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("completed")}>
-                    Completed
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("in-progress")}>
-                    In Progress
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("draft")}>
-                    Draft
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedStatus("all")}>All Scripts</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedStatus("completed")}>Completed</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedStatus("in-progress")}>In Progress</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedStatus("draft")}>Draft</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -244,11 +222,11 @@ export default function ScriptsPage() {
         <CardContent>
           {filteredScripts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <ScrollText className="h-12 w-12 text-muted-foreground mb-3" />
+              <ScrollText className="text-muted-foreground mb-3 h-12 w-12" />
               <p className="text-muted-foreground text-sm">
                 {searchQuery ? "No scripts match your search" : "No scripts yet"}
               </p>
-              <p className="text-muted-foreground text-xs mt-1">
+              <p className="text-muted-foreground mt-1 text-xs">
                 {searchQuery ? "Try adjusting your search terms" : "Create your first script to get started"}
               </p>
             </div>
@@ -270,9 +248,7 @@ export default function ScriptsPage() {
                 {filteredScripts.map((script) => (
                   <TableRow key={script.id}>
                     <TableCell className="font-medium">
-                      <div className="max-w-[200px] truncate">
-                        {script.title}
-                      </div>
+                      <div className="max-w-[200px] truncate">{script.title}</div>
                     </TableCell>
                     <TableCell>
                       <Badge variant={statusConfig[script.status as keyof typeof statusConfig].variant}>
@@ -289,9 +265,7 @@ export default function ScriptsPage() {
                     <TableCell className="text-right">
                       {script.engagement > 0 ? `${script.engagement}%` : "-"}
                     </TableCell>
-                    <TableCell>
-                      {new Date(script.lastEdited).toLocaleDateString()}
-                    </TableCell>
+                    <TableCell>{new Date(script.lastEdited).toLocaleDateString()}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -316,10 +290,7 @@ export default function ScriptsPage() {
                             <Download className="mr-2 h-4 w-4" />
                             Download
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => handleAction("delete", script)}
-                            className="text-destructive"
-                          >
+                          <DropdownMenuItem onClick={() => handleAction("delete", script)} className="text-destructive">
                             <Trash2 className="mr-2 h-4 w-4" />
                             Delete
                           </DropdownMenuItem>
@@ -335,4 +306,4 @@ export default function ScriptsPage() {
       </Card>
     </div>
   );
-} 
+}

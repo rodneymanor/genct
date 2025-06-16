@@ -24,6 +24,9 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-solid: var(--destructive);
+  --color-red: var(--destructive);
+  --color-secondary-hover: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
