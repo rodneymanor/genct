@@ -137,7 +137,7 @@ export function ScriptSuggestionCards({ className }: ScriptSuggestionCardsProps)
   };
 
   return (
-    <div className={cn("w-full", className)}>
+    <div id="script-cards" className={cn("w-full", className)}>
       {/* Section Header */}
       <div className="mb-8 text-center">
         <h2 className="mb-2 text-2xl font-bold tracking-tight md:text-3xl">Script Ideas to Get You Started</h2>

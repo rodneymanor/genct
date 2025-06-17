@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 
 import { AccountSwitcher } from "./_components/sidebar/account-switcher";
 import { LayoutControls } from "./_components/sidebar/layout-controls";
+import { QuickStatsButton } from "./_components/sidebar/quick-stats-button";
 import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
@@ -42,6 +43,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               <Separator orientation="vertical" className="data-[orientation=vertical]:h-4" />
               <GlobalSearch className="flex-1" />
               <div className="flex items-center gap-2">
+                <QuickStatsButton />
                 <LayoutControls
                   contentLayout={contentLayout}
                   variant={sidebarVariant}

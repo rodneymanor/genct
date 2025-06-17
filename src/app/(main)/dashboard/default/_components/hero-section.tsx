@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { Sparkles, Mic, ArrowRight } from "lucide-react";
+import { Sparkles, Mic, ArrowRight, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -60,6 +60,16 @@ export function HeroSection({ className }: HeroSectionProps) {
 
   const trimmedValue = value.trim();
 
+  const scrollToCards = () => {
+    const cardsSection = document.getElementById("script-cards");
+    if (cardsSection) {
+      cardsSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <div className={cn("flex flex-col items-center justify-center py-12 md:py-16 lg:py-20", className)}>
       {/* Hero Headline */}
@@ -74,14 +84,14 @@ export function HeroSection({ className }: HeroSectionProps) {
       </div>
 
       {/* Main Input Section */}
-      <form onSubmit={handleSubmit} className="w-full max-w-4xl">
+      <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
         <div className="relative">
           <Textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] resize-none border-2 px-6 py-4 pr-20 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
+            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-2 px-6 py-4 pr-20 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
             autoFocus
           />
 
@@ -120,6 +130,20 @@ export function HeroSection({ className }: HeroSectionProps) {
           )}
         </div>
       </form>
+
+      {/* Scroll to Ideas Button */}
+      <div className="mt-12 flex flex-col items-center gap-4">
+        <p className="text-muted-foreground text-sm">Or browse script ideas below</p>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={scrollToCards}
+          className="group flex h-auto flex-col items-center gap-1 px-4 py-2 hover:bg-transparent"
+        >
+          <span className="group-hover:text-primary text-sm font-medium transition-colors">Browse Ideas</span>
+          <ChevronDown className="group-hover:text-primary h-4 w-4 animate-bounce transition-all duration-300 group-hover:translate-y-1" />
+        </Button>
+      </div>
     </div>
   );
 }
