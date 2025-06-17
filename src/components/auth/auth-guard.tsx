@@ -25,7 +25,7 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
 
   if (loading) {
     return (
-      fallback || (
+      fallback ?? (
         <div className="flex h-screen items-center justify-center">
           <div className="flex flex-col items-center space-y-4">
             <Loader2 className="text-primary h-8 w-8 animate-spin" />

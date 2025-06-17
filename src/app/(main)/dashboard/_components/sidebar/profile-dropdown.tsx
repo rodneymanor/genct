@@ -29,7 +29,7 @@ export function ProfileDropdown() {
     }
   };
 
-  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
+  const displayName = user?.displayName ?? user?.email?.split("@")[0] ?? "User";
 
   return (
     <DropdownMenu>

@@ -48,9 +48,9 @@ export function AccountSwitcher({
   const displayUser = user
     ? {
         id: user.uid,
-        name: user.displayName || user.email?.split("@")[0] || "User",
-        email: user.email || "",
-        avatar: user.photoURL || "",
+        name: user.displayName ?? user.email?.split("@")[0] ?? "User",
+        email: user.email ?? "",
+        avatar: user.photoURL ?? "",
         role: "user",
       }
     : activeUser;

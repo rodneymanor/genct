@@ -3,6 +3,7 @@ import * as React from "react";
 
 import { ChartPie, Grid2X2, ChartLine, ShoppingBag, BookA, Forklift, Search } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -12,7 +13,6 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 
 const searchItems = [
@@ -29,7 +29,7 @@ const searchItems = [
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false);
   const { state } = useSidebar();
-  
+
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
@@ -49,23 +49,19 @@ export function SearchDialog() {
         variant="ghost"
         size={isCollapsed ? "icon" : "sm"}
         onClick={() => setOpen(true)}
-        className={`${
-          isCollapsed 
-            ? "w-8 h-8 p-0" 
-            : "w-full justify-start text-muted-foreground hover:text-foreground"
-        } transition-all duration-200`}
+        className={isCollapsed ? "h-8 w-8 p-0" : "text-muted-foreground hover:text-foreground w-full justify-start"}
       >
-        <Search className={`${isCollapsed ? "h-4 w-4" : "h-4 w-4 mr-2"}`} />
+        <Search className={`${isCollapsed ? "h-4 w-4" : "mr-2 h-4 w-4"}`} />
         {!isCollapsed && (
           <>
             <span className="flex-1 text-left">Search</span>
-            <kbd className="bg-muted inline-flex h-5 items-center gap-1 rounded border px-1.5 text-[10px] font-medium select-none ml-auto">
+            <kbd className="ml-auto inline-flex h-5 items-center gap-1 rounded border px-1.5 text-[10px] font-medium select-none">
               <span className="text-xs">⌘</span>J
             </kbd>
           </>
         )}
       </Button>
-      
+
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search dashboards, users, and more…" />
         <CommandList>
@@ -80,7 +76,6 @@ export function SearchDialog() {
                     <CommandItem className="!py-1.5" key={item.label} onSelect={() => setOpen(false)}>
                       {item.icon && <item.icon />}
                       <span>{item.label}</span>
-                      {/* {item.shortcut && <CommandShortcut>{item.shortcut}</CommandShortcut>} */}
                     </CommandItem>
                   ))}
               </CommandGroup>

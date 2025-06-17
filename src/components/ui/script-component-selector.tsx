@@ -111,18 +111,12 @@ interface ScriptComponentSelectorsProps {
     wta: ScriptWTA | null;
   };
   onComponentSelect: (type: string, component: any) => void;
-  onGenerateScript: () => void;
-  canGenerate: boolean;
-  isGenerating: boolean;
 }
 
 export function ScriptComponentSelectors({
   components,
   selectedComponents,
-  onComponentSelect,
-  onGenerateScript,
-  canGenerate,
-  isGenerating
+  onComponentSelect
 }: ScriptComponentSelectorsProps) {
   return (
     <div className="space-y-6">
@@ -162,27 +156,6 @@ export function ScriptComponentSelectors({
           selected={selectedComponents.wta}
           onSelect={(option) => onComponentSelect('wta', option)}
         />
-      </div>
-      
-      <div className="flex justify-center pt-4">
-        <Button
-          onClick={onGenerateScript}
-          disabled={!canGenerate || isGenerating}
-          size="lg"
-          className="min-w-48"
-        >
-          {isGenerating ? (
-            <>
-              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-              Generating Script...
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-4 h-4 mr-2" />
-              Generate Final Script
-            </>
-          )}
-        </Button>
       </div>
     </div>
   );
