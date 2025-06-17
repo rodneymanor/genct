@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 250 250" preserveAspectRatio="xMidYMid meet" version="1.1">
+  <title>Updated Gen C Logo</title>
+  <defs>
+    <!-- Defines the gradient fill -->
+    <linearGradient id="gc_gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#51a800;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a6e9a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- The main logo shape, forming a G that incorporates a C -->
+  <path d="M212.5,125 A87.5,87.5 0 1 1 125,37.5 V72.5 A52.5,52.5 0 1 0 177.5,125 H125 V160 H212.5 Z" fill="url(#gc_gradient)" />
+
+</svg>
