@@ -141,8 +141,8 @@ export function GlobalSearch({ className }: GlobalSearchProps) {
             </>
           )}
           
-          {/* Search results */}
-          {[...new Set(searchItems.map((item) => item.group))].map((group, i) => (
+          {/* Search results - Quick Actions first, then other groups */}
+          {["Quick Actions", ...new Set(searchItems.map((item) => item.group).filter(group => group !== "Quick Actions"))].map((group, i) => (
             <React.Fragment key={group}>
               {i !== 0 && <CommandSeparator />}
               <CommandGroup heading={group}>
