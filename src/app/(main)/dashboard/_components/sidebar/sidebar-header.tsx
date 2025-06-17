@@ -11,14 +11,14 @@ export function SidebarHeader() {
   const isCollapsed = state === "collapsed";
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {/* Logo */}
-      <div className="flex items-center justify-center px-2 py-1">
+      <div className={`flex items-center justify-center ${isCollapsed ? 'px-1 py-2' : 'px-3 py-3'}`}>
         <Image
           src="/gc.svg"
           alt="Gen C Logo"
-          width={isCollapsed ? 36 : 48}
-          height={isCollapsed ? 36 : 48}
+          width={isCollapsed ? 40 : 56}
+          height={isCollapsed ? 40 : 56}
           className="transition-all duration-200"
         />
       </div>
