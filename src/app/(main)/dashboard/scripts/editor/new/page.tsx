@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { Download, Copy, Save, Eye, Sparkles, ArrowLeft, RefreshCw } from "lucide-react";
+import { Save, Eye, Sparkles, ArrowLeft, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -107,7 +107,7 @@ export default function ScriptEditorPage() {
           />
         );
       case "error":
-        return <ScriptError error={state.error} onReset={reset} />;
+        return <ScriptError error={state.error ?? "An unknown error occurred"} onReset={reset} />;
       default:
         return <ScriptIdle />;
     }
