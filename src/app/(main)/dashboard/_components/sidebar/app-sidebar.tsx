@@ -10,7 +10,7 @@ import { SidebarHeader as CustomSidebarHeader } from "./sidebar-header";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="none" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <CustomSidebarHeader />
       </SidebarHeader>
