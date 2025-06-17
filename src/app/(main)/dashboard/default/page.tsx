@@ -1,20 +1,30 @@
-import { PerformanceChart } from "./_components/performance-chart";
-import { QuickAccessSection } from "./_components/quick-access-section";
-import { SocialStatsSection } from "./_components/social-stats-section";
+import { HeroSection } from "./_components/hero-section";
+import { ScriptSuggestionCards } from "./_components/script-suggestion-cards";
+import { SidebarStats } from "./_components/sidebar-stats";
 
 export default function Page() {
   return (
-    <div className="@container/main flex flex-col gap-4 md:gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold tracking-tight">Welcome back! 👋</h1>
-        <p className="text-muted-foreground">
-          Welcome back! Here&apos;s what&apos;s happening with your content today.
-        </p>
-      </div>
+    <div className="@container/main">
+      {/* Main Content Area */}
+      <div className="flex flex-col gap-6 lg:flex-row">
+        {/* Primary Content */}
+        <div className="flex-1">
+          <HeroSection />
+          <ScriptSuggestionCards className="mt-12" />
+        </div>
 
-      <SocialStatsSection />
-      <PerformanceChart />
-      <QuickAccessSection />
+        {/* Secondary Sidebar */}
+        <div className="space-y-4 lg:w-80">
+          <SidebarStats />
+
+          {/* Recent Activity - Collapsed by default */}
+          <div className="hidden lg:block">
+            <div className="text-muted-foreground mb-2 text-sm">
+              Recent activity and detailed analytics moved to dedicated pages for better focus.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
