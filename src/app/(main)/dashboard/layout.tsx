@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 
-import { cookies } from "next/headers";
-
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
@@ -17,7 +15,6 @@ import { QuickStatsButton } from "./_components/sidebar/quick-stats-button";
 import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
-  const cookieStore = await cookies();
   const defaultOpen = false;
 
   const sidebarVariant = await getSidebarVariant();

@@ -18,7 +18,7 @@ export function SidebarHeader() {
           type="file"
           className="hidden"
           multiple
-          {...({ webkitdirectory: "" } as any)}
+          {...({ webkitdirectory: "" } as Record<string, string>)}
         />
         <ContentDropdown />
       </div>

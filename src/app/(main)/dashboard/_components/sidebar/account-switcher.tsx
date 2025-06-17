@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { BadgeCheck, Bell, CreditCard, LogOut, User, Settings } from "lucide-react";
+import { Bell, CreditCard, LogOut, User, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,7 +17,7 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/auth-context";
-import { cn, getInitials } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
 
 export function AccountSwitcher({
   users,
@@ -30,7 +30,6 @@ export function AccountSwitcher({
     readonly role: string;
   }>;
 }) {
-  const [activeUser, setActiveUser] = useState(users[0]);
   const { user, logout } = useAuth();
   const router = useRouter();
 
@@ -39,7 +38,7 @@ export function AccountSwitcher({
       await logout();
       toast.success("Successfully logged out");
       router.push("/auth/v1/login");
-    } catch (error) {
+    } catch {
       toast.error("Failed to log out");
     }
   };
@@ -53,7 +52,7 @@ export function AccountSwitcher({
         avatar: user.photoURL ?? "",
         role: "user",
       }
-    : activeUser;
+    : users[0];
 
   return (
     <DropdownMenu>

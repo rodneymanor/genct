@@ -26,7 +26,7 @@ export function ProfileDropdown() {
       await logout();
       toast.success("Successfully logged out");
       router.push("/auth/v1/login");
-    } catch (error) {
+    } catch {
       toast.error("Failed to log out");
     }
   };

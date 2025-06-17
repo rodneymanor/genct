@@ -37,11 +37,9 @@ const IsComingSoon = () => (
 const NavItemExpanded = ({
   item,
   isActive,
-  isSubmenuOpen,
 }: {
   item: NavMainItem;
   isActive: (url: string, subItems?: NavMainItem["subItems"]) => boolean;
-  isSubmenuOpen: (subItems?: NavMainItem["subItems"]) => boolean;
 }) => {
   return (
     <Collapsible key={item.title} asChild defaultOpen={!!item.subItems} className="group/collapsible">
@@ -166,7 +164,7 @@ export function NavMain({ items }: NavMainProps) {
                 state === "collapsed" && !isMobile ? (
                   <NavItemCollapsed key={item.title} item={item} isActive={isItemActive} />
                 ) : (
-                  <NavItemExpanded key={item.title} item={item} isActive={isItemActive} isSubmenuOpen={isSubmenuOpen} />
+                  <NavItemExpanded key={item.title} item={item} isActive={isItemActive} />
                 ),
               )}
             </SidebarMenu>
