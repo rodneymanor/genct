@@ -14,7 +14,6 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface GlobalSearchProps {
@@ -44,32 +43,6 @@ export function GlobalSearch({ className }: GlobalSearchProps) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
-  const [placeholder, setPlaceholder] = React.useState("");
-  const [isTyping, setIsTyping] = React.useState(true);
-  
-  const fullPlaceholder = "Search scripts, navigate, or create something new...";
-  
-  // Typewriter effect for placeholder
-  React.useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    let currentIndex = 0;
-    
-    const typeWriter = () => {
-      if (currentIndex < fullPlaceholder.length) {
-        setPlaceholder(fullPlaceholder.slice(0, currentIndex + 1));
-        currentIndex++;
-        timeoutId = setTimeout(typeWriter, 50);
-      } else {
-        setIsTyping(false);
-      }
-    };
-    
-    typeWriter();
-    
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, []);
 
   // Keyboard shortcuts
   React.useEffect(() => {
@@ -118,21 +91,15 @@ export function GlobalSearch({ className }: GlobalSearchProps) {
   return (
     <>
       <div className={cn("relative flex items-center", className)}>
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onClick={handleInputClick}
-            placeholder={placeholder}
-            className="pl-10 pr-16 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-ring/20"
-            readOnly
-          />
-          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-            <kbd className="bg-background border text-xs px-1.5 py-0.5 rounded font-mono text-muted-foreground">
-              ⌘K
-            </kbd>
-          </div>
+        <div 
+          className="text-muted-foreground flex cursor-pointer items-center gap-2 text-sm hover:text-foreground transition-colors"
+          onClick={handleInputClick}
+        >
+          <Search className="size-4" />
+          <span>Search</span>
+          <kbd className="bg-muted inline-flex h-5 items-center gap-1 rounded border px-1.5 text-[10px] font-medium select-none">
+            <span className="text-xs">⌘</span>K
+          </kbd>
         </div>
       </div>
 
