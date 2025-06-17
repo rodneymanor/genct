@@ -115,11 +115,10 @@ const NavItemCollapsed = ({
             disabled={item.comingSoon}
             tooltip={item.title}
             isActive={isActive(item.url, item.subItems)}
-            className="transition-all duration-200 hover:bg-accent/60 data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
+            className="justify-center transition-all duration-200 hover:bg-accent/60 data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
           >
             {item.icon && <item.icon strokeWidth={1.5} />}
             <span className="sr-only">{item.title}</span>
-            <ChevronRight className="sr-only" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent 
