@@ -74,6 +74,16 @@
   --color-destructive-foreground: var(--destructive-foreground);
 }
 
+/* Custom fonts */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+  --color-surface-75: oklch(0.9850 0 0);
+  --color-border-stronger: oklch(0.8800 0 0);
+  --color-foreground-lighter: oklch(0.9700 0 0);
+}
+
 :root {
   --radius: 0.5rem;
   --card: oklch(0.9911 0 0);
@@ -198,117 +208,93 @@
   --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.43);
 }
 
-/* Enhanced HTML base styles */
+/* Universal base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
-  -moz-tab-size: 4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   tab-size: 4;
   -webkit-tap-highlight-color: transparent;
-  scroll-behavior: smooth !important;
+  scroll-behavior: smooth;
 }
 
-@layer base {
-  /* Enhanced universal styles */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
-    border-color: hsl(var(--border) / 1);
-  }
-
-  body {
-    @apply bg-background text-foreground overscroll-none;
-    letter-spacing: var(--tracking-normal);
-    font-weight: 500;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    margin: 0;
-    --tw-border-opacity: 1;
-    --tw-bg-opacity: 1;
-    --tw-text-opacity: 1;
-  }
-
-  /* Enhanced link styles */
-  a {
-    color: inherit;
-    text-decoration: inherit;
-  }
-
-  /* Enhanced button styles */
-  [type="button"] {
-    -webkit-appearance: button;
-    background-color: transparent;
-    background-image: none;
-  }
-
-  /* Enhanced selection styling */
-  ::selection {
-    background-color: hsl(var(--primary) / 0.2) !important;
-    color: hsl(var(--primary-foreground)) !important;
-  }
-
-  /* Enhanced outline handling */
-  * {
-    @apply outline-ring/50;
-  }
+body {
+  font-family: var(--font-sans);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  line-height: 1.5;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  font-variation-settings: "wght" 400;
+  letter-spacing: var(--tracking-normal);
 }
 
-@layer components {
-  /* Enhanced focus states */
-  .focus-visible\:ring-refined:focus-visible {
-    @apply ring-1 ring-ring/60 ring-offset-0 outline-none;
-  }
-  
-  /* Supabase-style border utilities */
-  .border-refined {
-    border-color: hsl(var(--foreground-lighter));
-  }
-  
-  .border-strong {
-    border-color: hsl(var(--border-strong));
-  }
-  
-  .border-card {
-    border-color: hsl(var(--foreground-lighter));
-  }
-  
-  /* Enhanced button states */
-  .btn-refined {
-    @apply transition-all duration-200 ease-out;
-    @apply hover:scale-[1.02] active:scale-[0.98];
-  }
-  
-  /* Backdrop blur for dropdowns */
-  .dropdown-refined {
-    @apply backdrop-blur-sm bg-popover/95 border border-border/60;
-  }
-  
-  /* Smooth text transitions */
-  .text-refined {
-    @apply transition-colors duration-200;
-  }
-  
-  /* Enhanced shadows */
-  .shadow-refined {
-    box-shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.12), 0px 1px 2px -1px hsl(0 0% 0% / 0.12);
-  }
-  
-  .shadow-refined-lg {
-    box-shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.12), 0px 4px 6px -1px hsl(0 0% 0% / 0.12);
-  }
+/* Enhanced link and button styles */
+a {
+  color: inherit;
+  text-decoration: inherit;
+  transition: color 0.2s ease;
+}
 
-  /* Enhanced transition utilities */
-  .transition-refined {
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 0.2s;
-  }
+a:hover {
+  color: hsl(var(--primary));
+}
 
-  .ease-out-refined {
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
+button {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Enhanced selection styling */
+::selection {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+::-moz-selection {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
 }
 
 /* Enhanced border utilities for Supabase-style aesthetics */
@@ -321,6 +307,10 @@ html {
 }
 
 .border-card {
+  border-color: hsl(var(--foreground-lighter));
+}
+
+.border-refined {
   border-color: hsl(var(--foreground-lighter));
 }
 
@@ -343,7 +333,7 @@ html {
 
 /* Enhanced component utility classes */
 .panel-gradient {
-  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-surface-75 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
+  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
 }
 
 .panel-inner {
