@@ -42,11 +42,6 @@ export const sidebarItems: NavGroup[] = [
         url: "/dashboard/default",
         icon: Home,
       },
-    ],
-  },
-  {
-    id: 2,
-    items: [
       {
         title: "Scripts",
         url: "/dashboard/scripts",
