@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { BadgeCheck, Bell, CreditCard, LogOut } from "lucide-react";
+import { BadgeCheck, Bell, CreditCard, LogOut, User, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -79,8 +79,12 @@ export function AccountSwitcher({
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <BadgeCheck />
-            Account
+            <User />
+            Profile Settings
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Settings />
+            Account Settings
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CreditCard />
