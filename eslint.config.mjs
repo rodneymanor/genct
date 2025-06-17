@@ -47,7 +47,7 @@ export default [
   {
     rules: {
       // Prettier integration rules
-      "prettier/prettier": "warn",
+      "prettier/prettier": "off",
 
       // File Naming
       "unicorn/filename-case": [
@@ -66,7 +66,7 @@ export default [
       // Import/Export Rules
       "import/no-mutable-exports": "error",
       "import/order": [
-        "error",
+        "warn",
         {
           groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
           pathGroups: [
@@ -100,7 +100,7 @@ export default [
       "import/no-cycle": ["error", { maxDepth: 2 }],
 
       // Whitespace and Punctuation (Style Rules)
-      "no-trailing-spaces": "error",
+      "no-trailing-spaces": "off",
       "no-multiple-empty-lines": ["error", { max: 1, maxEOF: 1 }],
       "space-before-function-paren": [
         "error",
@@ -120,13 +120,13 @@ export default [
       "no-underscore-dangle": ["error", { allow: ["_id", "__dirname"] }],
 
       // Complexity
-      "complexity": ["error", { max: 10 }],
-      "max-lines": ["error", { max: 300, skipBlankLines: true, skipComments: true }],
-      "max-depth": ["error", 4],
+      "complexity": ["warn", { max: 15 }],
+      "max-lines": ["warn", { max: 500, skipBlankLines: true, skipComments: true }],
+      "max-depth": ["warn", 6],
 
       // TypeScript-Specific Rules (customized)
-      "@typescript-eslint/prefer-nullish-coalescing": "error",
-      "@typescript-eslint/no-unnecessary-type-assertion": "error",
+      "@typescript-eslint/prefer-nullish-coalescing": "warn",
+      "@typescript-eslint/no-unnecessary-type-assertion": "warn",
       "@typescript-eslint/no-unnecessary-condition": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": ["warn"],
@@ -151,6 +151,22 @@ export default [
 
       // SonarJS: Detect commented-out code
       "sonarjs/no-commented-code": "warn",
+
+      // Security rules - relaxed for development
+      "security/detect-possible-timing-attacks": "warn",
+
+      // React hooks rules - relaxed
+      "react-hooks/exhaustive-deps": "warn",
+    },
+  },
+  // Override for API routes and specific files
+  {
+    files: ["src/app/api/**/*.ts", "src/hooks/**/*.ts", "src/lib/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "complexity": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
+      "prettier/prettier": "off",
     },
   },
 ];

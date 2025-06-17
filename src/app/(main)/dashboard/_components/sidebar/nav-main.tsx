@@ -146,11 +146,7 @@ export function NavMain({ items }: NavMainProps) {
     if (subItems?.length) {
       return subItems.some((sub) => path.startsWith(sub.url));
     }
-    return path === url;
-  };
-
-  const isSubmenuOpen = (subItems?: NavMainItem["subItems"]) => {
-    return subItems?.some((sub) => path.startsWith(sub.url)) ?? false;
+        return path === url;
   };
 
   return (

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { useRouter } from "next/navigation";
 
 import { Bell, CreditCard, LogOut, User, Settings } from "lucide-react";
