@@ -7,7 +7,6 @@ import { useSidebar } from "@/components/ui/sidebar";
 
 import { ContentDropdown } from "./content-dropdown";
 import { ProfileDropdown } from "./profile-dropdown";
-import { SearchDialog } from "./search-dialog";
 
 export function SidebarHeader() {
   const { toggleSidebar, state } = useSidebar();
@@ -43,11 +42,6 @@ export function SidebarHeader() {
           />
           <ContentDropdown />
         </div>
-      </div>
-      
-      {/* Search functionality - show in both expanded and collapsed states */}
-      <div className={`${state === "collapsed" ? "px-2" : "px-0"}`}>
-        <SearchDialog />
       </div>
     </div>
   );

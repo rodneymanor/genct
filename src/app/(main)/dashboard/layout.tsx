@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
-import { ScriptInput } from "@/components/ui/script-input";
+import { GlobalSearch } from "@/components/ui/global-search";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
@@ -40,7 +40,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
             <div className="flex w-full items-center gap-2 px-4 lg:px-6">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="data-[orientation=vertical]:h-4" />
-              <ScriptInput className="flex-1" />
+              <GlobalSearch className="flex-1" />
               <div className="flex items-center gap-2">
                 <LayoutControls
                   contentLayout={contentLayout}
