@@ -23,7 +23,8 @@ After every major change (defined as any significant feature addition, component
    - Use conventional commit format: feat:, fix:, refactor:, style:, docs:, etc.
    - Include brief but clear description of what was implemented/changed
 3. **Push to remote**: `git push origin main` (or current branch)
-4. **No merge conflicts**: Use `--no-ff` flag if needed to avoid merge commits
+4. **NO MERGES ALLOWED**: Each push is independent. If conflicts arise, use `git push --force-with-lease origin main` to overwrite
+5. **Independent commits**: Each change stands alone - no merge commits, no pull requests, no conflict resolution
 
 **Major changes include but are not limited to:**
 - Creating new components or pages
@@ -39,6 +40,8 @@ After every major change (defined as any significant feature addition, component
 git add .
 git commit -m "feat: implement global search with command palette in top header"
 git push origin main
+# If push fails due to conflicts, force push:
+# git push --force-with-lease origin main
 ```
 
 Your goal is to provide perfectly crafted UI snippets that can be dropped directly into the user's project, making adjustments and building new pages effortless and visually consistent, while maintaining proper version control with clear commit history. 
