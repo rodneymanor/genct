@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v9-compat and later, measurementId is optional
@@ -22,5 +22,22 @@ export const db = getFirestore(app);
 
 // Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
+
+// Connect to emulators in development
+if (process.env.NODE_ENV === 'development') {
+  try {
+    // Connect to Firestore emulator
+    connectFirestoreEmulator(db, 'localhost', 8180);
+  } catch (error) {
+    // Emulator already connected
+  }
+  
+  try {
+    // Connect to Auth emulator
+    connectAuthEmulator(auth, 'http://localhost:9199');
+  } catch (error) {
+    // Emulator already connected
+  }
+}
 
 export default app;
