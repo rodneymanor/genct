@@ -50,12 +50,11 @@ const NavItemExpanded = ({
               disabled={item.comingSoon}
               isActive={isActive(item.url, item.subItems)}
               tooltip={item.title}
-              className="group/button text-sm font-medium transition-all duration-200 hover:bg-accent/60 data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-semibold"
             >
-              {item.icon && <item.icon className="text-muted-foreground group-data-[active=true]/button:text-accent-foreground" strokeWidth={1.5} />}
+              {item.icon && <item.icon />}
               <span>{item.title}</span>
               {item.comingSoon && <IsComingSoon />}
-              <ChevronRight className="ml-auto h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" strokeWidth={1.5} />
+              <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
           ) : (
             <SidebarMenuButton
@@ -63,10 +62,9 @@ const NavItemExpanded = ({
               aria-disabled={item.comingSoon}
               isActive={isActive(item.url)}
               tooltip={item.title}
-              className="group/button text-sm font-medium transition-all duration-200 hover:bg-accent/60 data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-semibold"
             >
               <Link href={item.url} target={item.newTab ? "_blank" : undefined}>
-                {item.icon && <item.icon className="text-muted-foreground group-data-[active=true]/button:text-accent-foreground" strokeWidth={1.5} />}
+                {item.icon && <item.icon />}
                 <span>{item.title}</span>
                 {item.comingSoon && <IsComingSoon />}
               </Link>
@@ -75,17 +73,16 @@ const NavItemExpanded = ({
         </CollapsibleTrigger>
         {item.subItems && (
           <CollapsibleContent>
-            <SidebarMenuSub className="ml-4 mt-1 space-y-0.5 border-l border-border/40 pl-4">
+            <SidebarMenuSub>
               {item.subItems.map((subItem) => (
                 <SidebarMenuSubItem key={subItem.title}>
                   <SidebarMenuSubButton 
                     aria-disabled={subItem.comingSoon} 
                     isActive={isActive(subItem.url)} 
                     asChild
-                    className="group/subbutton text-sm transition-all duration-200 hover:bg-accent/40 data-[active=true]:bg-accent/60 data-[active=true]:text-accent-foreground data-[active=true]:font-medium"
                   >
                     <Link href={subItem.url} target={subItem.newTab ? "_blank" : undefined}>
-                      {subItem.icon && <subItem.icon className="text-muted-foreground group-data-[active=true]/subbutton:text-accent-foreground" strokeWidth={1.5} />}
+                      {subItem.icon && <subItem.icon />}
                       <span>{subItem.title}</span>
                       {subItem.comingSoon && <IsComingSoon />}
                     </Link>
@@ -115,29 +112,22 @@ const NavItemCollapsed = ({
             disabled={item.comingSoon}
             tooltip={item.title}
             isActive={isActive(item.url, item.subItems)}
-            className="justify-center transition-all duration-200 hover:bg-accent/60 data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
           >
-            {item.icon && <item.icon strokeWidth={1.5} />}
+            {item.icon && <item.icon />}
             <span className="sr-only">{item.title}</span>
           </SidebarMenuButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent 
-          className="w-50 space-y-1 border border-border/60 bg-popover/95 backdrop-blur-sm shadow-lg" 
-          side="right" 
-          align="start"
-          sideOffset={8}
-        >
+        <DropdownMenuContent side="right" align="start">
           {item.subItems?.map((subItem) => (
             <DropdownMenuItem key={subItem.title} asChild>
               <SidebarMenuSubButton
                 key={subItem.title}
                 asChild
-                className="cursor-pointer focus-visible:ring-0 transition-colors duration-200 hover:bg-accent/60"
                 aria-disabled={subItem.comingSoon}
                 isActive={isActive(subItem.url)}
               >
                 <Link href={subItem.url} target={subItem.newTab ? "_blank" : undefined}>
-                  {subItem.icon && <subItem.icon className="text-muted-foreground" strokeWidth={1.5} />}
+                  {subItem.icon && <subItem.icon />}
                   <span>{subItem.title}</span>
                   {subItem.comingSoon && <IsComingSoon />}
                 </Link>
@@ -162,12 +152,12 @@ export function NavMain({ items }: NavMainProps) {
   };
 
   return (
-    <div className="px-2 py-2">
+    <>
       {items.map((group) => (
-        <SidebarGroup key={group.id} className="mb-4">
-          {group.label && <SidebarGroupLabel className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">{group.label}</SidebarGroupLabel>}
+        <SidebarGroup key={group.id}>
+          {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu>
               {group.items.map((item) =>
                 state === "collapsed" && !isMobile ? (
                   <NavItemCollapsed key={item.title} item={item} isActive={isItemActive} />
@@ -179,6 +169,6 @@ export function NavMain({ items }: NavMainProps) {
           </SidebarGroupContent>
         </SidebarGroup>
       ))}
-    </div>
+    </>
   );
 }
