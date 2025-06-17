@@ -17,8 +17,8 @@ export function SidebarHeader() {
         <Image
           src="/gc.svg"
           alt="Gen C Logo"
-          width={isCollapsed ? 24 : 32}
-          height={isCollapsed ? 24 : 32}
+          width={isCollapsed ? 36 : 48}
+          height={isCollapsed ? 36 : 48}
           className="transition-all duration-200"
         />
       </div>
