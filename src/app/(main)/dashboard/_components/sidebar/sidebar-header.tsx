@@ -14,15 +14,13 @@ export function SidebarHeader() {
     <div className="flex flex-col gap-3 p-1.5">
       {/* Logo */}
       <div className={`flex items-center justify-center transition-all duration-200 ${isCollapsed ? 'py-0.5' : 'py-1'}`}>
-        <div className="relative">
-          <Image
-            src="/gc.svg"
-            alt="Gen C Logo"
-            width={isCollapsed ? 48 : 72}
-            height={isCollapsed ? 48 : 72}
-            className="transition-all duration-200 filter drop-shadow-sm"
-          />
-        </div>
+        <Image
+          src="/gc.svg"
+          alt="Gen C Logo"
+          width={isCollapsed ? 56 : 84}
+          height={isCollapsed ? 56 : 84}
+          className="transition-all duration-200 filter drop-shadow-sm"
+        />
       </div>
       
       {/* Content Dropdown (Plus button) */}

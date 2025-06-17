@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { Sparkles, Mic, ArrowRight, ChevronDown } from "lucide-react";
+import { Sparkles, Mic, ArrowUp, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -91,7 +91,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-2 px-6 py-4 pr-20 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
+            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-2 px-6 py-4 pr-24 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
             autoFocus
           />
 
@@ -100,7 +100,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="text-muted-foreground hover:text-primary absolute top-4 right-4"
+            className="text-muted-foreground hover:text-primary absolute top-4 right-16"
             onClick={() => {
               // TODO: Implement voice input
               console.log("Voice input clicked");
@@ -108,27 +108,31 @@ export function HeroSection({ className }: HeroSectionProps) {
           >
             <Mic className="h-5 w-5" />
           </Button>
-        </div>
 
-        {/* Primary Action Button */}
-        <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          {/* Submit Button */}
           <Button
             type="submit"
-            size="lg"
-            className="w-full gap-2 px-8 py-3 text-lg font-semibold sm:w-auto"
+            size="icon"
+            className={cn(
+              "absolute top-4 right-4 h-[38px] w-[38px] rounded-md border transition-all duration-200 ease-out outline-none",
+              "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-offset-1",
+              trimmedValue
+                ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary shadow-xs"
+                : "bg-background hover:bg-accent hover:text-accent-foreground text-foreground border-border shadow-xs"
+            )}
             disabled={!trimmedValue}
           >
-            <Sparkles className="h-5 w-5" />
-            Generate Script
-            <ArrowRight className="h-5 w-5" />
+            <ArrowUp className="h-5 w-5" />
           </Button>
+        </div>
 
-          {trimmedValue && (
+        {trimmedValue && (
+          <div className="mt-4 flex justify-center">
             <p className="text-muted-foreground text-sm">
               Press <kbd className="bg-muted rounded px-1.5 py-0.5 text-xs font-medium">⌘ Enter</kbd> to generate
             </p>
-          )}
-        </div>
+          </div>
+        )}
       </form>
 
       {/* Scroll to Ideas Button */}
