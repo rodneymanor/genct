@@ -28,6 +28,7 @@
   --color-border-stronger: var(--border-stronger);
   --color-foreground-lighter: var(--foreground-lighter);
   --color-foreground-light: var(--foreground-light);
+  --color-foreground-muted: var(--foreground-muted);
   --color-surface-75: var(--surface-75);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive: var(--destructive);
@@ -53,19 +54,66 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-mono: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --radius: 0.5rem;
-  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
-  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
-  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
-  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
-  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
-  --tracking-normal: var(--tracking-normal);
+  --font-sans: var(--font-sans);
+  --font-custom: var(--font-custom);
+  --font-heading: var(--font-heading);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
   --spacing: var(--spacing);
   --letter-spacing: var(--letter-spacing);
+  
+  /* Typography Scale */
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --text-4xl: var(--text-4xl);
+  --text-5xl: var(--text-5xl);
+  
+  /* Line Heights */
+  --leading-none: var(--leading-none);
+  --leading-tight: var(--leading-tight);
+  --leading-snug: var(--leading-snug);
+  --leading-normal: var(--leading-normal);
+  --leading-relaxed: var(--leading-relaxed);
+  --leading-loose: var(--leading-loose);
+  
+  /* Letter Spacing */
+  --tracking-tighter: var(--tracking-tighter);
+  --tracking-tight: var(--tracking-tight);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: var(--tracking-wide);
+  --tracking-wider: var(--tracking-wider);
+  --tracking-widest: var(--tracking-widest);
 }
+
+/* Supabase Custom Font Loading */
+@font-face {
+  font-family: 'custom-font';
+  src: url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Book.54303b32.woff2') format('woff2'),
+       url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Book.d2378969.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'custom-font';
+  src: url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Medium.0cc7d245.woff2') format('woff2'),
+       url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Medium.184a256f.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Inter Font Fallback */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Space Grotesk for Headings */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
   --radius: 0.5rem;
@@ -87,6 +135,7 @@
   --border-stronger: oklch(0.8800 0 0);
   --foreground-lighter: oklch(0.9700 0 0);
   --foreground-light: oklch(0.6000 0 0);
+  --foreground-muted: oklch(0.5000 0 0);
   --surface-75: oklch(0.9850 0 0);
   --input: oklch(0.9731 0 0);
   --ring: oklch(0.8348 0.1302 160.9080);
@@ -113,12 +162,40 @@
   --background: oklch(0.9911 0 0);
   --foreground: oklch(0.2046 0 0);
   --destructive-foreground: oklch(0.9934 0.0032 17.2118);
+  
+  /* Enhanced Typography Variables */
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-custom: "custom-font", "Circular", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Space Grotesk", "custom-font", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-  --letter-spacing: 0.025em;
-  --spacing: 0.25rem;
-  --tracking-normal: 0.025em;
+  
+  /* Typography Scale */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+  --text-5xl: 3rem;        /* 48px */
+  
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+  
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
   
   /* Enhanced opacity variables */
   --tw-border-opacity: 1;
@@ -147,6 +224,7 @@
   --border-stronger: oklch(0.3600 0 0);
   --foreground-lighter: oklch(0.2000 0 0);
   --foreground-light: oklch(0.4000 0 0);
+  --foreground-muted: oklch(0.6000 0 0);
   --surface-75: oklch(0.2200 0 0);
   --input: oklch(0.2603 0 0);
   --ring: oklch(0.8003 0.1821 151.7110);
@@ -172,12 +250,13 @@
   --sidebar-ring: oklch(0.8003 0.1821 151.7110);
   --destructive-foreground: oklch(0.9368 0.0045 34.3092);
   --radius: 0.5rem;
+  
+  /* Enhanced Typography Variables - Dark Mode */
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-custom: "custom-font", "Circular", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Space Grotesk", "custom-font", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-  --letter-spacing: 0.025em;
-  --spacing: 0.25rem;
-  --tracking-normal: 0.025em;
   
   /* Enhanced opacity variables */
   --tw-border-opacity: 1;
@@ -194,51 +273,192 @@
   border-color: hsl(var(--border-stronger));
 }
 
-/* Essential Global Base Styles - Restored Safely */
-*,
-*::before,
-*::after {
+/* Enhanced Global Styles */
+*, *::before, *::after {
   box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: hsl(var(--border-default)/1);
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(147 197 253/0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
 }
 
 html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  tab-size: 4;
-  -webkit-tap-highlight-color: transparent;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  line-height: 1.5;
-  font-feature-settings: "rlig" 1, "calt" 1;
-  font-variation-settings: "wght" 400;
-  letter-spacing: var(--tracking-normal);
-  font-display: swap;
+  font-family: var(--font-custom);
+  line-height: var(--leading-normal);
+  font-weight: 400;
+  color: hsl(var(--foreground)/var(--tw-text-opacity));
+  background-color: hsl(var(--background)/var(--tw-bg-opacity));
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
 }
 
-/* Enhanced Selection Styling */
+/* Typography Utilities */
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-custom {
+  font-family: var(--font-custom);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Text Size Utilities */
+.text-xs {
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}
+
+.text-sm {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.text-base {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+.text-lg {
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+}
+
+.text-xl {
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+}
+
+.text-2xl {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+}
+
+.text-3xl {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+}
+
+.text-4xl {
+  font-size: var(--text-4xl);
+  line-height: var(--leading-none);
+}
+
+.text-5xl {
+  font-size: var(--text-5xl);
+  line-height: var(--leading-none);
+}
+
+/* Line Height Utilities */
+.leading-none { line-height: var(--leading-none); }
+.leading-tight { line-height: var(--leading-tight); }
+.leading-snug { line-height: var(--leading-snug); }
+.leading-normal { line-height: var(--leading-normal); }
+.leading-relaxed { line-height: var(--leading-relaxed); }
+.leading-loose { line-height: var(--leading-loose); }
+
+/* Letter Spacing Utilities */
+.tracking-tighter { letter-spacing: var(--tracking-tighter); }
+.tracking-tight { letter-spacing: var(--tracking-tight); }
+.tracking-normal { letter-spacing: var(--tracking-normal); }
+.tracking-wide { letter-spacing: var(--tracking-wide); }
+.tracking-wider { letter-spacing: var(--tracking-wider); }
+.tracking-widest { letter-spacing: var(--tracking-widest); }
+
+/* Text Color Hierarchy */
+.text-foreground { color: hsl(var(--foreground)/var(--tw-text-opacity)); }
+.text-foreground-light { color: hsl(var(--foreground-light)/var(--tw-text-opacity)); }
+.text-foreground-lighter { color: hsl(var(--foreground-lighter)/var(--tw-text-opacity)); }
+.text-foreground-muted { color: hsl(var(--foreground-muted)/var(--tw-text-opacity)); }
+.text-muted-foreground { color: hsl(var(--muted-foreground)/var(--tw-text-opacity)); }
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: hsl(var(--foreground)/var(--tw-text-opacity));
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  font-weight: 600;
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+  font-weight: 600;
+}
+
+h4 {
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  font-weight: 600;
+}
+
+h5 {
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  font-weight: 500;
+}
+
+h6 {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-weight: 500;
+}
+
+/* Paragraph and Text Styles */
+p {
+  margin-bottom: 1rem;
+  line-height: var(--leading-relaxed);
+}
+
+/* Selection Styling */
 ::selection {
   background-color: hsl(var(--primary) / 0.2);
   color: hsl(var(--primary-foreground));
 }
 
-::-moz-selection {
-  background-color: hsl(var(--primary) / 0.2);
-  color: hsl(var(--primary-foreground));
-}
-
-/* Custom Scrollbar */
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+  background: hsl(var(--muted) / 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -250,59 +470,39 @@ body {
   background: hsl(var(--muted-foreground) / 0.5);
 }
 
-/* Custom Background Utilities - Now handled in @theme */
-
-/* Supabase Panel System */
-.panel-gradient {
-  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all duration-300 hover:shadow-lg hover:shadow-black/5 hover:scale-[1.02] hover:-translate-y-1 flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
+/* Focus Visible Improvements */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
-.panel-inner {
-  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full transition-all duration-300 group-hover/panel:bg-surface-75/95;
+/* Supabase-specific Typography Classes */
+.supabase-heading {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: hsl(var(--foreground));
 }
 
-/* Advanced Supabase-Style Utilities */
-.glass-morphism {
-  @apply bg-background/80 backdrop-blur-xl border border-border/50;
+.supabase-body {
+  font-family: var(--font-custom);
+  line-height: var(--leading-relaxed);
+  color: hsl(var(--foreground-light));
 }
 
-.glass-morphism-strong {
-  @apply bg-background/60 backdrop-blur-2xl border border-border/30 shadow-2xl shadow-black/10;
+.supabase-caption {
+  font-family: var(--font-custom);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: hsl(var(--foreground-muted));
 }
 
-.supabase-glow {
-  @apply shadow-lg shadow-primary/20 dark:shadow-primary/10;
-}
-
-.supabase-glow-strong {
-  @apply shadow-xl shadow-primary/30 dark:shadow-primary/20;
-}
-
-.interactive-lift {
-  @apply transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5;
-}
-
-.interactive-press {
-  @apply transition-all duration-150 active:scale-[0.98] active:shadow-sm;
-}
-
-/* Enhanced Focus States */
-.focus-supabase {
-  @apply focus-visible:ring-[3px] focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:shadow-lg focus-visible:shadow-primary/20;
-}
-
-/* Typography Enhancements */
-.text-supabase {
-  @apply tracking-tight font-medium;
-}
-
-.text-supabase-heading {
-  @apply tracking-tight font-semibold text-foreground/90;
-}
-
-/* Icon Consistency */
-.lucide {
-  stroke-width: 1;
+.supabase-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  background-color: hsl(var(--muted) / 0.5);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
 }
 
 /* Additional Border Utilities */
