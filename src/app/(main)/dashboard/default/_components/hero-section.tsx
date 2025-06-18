@@ -75,7 +75,7 @@ export function HeroSection({ className }: HeroSectionProps) {
       {/* Hero Headline */}
       <div className="mb-8 max-w-3xl text-center">
         <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
-          Turn Ideas Into Engaging Scripts
+          What will You <span className="text-primary">Script Today</span>?
         </h1>
         <p className="text-muted-foreground mb-8 text-lg md:text-xl">
           Describe what you want to create and I&apos;ll help you craft compelling content that resonates with your
