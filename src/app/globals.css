@@ -56,28 +56,13 @@
   --tracking-wider: calc(var(--tracking-normal) + 0.05em);
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
   --tracking-normal: var(--tracking-normal);
-  --shadow-2xl: var(--shadow-2xl);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-md: var(--shadow-md);
-  --shadow: var(--shadow);
-  --shadow-sm: var(--shadow-sm);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-2xs: var(--shadow-2xs);
   --spacing: var(--spacing);
   --letter-spacing: var(--letter-spacing);
-  --shadow-offset-y: var(--shadow-offset-y);
-  --shadow-offset-x: var(--shadow-offset-x);
-  --shadow-spread: var(--shadow-spread);
-  --shadow-blur: var(--shadow-blur);
-  --shadow-opacity: var(--shadow-opacity);
-  --color-shadow-color: var(--shadow-color);
   --color-destructive-foreground: var(--destructive-foreground);
 }
 
 /* Tailwind v4 Theme Configuration */
 @theme {
-  --color-surface-75: oklch(0.9850 0 0);
   --color-border-stronger: oklch(0.8800 0 0);
   --color-foreground-lighter: oklch(0.9700 0 0);
 }
@@ -101,7 +86,6 @@
   --border-strong: oklch(0.9200 0 0);
   --border-stronger: oklch(0.8800 0 0);
   --foreground-lighter: oklch(0.9700 0 0);
-  --surface-75: oklch(0.9850 0 0);
   --input: oklch(0.9731 0 0);
   --ring: oklch(0.8348 0.1302 160.9080);
   --chart-1: oklch(0.8348 0.1302 160.9080);
@@ -123,22 +107,8 @@
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-  --shadow-color: #000000;
-  --shadow-opacity: 0.17;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-offset-x: 0px;
-  --shadow-offset-y: 1px;
   --letter-spacing: 0.025em;
   --spacing: 0.25rem;
-  --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow-md: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 2px 4px -1px hsl(0 0% 0% / 0.17);
-  --shadow-lg: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 4px 6px -1px hsl(0 0% 0% / 0.17);
-  --shadow-xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 8px 10px -1px hsl(0 0% 0% / 0.17);
-  --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.43);
   --tracking-normal: 0.025em;
   
   /* Enhanced opacity variables */
@@ -167,7 +137,6 @@
   --border-strong: oklch(0.3200 0 0);
   --border-stronger: oklch(0.3600 0 0);
   --foreground-lighter: oklch(0.2000 0 0);
-  --surface-75: oklch(0.1950 0 0);
   --input: oklch(0.2603 0 0);
   --ring: oklch(0.8003 0.1821 151.7110);
   --chart-1: oklch(0.8003 0.1821 151.7110);
@@ -188,16 +157,17 @@
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-  --shadow-color: #000000;
-  --shadow-opacity: 0.17;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-offset-x: 0px;
-  --shadow-offset-y: 1px;
   --letter-spacing: 0.025em;
   --spacing: 0.25rem;
-  --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
+}
+
+/* Keep only essential border utilities */
+.border-strong {
+  border-color: hsl(var(--border-strong));
+}
+
+.border-stronger {
+  border-color: hsl(var(--border-stronger));
 }
 
 /* COMMENTED OUT PROBLEMATIC GLOBAL STYLES */
@@ -292,22 +262,12 @@ Scrollbar styling - COMMENTED OUT TO PREVENT CONFLICTS
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
-*/
 
-/* Keep essential border utilities for Supabase-style aesthetics */
-.border-strong {
-  border-color: hsl(var(--border-strong));
-}
-
-.border-stronger {
-  border-color: hsl(var(--border-stronger));
-}
-
+REMOVED PANEL UTILITIES AND SURFACE BACKGROUND
 .bg-surface-75 {
   background-color: hsl(var(--surface-75));
 }
 
-/* Keep panel utilities as they're used in components */
 .panel-gradient {
   @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
 }
@@ -316,7 +276,6 @@ Scrollbar styling - COMMENTED OUT TO PREVENT CONFLICTS
   @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
 }
 
-/*
 COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
 .border-card {
   border-color: hsl(var(--foreground-lighter));
