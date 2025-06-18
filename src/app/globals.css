@@ -711,6 +711,106 @@ p {
   font-display: swap;
 }
 
+/* Essential Utility Classes - Force Generation */
+.text-brand {
+  --tw-text-opacity: 1;
+  color: hsl(var(--brand) / var(--tw-text-opacity));
+}
+
+.border-brand {
+  border-color: hsl(var(--brand));
+}
+
+.border-brand-400 {
+  border-color: hsl(var(--brand-400));
+}
+
+.border-brand-500 {
+  border-color: hsl(var(--brand-500));
+}
+
+.border-brand-600 {
+  border-color: hsl(var(--brand-600));
+}
+
+.border-border {
+  border-color: hsl(var(--border));
+}
+
+.border-border-strong {
+  border-color: hsl(var(--border-strong));
+}
+
+.border-border-stronger {
+  border-color: hsl(var(--border-stronger));
+}
+
+.bg-brand-400 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-400) / var(--tw-bg-opacity));
+}
+
+.bg-brand-500 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-500) / var(--tw-bg-opacity));
+}
+
+.bg-brand-600 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
+}
+
+/* Hover States */
+.hover\:bg-brand-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-500) / var(--tw-bg-opacity));
+}
+
+.hover\:bg-brand-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
+}
+
+.hover\:border-brand-500:hover {
+  border-color: hsl(var(--brand-500));
+}
+
+.hover\:border-brand-600:hover {
+  border-color: hsl(var(--brand-600));
+}
+
+.hover\:border-border-strong:hover {
+  border-color: hsl(var(--border-strong));
+}
+
+/* Dark mode variants */
+.dark .dark\:bg-brand-500 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-500) / var(--tw-bg-opacity));
+}
+
+.dark .dark\:bg-brand-600 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
+}
+
+.dark .dark\:border-brand-500 {
+  border-color: hsl(var(--brand-500));
+}
+
+.dark .dark\:border-brand-600 {
+  border-color: hsl(var(--brand-600));
+}
+
+.dark .dark\:hover\:bg-brand-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
+}
+
+.dark .dark\:hover\:border-brand-600:hover {
+  border-color: hsl(var(--brand-600));
+}
+
 /* Ensure fonts are loaded */
 @media (prefers-reduced-motion: no-preference) {
   html {
