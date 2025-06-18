@@ -9,6 +9,7 @@ import {
   FolderOpen,
   Settings,
   Mail,
+  Monitor,
   type LucideIcon,
 } from "lucide-react";
 
@@ -73,6 +74,11 @@ export const sidebarItems: NavGroup[] = [
   {
     id: 2,
     items: [
+      {
+        title: "Dock Demo",
+        url: "/dashboard/dock-demo",
+        icon: PenTool,
+      },
       {
         title: "Settings",
         url: "/dashboard/settings",
