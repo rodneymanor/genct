@@ -90,11 +90,11 @@
   --tracking-widest: var(--tracking-widest);
 }
 
-/* Supabase Custom Font Loading */
+/* Supabase Custom Font Loading - Local Files */
 @font-face {
   font-family: 'custom-font';
-  src: url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Book.54303b32.woff2') format('woff2'),
-       url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Book.d2378969.woff') format('woff');
+  src: url('/CustomFont-Book.54303b32.woff2') format('woff2'),
+       url('/CustomFont-Book.d2378969.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -102,8 +102,8 @@
 
 @font-face {
   font-family: 'custom-font';
-  src: url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Medium.0cc7d245.woff2') format('woff2'),
-       url('https://frontend-assets.supabase.com/www/518d3c278fe8/_next/static/media/CustomFont-Medium.184a256f.woff') format('woff');
+  src: url('/CustomFont-Medium.0cc7d245.woff2') format('woff2'),
+       url('/CustomFont-Medium.184a256f.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
