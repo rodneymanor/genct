@@ -74,7 +74,7 @@ export function HeroSection({ className }: HeroSectionProps) {
     <div className={cn("flex flex-col items-center justify-center py-12 md:py-16 lg:py-20", className)}>
       {/* Hero Headline */}
       <div className="mb-8 max-w-3xl text-center">
-        <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+        <h1 className="mb-4 text-3xl font-black tracking-tight md:text-4xl lg:text-5xl">
           What will You <span className="text-primary">Script Today</span>?
         </h1>
         <p className="text-muted-foreground mb-8 text-lg md:text-xl">
