@@ -92,7 +92,7 @@ export function ScriptTweetCard({
   return (
     <article
       className={cn(
-        "group relative cursor-pointer border-b border-border/50 bg-background p-4 transition-all duration-200 hover:bg-muted/30",
+        "group relative cursor-pointer border-b border-foreground/15 bg-background p-4 transition-all duration-200 hover:bg-muted/30",
         className
       )}
       onClick={handleUseIdea}

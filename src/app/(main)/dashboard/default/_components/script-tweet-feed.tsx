@@ -148,7 +148,7 @@ export function ScriptTweetFeed({ className }: ScriptTweetFeedProps) {
   return (
     <div id="script-tweet-feed" className={cn("w-full max-w-2xl mx-auto", className)}>
       {/* Feed Header */}
-      <div className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-10 p-4">
+      <div className="border-b border-foreground/15 bg-background/80 backdrop-blur-sm sticky top-0 z-10 p-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-foreground">Script Ideas</h2>
@@ -167,7 +167,7 @@ export function ScriptTweetFeed({ className }: ScriptTweetFeedProps) {
       </div>
 
       {/* Tweet-style Feed */}
-      <div className="divide-y divide-border/50">
+      <div className="divide-y divide-foreground/10">
         {scriptSuggestions.map((suggestion) => (
           <ScriptTweetCard
             key={suggestion.id}
@@ -188,7 +188,7 @@ export function ScriptTweetFeed({ className }: ScriptTweetFeedProps) {
       </div>
 
       {/* Load More */}
-      <div className="border-t border-border/50 p-4 text-center">
+      <div className="border-t border-foreground/15 p-4 text-center">
         <Button variant="ghost" className="gap-2" onClick={() => router.push("/dashboard/inspiration")}>
           <Star className="h-4 w-4" />
           Show more script ideas

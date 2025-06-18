@@ -38,14 +38,14 @@ export function ContentDropdown() {
         <Button
           variant="ghost"
           size="sm"
-          className="relative inline-flex h-8 w-8 items-center justify-center rounded-md border border-border/60 bg-background/50 text-foreground/80 transition-all duration-200 hover:border-border hover:bg-accent/50 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:outline-none data-[state=open]:bg-accent data-[state=open]:border-border"
+          className="relative inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/20 bg-background/50 text-foreground/80 transition-all duration-200 hover:border-foreground/50 hover:bg-accent/50 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:outline-none data-[state=open]:bg-accent data-[state=open]:border-foreground/50"
         >
           <Plus className="h-4 w-4" strokeWidth={1.5} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-48 border border-border/60 bg-popover/95 backdrop-blur-sm shadow-lg"
+        className="w-48 border border-foreground/15 bg-popover/95 backdrop-blur-sm shadow-lg"
         sideOffset={4}
       >
         <DropdownMenuItem 
@@ -69,7 +69,7 @@ export function ContentDropdown() {
           <Mic className="mr-3 h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
           Recording
         </DropdownMenuItem>
-        <DropdownMenuSeparator className="bg-border/60" />
+        <DropdownMenuSeparator className="bg-foreground/10" />
         <DropdownMenuItem 
           onClick={handleCreateCollection}
           className="cursor-pointer text-sm font-medium transition-colors duration-200 hover:bg-accent/80 focus:bg-accent/80"
