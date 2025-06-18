@@ -587,19 +587,19 @@ p {
 }
 
 .border-gray-200 {
-  border-color: rgb(229 231 235);
+  border-color: rgb(243 244 246);
 }
 
 .border-gray-300 {
-  border-color: rgb(209 213 219);
+  border-color: rgb(229 231 235);
 }
 
 .border-gray-500 {
-  border-color: rgb(107 114 128);
+  border-color: rgb(156 163 175);
 }
 
 .border-gray-600 {
-  border-color: rgb(75 85 99);
+  border-color: rgb(107 114 128);
 }
 
 .border-primary {
@@ -778,3 +778,30 @@ COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
   outline: none !important;
 }
 */
+
+/* Sidebar Border Colors */
+.border-sidebar-border {
+  border-color: hsl(var(--sidebar-border));
+}
+
+/* Add group-data responsive border utilities */
+.group-data-\[side\=left\]\:border-r[data-side="left"] {
+  border-right-width: 1px;
+  border-right-color: hsl(var(--sidebar-border));
+}
+
+.group-data-\[side\=right\]\:border-l[data-side="right"] {
+  border-left-width: 1px;
+  border-left-color: hsl(var(--sidebar-border));
+}
+
+/* Alternative approach - direct group data selectors */
+[data-side="left"] .group-data-\[side\=left\]\:border-r {
+  border-right-width: 1px;
+  border-right-color: hsl(var(--sidebar-border));
+}
+
+[data-side="right"] .group-data-\[side\=right\]\:border-l {
+  border-left-width: 1px;
+  border-left-color: hsl(var(--sidebar-border));
+}
