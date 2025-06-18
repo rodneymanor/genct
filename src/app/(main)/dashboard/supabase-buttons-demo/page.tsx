@@ -152,6 +152,69 @@ export default function SupabaseButtonsDemo() {
               </div>
             </section>
 
+            {/* Transparent Border Demonstration */}
+            <section>
+              <h2 className="text-lg font-medium mb-4">Transparent Border Fix Demonstration</h2>
+              <div className="space-y-6">
+                {/* Before/After Comparison */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-muted-foreground">❌ Before (Dark borders)</h3>
+                    <div className="p-4 border border-gray-600 rounded-lg bg-background/50">
+                      <p className="text-sm">Using border-border/60 - Too dark in dark mode</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-muted-foreground">✅ After (Proper transparency)</h3>
+                    <div className="p-4 border border-foreground/20 rounded-lg bg-background/50">
+                      <p className="text-sm">Using border-foreground/20 - Visible and elegant</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Opacity Variations */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-muted-foreground">Opacity Variations</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="p-3 border border-foreground/10 rounded-md bg-background/30 text-center text-xs">
+                      10% opacity
+                    </div>
+                    <div className="p-3 border border-foreground/20 rounded-md bg-background/30 text-center text-xs">
+                      20% opacity
+                    </div>
+                    <div className="p-3 border border-foreground/30 rounded-md bg-background/30 text-center text-xs">
+                      30% opacity
+                    </div>
+                    <div className="p-3 border border-foreground/50 rounded-md bg-background/30 text-center text-xs">
+                      50% opacity
+                    </div>
+                  </div>
+                </div>
+
+                {/* Interactive Examples */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-muted-foreground">Interactive Examples</h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <button className="p-4 border border-foreground/15 rounded-lg bg-background/50 hover:border-foreground/30 hover:bg-background/80 transition-all text-left">
+                      <div className="font-medium">Hover me</div>
+                      <div className="text-sm text-muted-foreground">border-foreground/15 → /30</div>
+                    </button>
+                    
+                    <button className="p-4 border border-foreground/20 rounded-lg bg-background/60 hover:border-foreground/40 hover:bg-background/90 transition-all text-left">
+                      <div className="font-medium">Hover me</div>
+                      <div className="text-sm text-muted-foreground">border-foreground/20 → /40</div>
+                    </button>
+                    
+                    <button className="p-4 border border-foreground/25 rounded-lg bg-background/70 hover:border-foreground/50 hover:bg-background transition-all text-left">
+                      <div className="font-medium">Hover me</div>
+                      <div className="text-sm text-muted-foreground">border-foreground/25 → /50</div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Interactive Examples */}
             <section>
               <h2 className="text-lg font-medium mb-4">Interactive Examples</h2>
