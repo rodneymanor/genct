@@ -316,15 +316,34 @@ className="hover:bg-accent hover:text-accent-foreground"
 
 ### 🏷️ `[TYPOGRAPHY-SYSTEM]` Font Configuration
 ```css
-/* 🔍 SEARCH: fonts, typography, text, family */
+/* 🔍 SEARCH: fonts, typography, text, family, custom-font, supabase */
+/* Local Custom Fonts - Supabase Style */
+@font-face {
+  font-family: custom-font;
+  src: url('/CustomFont-Book.54303b32.woff2') format("woff2"),
+       url('/CustomFont-Book.d2378969.woff') format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: custom-font;
+  src: url('/CustomFont-Medium.0cc7d245.woff2') format("woff2"),
+       url('/CustomFont-Medium.184a256f.woff') format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --font-sans: "Space Grotesk", sans-serif;
+  --font-sans: custom-font, "Circular", "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: monospace;
   --tracking-normal: 0.025em;
 }
 
-/* Font Import */
+/* Fallback Font Import */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 ```
 
