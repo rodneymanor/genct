@@ -86,6 +86,7 @@
   --border-strong: oklch(0.9200 0 0);
   --border-stronger: oklch(0.8800 0 0);
   --foreground-lighter: oklch(0.9700 0 0);
+  --surface-75: oklch(0.9850 0 0);
   --input: oklch(0.9731 0 0);
   --ring: oklch(0.8348 0.1302 160.9080);
   --chart-1: oklch(0.8348 0.1302 160.9080);
@@ -137,6 +138,7 @@
   --border-strong: oklch(0.3200 0 0);
   --border-stronger: oklch(0.3600 0 0);
   --foreground-lighter: oklch(0.2000 0 0);
+  --surface-75: oklch(0.2200 0 0);
   --input: oklch(0.2603 0 0);
   --ring: oklch(0.8003 0.1821 151.7110);
   --chart-1: oklch(0.8003 0.1821 151.7110);
@@ -170,11 +172,7 @@
   border-color: hsl(var(--border-stronger));
 }
 
-/* COMMENTED OUT PROBLEMATIC GLOBAL STYLES */
-/* Uncomment sections below as needed once you've identified what works */
-
-/*
-Universal base styles - COMMENTED OUT TO PREVENT CONFLICTS
+/* Essential Global Base Styles - Restored Safely */
 *,
 *::before,
 *::after {
@@ -200,6 +198,68 @@ body {
   font-display: swap;
 }
 
+/* Enhanced Selection Styling */
+::selection {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+::-moz-selection {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Essential Panel Utilities - Restored */
+.bg-surface-75 {
+  background-color: hsl(var(--surface-75));
+}
+
+.panel-gradient {
+  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
+}
+
+.panel-inner {
+  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
+}
+
+/* Icon Consistency */
+.lucide {
+  stroke-width: 1;
+}
+
+/* Additional Border Utilities */
+.border-card {
+  border-color: hsl(var(--foreground-lighter));
+}
+
+.border-refined {
+  border-color: hsl(var(--foreground-lighter));
+}
+
+/* COMMENTED OUT PROBLEMATIC GLOBAL STYLES */
+/* These remain commented out to prevent conflicts with shadcn/ui components */
+
+/*
 Enhanced link and button styles - COMMENTED OUT TO PREVENT CONFLICTS
 a {
   color: inherit;
@@ -226,65 +286,13 @@ button:disabled {
   opacity: 0.5;
 }
 
-Enhanced selection styling - COMMENTED OUT TO PREVENT CONFLICTS
-::selection {
-  background-color: hsl(var(--primary) / 0.2);
-  color: hsl(var(--primary-foreground));
-}
-
-::-moz-selection {
-  background-color: hsl(var(--primary) / 0.2);
-  color: hsl(var(--primary-foreground));
-}
-
 Focus styles - COMMENTED OUT TO PREVENT CONFLICTS
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
-Scrollbar styling - COMMENTED OUT TO PREVENT CONFLICTS
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
-}
-
-REMOVED PANEL UTILITIES AND SURFACE BACKGROUND
-.bg-surface-75 {
-  background-color: hsl(var(--surface-75));
-}
-
-.panel-gradient {
-  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
-}
-
-.panel-inner {
-  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
-}
-
 COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
-.border-card {
-  border-color: hsl(var(--foreground-lighter));
-}
-
-.border-refined {
-  border-color: hsl(var(--foreground-lighter));
-}
-
 .card-gradient-border {
   background: linear-gradient(to bottom, hsl(var(--border)), hsl(var(--border) / 0.5));
 }
@@ -305,9 +313,5 @@ COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
 .group\/panel > [data-slot="card"] {
   border: none !important;
   outline: none !important;
-}
-
-.lucide {
-  stroke-width: 1;
 }
 */
