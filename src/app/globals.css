@@ -380,3 +380,11 @@ button:disabled {
   border: none !important;
   outline: none !important;
 }
+
+/* --- GLOBAL ICON OVERRIDE --- */
+/* 🏷️ [UTILITY-ICONS] */
+/* 🔍 SEARCH: icon, svg, stroke, lucide */
+/* Override default lucide-react stroke-width to be lighter */
+.lucide {
+  stroke-width: 1.5;
+}
