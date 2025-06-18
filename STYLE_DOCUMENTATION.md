@@ -312,14 +312,19 @@ The root cause of heavy/dark borders was deeper than expected:
 
 #### 🎨 **Contrast-Aware Border Strategy**
 
-**The visibility problem**: `border-gray-200` (#E5E7EB) is too light against colored backgrounds.
+**The luminance contrast problem**: `border-primary/60` shares the same **hue** as `bg-primary`, with only 40% transparency difference. This creates insufficient **luminance contrast** for the human eye to distinguish a 1px border.
 
-| Background Type | Border Color | Reasoning |
-|----------------|--------------|-----------|
-| **Colored buttons** (primary, destructive) | `border-primary/60` | Uses the background color at 60% opacity for subtle contrast |
-| **Neutral buttons** (outline, secondary) | `border-gray-300` | Darker gray provides better visibility on light backgrounds |
-| **Ghost buttons** | `border-transparent hover:border-gray-300` | No border at rest, visible on interaction |
-| **Dark mode** | `dark:border-gray-600` | Appropriate contrast for dark backgrounds |
+**Additional issues:**
+- **Hi-DPI screens**: 1px borders become even thinner physical lines
+- **Focus ring overlap**: 3px focus ring visually swallows the faint inner border
+- **WCAG compliance**: Need 3:1 contrast ratio minimum for non-text graphics
+
+| Background Type | Border Strategy | Reasoning |
+|----------------|-----------------|-----------|
+| **Colored buttons** (primary, destructive) | `border-transparent hover:border-primary-700 focus-visible:border-ring` | No border at rest, high-contrast border on interaction |
+| **Neutral buttons** (outline, secondary) | `border-gray-300 hover:border-gray-500` | Always visible with darker hover state |
+| **Ghost buttons** | `border-transparent hover:border-gray-400` | Clean at rest, visible on interaction |
+| **Dark mode** | `dark:border-gray-600 dark:hover:border-gray-400` | Proper contrast ratios for dark backgrounds |
 
 #### ✅ **The Correct Solution**
 
@@ -337,31 +342,38 @@ The root cause of heavy/dark borders was deeper than expected:
 #### 🔄 **Migration Examples**
 
 ```html
-<!-- ❌ WRONG: Custom classes fall back to dark --border -->
-<input class="border border-light" />
-<button class="border border-default" />
+<!-- ❌ WRONG: Same hue, insufficient luminance contrast -->
+<button class="bg-primary border border-primary/60">Invisible border</button>
 
 <!-- ❌ ALSO WRONG: Light border invisible on colored background -->
 <button class="bg-primary border border-gray-200">Invisible border</button>
 
-<!-- ✅ CORRECT: Contrast-aware borders -->
-<button class="bg-primary border border-primary/60 hover:border-primary/70">Visible border</button>
-<input class="border border-gray-300 focus:border-primary" />
-<button class="border border-transparent hover:border-gray-300">Ghost with hover</button>
+<!-- ✅ CORRECT: Transparent at rest, high-contrast on interaction -->
+<button class="bg-primary border border-transparent hover:border-primary-700 focus-visible:border-ring">
+  Visible on interaction
+</button>
 
-<!-- ✅ DARK MODE SUPPORT -->
-<div class="border border-gray-300 dark:border-gray-600">Adapts to theme</div>
+<!-- ✅ NEUTRAL BACKGROUNDS: Always visible borders -->
+<input class="border border-gray-300 hover:border-gray-500 focus:border-primary" />
+
+<!-- ✅ ALTERNATIVE: Thicker border for better visibility -->
+<button class="bg-primary border-2 border-primary-700">Always visible thick border</button>
 ```
 
-#### 🔬 **Testing Border Visibility**
+#### 🔬 **Testing Luminance Contrast**
 
 ```html
-<!-- Quick test: Use red border to verify CSS is applied -->
-<button class="bg-primary border border-red-500">Test border</button>
+<!-- Test 1: Same hue issue -->
+<button class="bg-blue-500 border border-blue-500/60">Hard to see</button>
+<button class="bg-blue-500 border border-blue-800">Much better</button>
 
-<!-- If you see the red border, the issue is contrast, not CSS -->
-<!-- Replace with appropriate contrast color -->
-<button class="bg-primary border border-primary/60">Proper contrast</button>
+<!-- Test 2: Verify with high contrast -->
+<button class="bg-primary border border-red-500">If you see red, CSS works</button>
+<button class="bg-primary border border-primary-700">Proper contrast</button>
+
+<!-- Test 3: Hi-DPI visibility -->
+<button class="bg-primary border border-primary-700">1px border</button>
+<button class="bg-primary border-2 border-primary-700">2px border</button>
 ```
 
 #### 🎯 **Best Practices**
@@ -371,12 +383,29 @@ The root cause of heavy/dark borders was deeper than expected:
 3. **Hover Effects**: `border-gray-200 hover:border-gray-300` for subtle interactions
 4. **Dark Mode**: Tailwind automatically handles dark mode variants
 
-#### 🌙 **Theme Compatibility**
-- All Tailwind color classes automatically adapt to light/dark themes
-- No need for custom CSS variables or opacity calculations
-- Consistent behavior across all browsers and devices
+#### 📏 **WCAG Compliance & Visibility Guidelines**
 
-### 🏷️ `[UTILITY-ICONS]` Icon Utilities
+**Contrast Requirements:**
+- **Minimum**: 3:1 contrast ratio for non-text graphics (WCAG AA)
+- **Enhanced**: 4.5:1 contrast ratio for better accessibility
+- **Hi-DPI consideration**: 1px borders may need higher contrast ratios
+
+**Border Visibility Strategies:**
+
+| Strategy | When to Use | WCAG Compliance |
+|----------|-------------|-----------------|
+| **Transparent + Interaction** | Primary/destructive buttons | ✅ Focus states meet requirements |
+| **Always Visible** | Form inputs, cards | ✅ 3:1+ contrast maintained |
+| **Thicker Borders** | Accessibility-first designs | ✅ Enhanced visibility |
+| **High Contrast Colors** | -700/-800 color variants | ✅ Exceeds minimum requirements |
+
+**Testing Checklist:**
+- [ ] Test on Hi-DPI/Retina displays
+- [ ] Verify 3:1 contrast ratio with color contrast tools
+- [ ] Check focus states are clearly visible
+- [ ] Test in both light and dark modes
+
+### ��️ `[UTILITY-ICONS]` Icon Utilities
 ```css
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */
