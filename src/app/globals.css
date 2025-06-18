@@ -251,6 +251,8 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
   font-variation-settings: "wght" 400;
   letter-spacing: var(--tracking-normal);
+  /* Force font loading */
+  font-display: swap;
 }
 
 /* Enhanced link and button styles */
