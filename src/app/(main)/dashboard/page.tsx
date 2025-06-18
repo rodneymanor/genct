@@ -2,7 +2,9 @@ export default function Page() {
   return (
     <div className="p-8 space-y-6">
       <div className="space-y-4">
-        <h1 className="text-4xl font-normal">Dashboard - Inter Font</h1>
+        <h1 className="text-4xl font-bold">
+          What will You <span className="text-primary">Script Today</span>?
+        </h1>
         <h2 className="text-3xl font-medium">Welcome to your dashboard</h2>
         <p className="text-lg font-normal">
           This page is using Inter font, which provides excellent readability and modern aesthetics.
