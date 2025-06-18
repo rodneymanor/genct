@@ -362,49 +362,25 @@ button:disabled {
   @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
 }
 
-/* Global border utility system - replacing heavy shadow-xs */
+/* Border utilities documentation - Use proper Tailwind classes */
 /* 🏷️ [UTILITY-BORDERS] */
-/* 🔍 SEARCH: border, outline, stroke, border-default, border-light, border-subtle */
+/* 🔍 SEARCH: border, outline, stroke, border-gray, border-slate */
 
-/* Ultra-light border for minimal aesthetic */
-.border-subtle {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.15);
-  border-width: 1px;
-  border-style: solid;
-}
+/* 
+IMPORTANT: Use actual Tailwind color classes for borders, not custom utilities.
+Custom border classes like 'border-light' fall back to the dark --border variable.
 
-/* Light border - good for most UI elements */
-.border-light {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.3);
-  border-width: 1px;
-  border-style: solid;
-}
+Recommended border classes:
+- border-gray-200    (light gray - good for most UI)
+- border-gray-300    (medium gray - more visible)  
+- border-slate-200   (cooler light gray)
+- border-transparent (invisible until focus)
+- border-current     (inherits text color)
 
-/* Default border - balanced visibility */
-.border-default {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.5);
-  border-width: 1px;
-  border-style: solid;
-}
-
-/* Medium border - for emphasis */
-.border-medium {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.7);
-  border-width: 1px;
-  border-style: solid;
-}
-
-/* Strong border - for high contrast needs */
-.border-strong-custom {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 1);
-  border-width: 1px;
-  border-style: solid;
-}
+Example usage:
+<input class="border border-gray-200 focus:border-primary" />
+<div class="border border-slate-200 hover:border-gray-300" />
+*/
 
 /* Fix for unwanted black borders on cards */
 .group\/panel {

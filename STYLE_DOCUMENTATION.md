@@ -266,47 +266,23 @@ const alertVariants = cva(
 
 ### 🏷️ `[UTILITY-BORDERS]` Border Utilities
 ```css
-/* 🔍 SEARCH: border, outline, stroke, border-default, border-light, border-subtle */
+/* 🔍 SEARCH: border, outline, stroke, border-gray, border-slate */
 
-/* Ultra-light border for minimal aesthetic */
-.border-subtle {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.15);
-  border-width: 1px;
-  border-style: solid;
-}
+/* 
+IMPORTANT: Use actual Tailwind color classes for borders, not custom utilities.
+Custom border classes like 'border-light' fall back to the dark --border variable.
 
-/* Light border - good for most UI elements */
-.border-light {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.3);
-  border-width: 1px;
-  border-style: solid;
-}
+Recommended border classes:
+- border-gray-200    (light gray - good for most UI)
+- border-gray-300    (medium gray - more visible)  
+- border-slate-200   (cooler light gray)
+- border-transparent (invisible until focus)
+- border-current     (inherits text color)
 
-/* Default border - balanced visibility */
-.border-default {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.5);
-  border-width: 1px;
-  border-style: solid;
-}
-
-/* Medium border - for emphasis */
-.border-medium {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 0.7);
-  border-width: 1px;
-  border-style: solid;
-}
-
-/* Strong border - for high contrast needs */
-.border-strong-custom {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / 1);
-  border-width: 1px;
-  border-style: solid;
-}
+Example usage:
+<input class="border border-gray-200 focus:border-primary" />
+<div class="border border-slate-200 hover:border-gray-300" />
+*/
 
 .border-strong {
   border-color: hsl(var(--border-strong));
@@ -325,42 +301,55 @@ const alertVariants = cva(
 }
 ```
 
-#### 🚨 **Why Borders Appeared "Dark & Heavy"**
+#### 🚨 **Why Custom Border Classes Don't Work**
 
-The original issue wasn't stroke-width - it was **border color opacity**:
+The root cause of heavy/dark borders was deeper than expected:
 
-1. **Problem**: `border-default` was using `hsl(var(--border) / 1)` (100% opacity)
-2. **CSS Variable**: `--border: oklch(0.9461 0 0)` in light mode is quite dark (~95% gray)
-3. **Result**: Heavy, prominent borders that looked "thick" even at 1px width
-4. **Solution**: Use opacity-based border system for lighter, more subtle appearance
+1. **Tailwind v4 Behavior**: Custom classes like `border-light` aren't recognized by Tailwind
+2. **Fallback Problem**: Unrecognized border classes fall back to the generic `border` utility
+3. **CSS Variable Issue**: The `border` utility uses `--border` variable which is dark: `oklch(0.9461 0 0)`
+4. **Result**: Even "custom" border classes still rendered with the same dark color
 
-#### 🎨 **Border Weight Guide**
+#### ✅ **The Correct Solution**
 
-| Class | Opacity | Best For | Visual Weight |
-|-------|---------|----------|---------------|
-| `border-subtle` | 15% | Minimal dividers, very light separation | Ultra-light |
-| `border-light` | 30% | Most UI elements, cards, inputs | Light |
-| `border-default` | 50% | Standard components, balanced visibility | Medium |
-| `border-medium` | 70% | Emphasis, important boundaries | Strong |
-| `border-strong-custom` | 100% | High contrast, accessibility needs | Heavy |
+**Use actual Tailwind color classes:**
 
-#### 🔄 **Migration Strategy**
+| Class | Color Value | Visual Weight | Best For |
+|-------|-------------|---------------|----------|
+| `border-gray-100` | Very light gray | Ultra-light | Minimal dividers |
+| `border-gray-200` | Light gray | Light | Most UI elements |
+| `border-gray-300` | Medium gray | Medium | Visible boundaries |
+| `border-slate-200` | Cool light gray | Light | Modern aesthetic |
+| `border-transparent` | Invisible | None | Focus-only borders |
+
+#### 🔄 **Migration Examples**
 
 ```html
-<!-- ❌ OLD: Heavy, dark borders -->
-<div class="border-2 border-gray-300">Heavy border</div>
+<!-- ❌ WRONG: Custom classes fall back to dark --border -->
+<input class="border border-light" />
+<button class="border border-default" />
 
-<!-- ✅ NEW: Light, subtle borders -->
-<div class="border-light">Light border</div>
-<div class="border-subtle">Ultra-light border</div>
+<!-- ✅ CORRECT: Use actual Tailwind color classes -->
+<input class="border border-gray-200 focus:border-primary" />
+<button class="border border-gray-200 hover:border-gray-300" />
+
+<!-- ✅ ALTERNATIVE: Transparent until focus -->
+<input class="border border-transparent focus:border-primary" />
 ```
 
-#### 🌙 **Theme Compatibility**
-- All border utilities automatically adapt to light/dark themes
-- Opacity-based system ensures consistent visual weight across themes
-- No need for separate `dark:` classes - the base `--border` variable handles theme switching
+#### 🎯 **Best Practices**
 
-### ��️ `[UTILITY-ICONS]` Icon Utilities
+1. **Primary Choice**: `border-gray-200` for most UI elements
+2. **Invisible Borders**: `border-transparent focus:border-primary` for clean focus states
+3. **Hover Effects**: `border-gray-200 hover:border-gray-300` for subtle interactions
+4. **Dark Mode**: Tailwind automatically handles dark mode variants
+
+#### 🌙 **Theme Compatibility**
+- All Tailwind color classes automatically adapt to light/dark themes
+- No need for custom CSS variables or opacity calculations
+- Consistent behavior across all browsers and devices
+
+### 🏷️ `[UTILITY-ICONS]` Icon Utilities
 ```css
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */
@@ -666,40 +655,3 @@ Convert the provided website styles into a comprehensive, searchable documentati
 - Responsive variations
 - Dark mode adaptations
 ```
-
-## Output Requirements:
-- Use the exact 🏷️ `[CATEGORY-NAME]` tag format
-- Include 🔍 SEARCH comments with relevant keywords
-- Show both implementation and usage
-- Document all variants and states
-- Make it easily searchable and replaceable
-
-## Example Input:
-[Paste website styles/components here]
-
-## Expected Output:
-A fully documented, searchable style system following the format above.
-```
-
----
-
-## 📝 Usage Instructions
-
-### Finding Styles:
-1. **Use Ctrl+F** to search for specific tags like `[COMPONENT-CARD]`
-2. **Search keywords** in comments like `/* 🔍 SEARCH: border */`
-3. **Browse by category** using the table of contents
-
-### Replacing Styles:
-1. **Locate** the style section using search tags
-2. **Copy** the new styles from converted documentation
-3. **Replace** the entire tagged section
-4. **Update** search keywords if needed
-
-### Adding New Styles:
-1. **Follow** the tagging format: `🏷️ [CATEGORY-NAME]`
-2. **Add** search keywords: `/* 🔍 SEARCH: keywords */`
-3. **Include** usage examples
-4. **Document** all variants
-
-This system ensures your styles are organized, searchable, and easily maintainable! 

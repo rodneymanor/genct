@@ -135,7 +135,7 @@ export function QuickNoteCapture({ isOpen, onClose, onSave }: QuickNoteCapturePr
                  placeholder="Note title (optional)"
                  value={title}
                  onChange={(e) => setTitle(e.target.value)}
-                 className="text-base font-medium border-light"
+                 className="text-base font-medium border-gray-200"
                  disabled={isGeneratingTitle}
                />
           </div>
@@ -147,7 +147,7 @@ export function QuickNoteCapture({ isOpen, onClose, onSave }: QuickNoteCapturePr
                  placeholder="Start typing your note..."
                  value={content}
                  onChange={(e) => setContent(e.target.value)}
-                 className="min-h-[120px] resize-none text-base leading-relaxed border-light"
+                 className="min-h-[120px] resize-none text-base leading-relaxed border-gray-200"
                  rows={5}
                />
           </div>
@@ -159,13 +159,13 @@ export function QuickNoteCapture({ isOpen, onClose, onSave }: QuickNoteCapturePr
               <kbd className="px-2 py-1 bg-muted rounded text-xs ml-1">⌘ Enter</kbd> to save
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={handleClose} className="border-light">
+              <Button variant="outline" onClick={handleClose} className="border-gray-200">
                 Cancel
               </Button>
               <Button 
                 onClick={handleSave} 
                 disabled={!content.trim() || isGeneratingTitle}
-                className="min-w-[80px] border-light"
+                className="min-w-[80px] border-gray-200"
               >
                 {isGeneratingTitle ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
