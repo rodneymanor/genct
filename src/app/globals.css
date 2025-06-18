@@ -25,7 +25,8 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
-  --color-foreground-lighter: var(--foreground-lighter);
+  --color-border-stronger: oklch(0.8800 0 0);
+  --color-foreground-lighter: oklch(0.9700 0 0);
   --color-destructive: var(--destructive);
   --color-destructive-solid: var(--destructive);
   --color-red: var(--destructive);
@@ -59,12 +60,6 @@
   --spacing: var(--spacing);
   --letter-spacing: var(--letter-spacing);
   --color-destructive-foreground: var(--destructive-foreground);
-}
-
-/* Tailwind v4 Theme Configuration */
-@theme {
-  --color-border-stronger: oklch(0.8800 0 0);
-  --color-foreground-lighter: oklch(0.9700 0 0);
 }
 
 :root {
