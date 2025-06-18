@@ -310,6 +310,17 @@ The root cause of heavy/dark borders was deeper than expected:
 3. **CSS Variable Issue**: The `border` utility uses `--border` variable which is dark: `oklch(0.9461 0 0)`
 4. **Result**: Even "custom" border classes still rendered with the same dark color
 
+#### 🎨 **Contrast-Aware Border Strategy**
+
+**The visibility problem**: `border-gray-200` (#E5E7EB) is too light against colored backgrounds.
+
+| Background Type | Border Color | Reasoning |
+|----------------|--------------|-----------|
+| **Colored buttons** (primary, destructive) | `border-primary/60` | Uses the background color at 60% opacity for subtle contrast |
+| **Neutral buttons** (outline, secondary) | `border-gray-300` | Darker gray provides better visibility on light backgrounds |
+| **Ghost buttons** | `border-transparent hover:border-gray-300` | No border at rest, visible on interaction |
+| **Dark mode** | `dark:border-gray-600` | Appropriate contrast for dark backgrounds |
+
 #### ✅ **The Correct Solution**
 
 **Use actual Tailwind color classes:**
@@ -317,10 +328,11 @@ The root cause of heavy/dark borders was deeper than expected:
 | Class | Color Value | Visual Weight | Best For |
 |-------|-------------|---------------|----------|
 | `border-gray-100` | Very light gray | Ultra-light | Minimal dividers |
-| `border-gray-200` | Light gray | Light | Most UI elements |
-| `border-gray-300` | Medium gray | Medium | Visible boundaries |
+| `border-gray-200` | Light gray | Light | Light backgrounds only |
+| `border-gray-300` | Medium gray | Medium | Most UI elements |
 | `border-slate-200` | Cool light gray | Light | Modern aesthetic |
 | `border-transparent` | Invisible | None | Focus-only borders |
+| `border-primary/60` | Primary color at 60% | Contextual | Colored button borders |
 
 #### 🔄 **Migration Examples**
 
@@ -329,12 +341,27 @@ The root cause of heavy/dark borders was deeper than expected:
 <input class="border border-light" />
 <button class="border border-default" />
 
-<!-- ✅ CORRECT: Use actual Tailwind color classes -->
-<input class="border border-gray-200 focus:border-primary" />
-<button class="border border-gray-200 hover:border-gray-300" />
+<!-- ❌ ALSO WRONG: Light border invisible on colored background -->
+<button class="bg-primary border border-gray-200">Invisible border</button>
 
-<!-- ✅ ALTERNATIVE: Transparent until focus -->
-<input class="border border-transparent focus:border-primary" />
+<!-- ✅ CORRECT: Contrast-aware borders -->
+<button class="bg-primary border border-primary/60 hover:border-primary/70">Visible border</button>
+<input class="border border-gray-300 focus:border-primary" />
+<button class="border border-transparent hover:border-gray-300">Ghost with hover</button>
+
+<!-- ✅ DARK MODE SUPPORT -->
+<div class="border border-gray-300 dark:border-gray-600">Adapts to theme</div>
+```
+
+#### 🔬 **Testing Border Visibility**
+
+```html
+<!-- Quick test: Use red border to verify CSS is applied -->
+<button class="bg-primary border border-red-500">Test border</button>
+
+<!-- If you see the red border, the issue is contrast, not CSS -->
+<!-- Replace with appropriate contrast color -->
+<button class="bg-primary border border-primary/60">Proper contrast</button>
 ```
 
 #### 🎯 **Best Practices**
