@@ -25,24 +25,23 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
-  --color-border-stronger: oklch(0.8800 0 0);
-  --color-foreground-lighter: oklch(0.9700 0 0);
+  --color-border-stronger: var(--border-stronger);
+  --color-foreground-lighter: var(--foreground-lighter);
+  --color-surface-75: var(--surface-75);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive: var(--destructive);
-  --color-destructive-solid: var(--destructive);
-  --color-red: var(--destructive);
-  --color-secondary-hover: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -59,7 +58,6 @@
   --tracking-normal: var(--tracking-normal);
   --spacing: var(--spacing);
   --letter-spacing: var(--letter-spacing);
-  --color-destructive-foreground: var(--destructive-foreground);
 }
 
 :root {
@@ -204,7 +202,7 @@ body {
   color: hsl(var(--primary-foreground));
 }
 
-/* Scrollbar Styling */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -212,7 +210,6 @@ body {
 
 ::-webkit-scrollbar-track {
   background: hsl(var(--muted));
-  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -224,11 +221,9 @@ body {
   background: hsl(var(--muted-foreground) / 0.5);
 }
 
-/* Essential Panel Utilities - Restored */
-.bg-surface-75 {
-  background-color: hsl(var(--surface-75));
-}
+/* Custom Background Utilities - Now handled in @theme */
 
+/* Supabase Panel System */
 .panel-gradient {
   @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
 }
