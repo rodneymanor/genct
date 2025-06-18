@@ -6,16 +6,15 @@ import {
   ScrollText,
   Plus,
   Search,
-  Filter,
-  MoreHorizontal,
-  Edit,
   Copy,
   Download,
-  Trash2,
-  Eye,
-  Calendar,
-  TrendingUp,
+  FileText,
+  Lightbulb,
+  PenTool,
+  ChevronRight,
+  Globe,
   Clock,
+  MoreVertical,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +27,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 const sampleScripts = [
   {
@@ -38,9 +44,17 @@ const sampleScripts = [
     createdAt: "2024-01-15",
     lastEdited: "2024-01-16",
     words: 342,
-    views: 12400,
-    engagement: 4.8,
     platform: "TikTok",
+    research: [
+      { title: "Harvard Study on Morning Routines", url: "harvard.edu/study", summary: "Research shows morning routines increase productivity by 40%" },
+      { title: "Psychology Today: Habit Formation", url: "psychologytoday.com", summary: "Key insights on building lasting habits" }
+    ],
+    outline: [
+      { id: 1, title: "Hook: The 5AM Club Secret", type: "hook", content: "What if I told you 5 simple habits could transform your entire life?" },
+      { id: 2, title: "Problem: Most People's Mornings", type: "problem", content: "Most people wake up and immediately check their phones..." },
+      { id: 3, title: "Solution: The 5 Habits", type: "solution", content: "Here are the 5 habits that changed everything..." }
+    ],
+    script: "What if I told you 5 simple habits could transform your entire life? Most people wake up and immediately check their phones..."
   },
   {
     id: 2,
@@ -49,9 +63,10 @@ const sampleScripts = [
     createdAt: "2024-01-14",
     lastEdited: "2024-01-14",
     words: 287,
-    views: 0,
-    engagement: 0,
     platform: "Instagram",
+    research: [],
+    outline: [],
+    script: ""
   },
   {
     id: 3,
@@ -60,250 +75,356 @@ const sampleScripts = [
     createdAt: "2024-01-13",
     lastEdited: "2024-01-15",
     words: 195,
-    views: 8900,
-    engagement: 3.2,
     platform: "TikTok",
-  },
-  {
-    id: 4,
-    title: "Why 99% of Creators Fail (and how to be the 1%)",
-    status: "completed",
-    createdAt: "2024-01-12",
-    lastEdited: "2024-01-13",
-    words: 456,
-    views: 25600,
-    engagement: 6.1,
-    platform: "Instagram",
-  },
-  {
-    id: 5,
-    title: "My Biggest Social Media Mistake",
-    status: "completed",
-    createdAt: "2024-01-10",
-    lastEdited: "2024-01-11",
-    words: 298,
-    views: 18200,
-    engagement: 5.4,
-    platform: "TikTok",
-  },
+    research: [
+      { title: "Video Editing Best Practices", url: "videoguide.com", summary: "Professional editing techniques for social media" }
+    ],
+    outline: [
+      { id: 1, title: "Hook: Engagement Problem", type: "hook", content: "Your videos are getting ignored because..." }
+    ],
+    script: "Your videos are getting ignored because you're making these 3 critical editing mistakes..."
+  }
 ];
 
 const statusConfig = {
-  draft: { label: "Draft", variant: "secondary" as const },
-  "in-progress": { label: "In Progress", variant: "default" as const },
-  completed: { label: "Completed", variant: "outline" as const },
+  draft: { label: "Draft", variant: "secondary" as const, color: "bg-gray-500" },
+  "in-progress": { label: "In Progress", variant: "default" as const, color: "bg-yellow-500" },
+  completed: { label: "Completed", variant: "outline" as const, color: "bg-green-500" },
 };
+
+const toneOptions = [
+  "Professional",
+  "Casual",
+  "Energetic",
+  "Educational",
+  "Humorous",
+  "Inspirational",
+  "Conversational"
+];
 
 export default function ScriptsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedScript, setSelectedScript] = useState<typeof sampleScripts[0] | null>(sampleScripts[0]);
+  const [activeTab, setActiveTab] = useState<"research" | "outline" | "script">("research");
+  const [selectedTone, setSelectedTone] = useState("Conversational");
+  const [customChanges, setCustomChanges] = useState("");
 
-  const filteredScripts = sampleScripts.filter((script) => {
-    const matchesSearch = script.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = selectedStatus === "all" || script.status === selectedStatus;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredScripts = sampleScripts.filter((script) =>
+    script.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const handleAction = (action: string, script: any) => {
-    switch (action) {
-      case "edit":
-        window.location.href = `/dashboard/scripts/editor/${script.id}`;
-        break;
-      case "view":
-        window.location.href = `/dashboard/scripts/view/${script.id}`;
-        break;
-      case "copy":
-        alert(`Copied "${script.title}" to clipboard`);
-        break;
-      case "download":
-        alert(`Downloading "${script.title}"`);
-        break;
-      case "delete":
-        if (confirm(`Are you sure you want to delete "${script.title}"?`)) {
-          alert("Script deleted");
-        }
-        break;
+  const handleNewScript = () => {
+    // Navigate to new script creation
+    window.location.href = "/dashboard/scripts/editor/new";
+  };
+
+  const handleCopyScript = () => {
+    if (selectedScript) {
+      navigator.clipboard.writeText(selectedScript.script);
+      alert("Script copied to clipboard!");
     }
   };
 
-  return (
-    <div className="@container/main flex flex-col gap-4 md:gap-6">
+  const handleDownloadScript = () => {
+    if (selectedScript) {
+      const element = document.createElement("a");
+      const file = new Blob([selectedScript.script], { type: "text/plain" });
+      element.href = URL.createObjectURL(file);
+      element.download = `${selectedScript.title}.txt`;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+  };
+
+  const renderResearchView = () => (
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold tracking-tight">Scripts</h1>
-          <p className="text-muted-foreground">Manage all your generated scripts in one place.</p>
-        </div>
-        <Button onClick={() => (window.location.href = "/dashboard/new-script")}>
+        <h3 className="text-lg font-semibold">Research Sources</h3>
+        <Button size="sm">
           <Plus className="mr-2 h-4 w-4" />
-          New Script
+          Add Source
         </Button>
       </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 gap-4 @md/main:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Scripts</CardTitle>
-            <ScrollText className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{sampleScripts.length}</div>
-            <p className="text-muted-foreground text-xs">+2 from last week</p>
+      {selectedScript?.research.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-8">
+            <Globe className="h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-muted-foreground text-center">No research sources yet</p>
+            <p className="text-sm text-muted-foreground">Add sources to strengthen your script</p>
           </CardContent>
         </Card>
+      ) : (
+        <div className="grid gap-4">
+          {selectedScript?.research.map((source, index) => (
+            <Card key={index}>
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-sm">{source.title}</CardTitle>
+                    <CardDescription className="text-xs">{source.url}</CardDescription>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem>Remove</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{source.summary}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            <Eye className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">65.1K</div>
-            <p className="text-muted-foreground text-xs">+12% from last week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Engagement</CardTitle>
-            <TrendingUp className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4.9%</div>
-            <p className="text-muted-foreground text-xs">+0.3% from last week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-            <Clock className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">80%</div>
-            <p className="text-muted-foreground text-xs">4 of 5 scripts completed</p>
-          </CardContent>
-        </Card>
+  const renderOutlineView = () => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Script Outline</h3>
+        <Button size="sm">
+          <Plus className="mr-2 h-4 w-4" />
+          Add Component
+        </Button>
       </div>
+      {selectedScript?.outline.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-8">
+            <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-muted-foreground text-center">No outline components yet</p>
+            <p className="text-sm text-muted-foreground">Build your script structure</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {selectedScript?.outline.map((component) => (
+            <Card key={component.id} className="cursor-pointer hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="text-xs">
+                        {component.type}
+                      </Badge>
+                      <h4 className="font-medium text-sm">{component.title}</h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{component.content}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const renderScriptView = () => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Script Editor</h3>
+        <div className="flex items-center gap-2">
+          <Select value={selectedTone} onValueChange={setSelectedTone}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Tone of voice" />
+            </SelectTrigger>
+            <SelectContent>
+              {toneOptions.map((tone) => (
+                <SelectItem key={tone} value={tone}>
+                  {tone}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      
+      <Card>
+        <CardContent className="p-4">
+          <Textarea
+            value={selectedScript?.script ?? ""}
+            placeholder="Your script content will appear here..."
+            className="min-h-[300px] resize-none border-none p-0 focus-visible:ring-0"
+            readOnly={!selectedScript?.script}
+          />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Script Library</CardTitle>
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
-                <Input
-                  placeholder="Search scripts..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-64 pl-8"
-                />
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Filter className="mr-2 h-4 w-4" />
-                    {selectedStatus === "all"
-                      ? "All"
-                      : statusConfig[selectedStatus as keyof typeof statusConfig]?.label}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("all")}>All Scripts</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("completed")}>Completed</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("in-progress")}>In Progress</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSelectedStatus("draft")}>Draft</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
+          <CardTitle className="text-sm">Ask for Custom Changes</CardTitle>
+          <CardDescription className="text-xs">
+            Describe specific changes you&apos;d like AI to make to your script
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          {filteredScripts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <ScrollText className="text-muted-foreground mb-3 h-12 w-12" />
-              <p className="text-muted-foreground text-sm">
-                {searchQuery ? "No scripts match your search" : "No scripts yet"}
-              </p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                {searchQuery ? "Try adjusting your search terms" : "Create your first script to get started"}
-              </p>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Platform</TableHead>
-                  <TableHead className="text-right">Words</TableHead>
-                  <TableHead className="text-right">Views</TableHead>
-                  <TableHead className="text-right">Engagement</TableHead>
-                  <TableHead>Last Edited</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredScripts.map((script) => (
-                  <TableRow key={script.id}>
-                    <TableCell className="font-medium">
-                      <div className="max-w-[200px] truncate">{script.title}</div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={statusConfig[script.status as keyof typeof statusConfig].variant}>
-                        {statusConfig[script.status as keyof typeof statusConfig].label}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{script.platform}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">{script.words}</TableCell>
-                    <TableCell className="text-right">
-                      {script.views > 0 ? script.views.toLocaleString() : "-"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {script.engagement > 0 ? `${script.engagement}%` : "-"}
-                    </TableCell>
-                    <TableCell>{new Date(script.lastEdited).toLocaleDateString()}</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleAction("view", script)}>
-                            <Eye className="mr-2 h-4 w-4" />
-                            View
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleAction("edit", script)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleAction("copy", script)}>
-                            <Copy className="mr-2 h-4 w-4" />
-                            Copy
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleAction("download", script)}>
-                            <Download className="mr-2 h-4 w-4" />
-                            Download
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleAction("delete", script)} className="text-destructive">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
+        <CardContent className="space-y-3">
+          <Textarea
+            value={customChanges}
+            onChange={(e) => setCustomChanges(e.target.value)}
+            placeholder="e.g., Make it more energetic, add a call-to-action, shorten the intro..."
+            className="min-h-[80px]"
+          />
+          <Button size="sm" disabled={!customChanges.trim()}>
+            Apply Changes
+          </Button>
         </CardContent>
       </Card>
+    </div>
+  );
+
+  return (
+    <div className="flex h-[calc(100vh-4rem)] w-full">
+      {/* Left Sidebar - Scripts List */}
+      <div className="hidden md:block w-80 border-r bg-muted/30">
+        <div className="flex h-full flex-col">
+          {/* Header */}
+          <div className="border-b p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">All Scripts</h2>
+              <Button size="sm" onClick={handleNewScript}>
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search scripts..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+
+          {/* Scripts List */}
+          <div className="flex-1 overflow-y-auto p-2">
+            <div className="space-y-2">
+              {filteredScripts.map((script) => (
+                <div
+                  key={script.id}
+                  onClick={() => setSelectedScript(script)}
+                  className={`cursor-pointer rounded-md p-3 transition-colors hover:bg-muted ${
+                    selectedScript?.id === script.id ? "bg-muted font-medium" : ""
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-medium text-sm line-clamp-2">{script.title}</h3>
+                    <div className={`w-2 h-2 rounded-full mt-1 ${statusConfig[script.status as keyof typeof statusConfig].color}`} />
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Badge variant="outline" className="text-xs">
+                      {script.platform}
+                    </Badge>
+                    <span>•</span>
+                    <span>{script.words} words</span>
+                    <span>•</span>
+                    <Clock className="h-3 w-3" />
+                    <span>{new Date(script.lastEdited).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Content Area */}
+      <div className="flex-1 overflow-y-auto">
+        {selectedScript ? (
+          <div className="flex h-full flex-col">
+            {/* Header */}
+            <div className="border-b p-6">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold mb-2">{selectedScript.title}</h1>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${statusConfig[selectedScript.status as keyof typeof statusConfig].color}`} />
+                      <span>{statusConfig[selectedScript.status as keyof typeof statusConfig].label}</span>
+                    </div>
+                    <span>•</span>
+                    <span>{selectedScript.platform}</span>
+                    <span>•</span>
+                    <span>{selectedScript.words} words</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={handleCopyScript}>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy Script
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={handleDownloadScript}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Script
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tabs */}
+              <div className="flex items-center gap-1 mt-6">
+                <Button
+                  variant={activeTab === "research" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveTab("research")}
+                  className="gap-2"
+                >
+                  <Lightbulb className="h-4 w-4" />
+                  Research
+                </Button>
+                <Button
+                  variant={activeTab === "outline" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveTab("outline")}
+                  className="gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Outline
+                </Button>
+                <Button
+                  variant={activeTab === "script" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveTab("script")}
+                  className="gap-2"
+                >
+                  <PenTool className="h-4 w-4" />
+                  Script
+                </Button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 p-6">
+              {activeTab === "research" && renderResearchView()}
+              {activeTab === "outline" && renderOutlineView()}
+              {activeTab === "script" && renderScriptView()}
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-center">
+              <ScrollText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Select a script to get started</h3>
+              <p className="text-muted-foreground mb-4">Choose a script from the sidebar or create a new one</p>
+              <Button onClick={handleNewScript}>
+                <Plus className="mr-2 h-4 w-4" />
+                Create New Script
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
