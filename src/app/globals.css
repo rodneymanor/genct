@@ -198,15 +198,13 @@
   --spacing: 0.25rem;
   --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
   --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow-md: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 2px 4px -1px hsl(0 0% 0% / 0.17);
-  --shadow-lg: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 4px 6px -1px hsl(0 0% 0% / 0.17);
-  --shadow-xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 8px 10px -1px hsl(0 0% 0% / 0.17);
-  --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.43);
 }
 
-/* Universal base styles */
+/* COMMENTED OUT PROBLEMATIC GLOBAL STYLES */
+/* Uncomment sections below as needed once you've identified what works */
+
+/*
+Universal base styles - COMMENTED OUT TO PREVENT CONFLICTS
 *,
 *::before,
 *::after {
@@ -229,11 +227,10 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
   font-variation-settings: "wght" 400;
   letter-spacing: var(--tracking-normal);
-  /* Force font loading */
   font-display: swap;
 }
 
-/* Enhanced link and button styles */
+Enhanced link and button styles - COMMENTED OUT TO PREVENT CONFLICTS
 a {
   color: inherit;
   text-decoration: inherit;
@@ -259,7 +256,7 @@ button:disabled {
   opacity: 0.5;
 }
 
-/* Enhanced selection styling */
+Enhanced selection styling - COMMENTED OUT TO PREVENT CONFLICTS
 ::selection {
   background-color: hsl(var(--primary) / 0.2);
   color: hsl(var(--primary-foreground));
@@ -270,13 +267,13 @@ button:disabled {
   color: hsl(var(--primary-foreground));
 }
 
-/* Focus styles */
+Focus styles - COMMENTED OUT TO PREVENT CONFLICTS
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
-/* Scrollbar styling */
+Scrollbar styling - COMMENTED OUT TO PREVENT CONFLICTS
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -295,8 +292,9 @@ button:disabled {
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
+*/
 
-/* Enhanced border utilities for Supabase-style aesthetics */
+/* Keep essential border utilities for Supabase-style aesthetics */
 .border-strong {
   border-color: hsl(var(--border-strong));
 }
@@ -305,6 +303,21 @@ button:disabled {
   border-color: hsl(var(--border-stronger));
 }
 
+.bg-surface-75 {
+  background-color: hsl(var(--surface-75));
+}
+
+/* Keep panel utilities as they're used in components */
+.panel-gradient {
+  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
+}
+
+.panel-inner {
+  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
+}
+
+/*
+COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
 .border-card {
   border-color: hsl(var(--foreground-lighter));
 }
@@ -313,11 +326,6 @@ button:disabled {
   border-color: hsl(var(--foreground-lighter));
 }
 
-.bg-surface-75 {
-  background-color: hsl(var(--surface-75));
-}
-
-/* Card gradient border utilities */
 .card-gradient-border {
   background: linear-gradient(to bottom, hsl(var(--border)), hsl(var(--border) / 0.5));
 }
@@ -330,48 +338,6 @@ button:disabled {
   background-color: hsl(var(--border-stronger));
 }
 
-/* Enhanced component utility classes */
-.panel-gradient {
-  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
-}
-
-.panel-inner {
-  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
-}
-
-/* Border utilities documentation - Use proper Tailwind classes */
-/* 🏷️ [UTILITY-BORDERS] */
-/* 🔍 SEARCH: border, outline, stroke, border-gray, border-slate, panel-borders */
-
-/* 
-IMPORTANT: Use actual Tailwind color classes for borders, not custom utilities.
-Custom border classes like 'border-light' fall back to the dark --border variable.
-
-Recommended border classes:
-- border-gray-200    (light gray - good for most UI)
-- border-gray-300    (medium gray - more visible)  
-- border-slate-200   (cooler light gray)
-- border-transparent (invisible until focus)
-- border-current     (inherits text color)
-
-Example usage:
-<input class="border border-gray-200 focus:border-primary" />
-<div class="border border-slate-200 hover:border-gray-300" />
-
-PANEL BORDERS - MANDATORY REQUIREMENT:
-All panel borders (sidebars, content areas, dividers) MUST use border-strong class:
-- border-strong      (Supabase standard panel border)
-- border-stronger    (Stronger emphasis borders)
-
-Correct panel usage:
-<div class="border-r border-strong">Sidebar</div>
-<div class="border-b border-strong">Header</div>
-<div class="border border-strong">Panel</div>
-
-NEVER use plain 'border' without border-strong for panels!
-*/
-
-/* Fix for unwanted black borders on cards */
 .group\/panel {
   border: none !important;
   outline: none !important;
@@ -382,10 +348,7 @@ NEVER use plain 'border' without border-strong for panels!
   outline: none !important;
 }
 
-/* --- GLOBAL ICON OVERRIDE --- */
-/* 🏷️ [UTILITY-ICONS] */
-/* 🔍 SEARCH: icon, svg, stroke, lucide */
-/* Override default lucide-react stroke-width to be lighter */
 .lucide {
   stroke-width: 1;
 }
+*/
