@@ -27,6 +27,7 @@
   --color-border-strong: var(--border-strong);
   --color-border-stronger: var(--border-stronger);
   --color-foreground-lighter: var(--foreground-lighter);
+  --color-foreground-light: var(--foreground-light);
   --color-surface-75: var(--surface-75);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive: var(--destructive);
@@ -42,10 +43,16 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-brand: var(--brand);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --font-mono: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
@@ -79,9 +86,17 @@
   --border-strong: oklch(0.9200 0 0);
   --border-stronger: oklch(0.8800 0 0);
   --foreground-lighter: oklch(0.9700 0 0);
+  --foreground-light: oklch(0.6000 0 0);
   --surface-75: oklch(0.9850 0 0);
   --input: oklch(0.9731 0 0);
   --ring: oklch(0.8348 0.1302 160.9080);
+  
+  /* Supabase Brand Colors */
+  --brand: oklch(0.8348 0.1302 160.9080);
+  --brand-400: oklch(0.8348 0.1302 160.9080);
+  --brand-500: oklch(0.7348 0.1502 160.9080);
+  --brand-600: oklch(0.6348 0.1702 160.9080);
+  
   --chart-1: oklch(0.8348 0.1302 160.9080);
   --chart-2: oklch(0.6231 0.1880 259.8145);
   --chart-3: oklch(0.6056 0.2189 292.7172);
@@ -131,9 +146,17 @@
   --border-strong: oklch(0.3200 0 0);
   --border-stronger: oklch(0.3600 0 0);
   --foreground-lighter: oklch(0.2000 0 0);
+  --foreground-light: oklch(0.4000 0 0);
   --surface-75: oklch(0.2200 0 0);
   --input: oklch(0.2603 0 0);
   --ring: oklch(0.8003 0.1821 151.7110);
+  
+  /* Supabase Brand Colors - Dark Mode */
+  --brand: oklch(0.4365 0.1044 156.7556);
+  --brand-400: oklch(0.4365 0.1044 156.7556);
+  --brand-500: oklch(0.5365 0.1244 156.7556);
+  --brand-600: oklch(0.6365 0.1444 156.7556);
+  
   --chart-1: oklch(0.8003 0.1821 151.7110);
   --chart-2: oklch(0.7137 0.1434 254.6240);
   --chart-3: oklch(0.7090 0.1592 293.5412);
@@ -154,6 +177,12 @@
   --font-mono: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
   --letter-spacing: 0.025em;
   --spacing: 0.25rem;
+  --tracking-normal: 0.025em;
+  
+  /* Enhanced opacity variables */
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
 }
 
 /* Keep only essential border utilities */

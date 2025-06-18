@@ -128,13 +128,13 @@ export default function ScriptsPage() {
 
   const renderResearchView = () => (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Research Sources</h3>
-        <Button size="sm">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Source
-        </Button>
-      </div>
+                <div className="flex items-center justify-between">
+            <h3 className="text-lg font-medium">Research Sources</h3>
+            <Button variant="brand" size="tiny">
+              <Plus className="w-3 h-3" />
+              Add Source
+            </Button>
+          </div>
       {selectedScript?.research.length === 0 ? (
         <div className="panel-gradient">
           <div className="panel-inner flex flex-col items-center justify-center py-8">
@@ -180,8 +180,8 @@ export default function ScriptsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Script Outline</h3>
-        <Button size="sm">
-          <Plus className="mr-2 h-4 w-4" />
+        <Button variant="brand" size="tiny">
+          <Plus className="w-3 h-3" />
           Add Component
         </Button>
       </div>
@@ -263,7 +263,7 @@ export default function ScriptsPage() {
             placeholder="e.g., Make it more energetic, add a call-to-action, shorten the intro..."
             className="min-h-[80px]"
           />
-          <Button size="sm" disabled={!customChanges.trim()}>
+          <Button variant="brand" size="tiny" disabled={!customChanges.trim()}>
             Apply Changes
           </Button>
         </CardContent>
@@ -280,8 +280,10 @@ export default function ScriptsPage() {
           <div className="border-b border-border-strong p-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-medium">All Scripts</h2>
-              <Button size="sm" variant="ghost">
-                <Filter className="h-4 w-4" />
+              <Button variant="dashed" size="icon-tiny">
+                <div className="text-foreground-lighter">
+                  <Filter className="w-3.5 h-3.5" />
+                </div>
               </Button>
             </div>
           </div>
@@ -345,8 +347,8 @@ export default function ScriptsPage() {
                     size="sm"
                     variant="outline"
                   />
-                  <Button variant="outline" size="sm" onClick={handleDownloadScript}>
-                    <Download className="mr-2 h-4 w-4" />
+                  <Button variant="dashed" size="tiny" onClick={handleDownloadScript}>
+                    <Download className="w-3 h-3" />
                     Download Script
                   </Button>
                 </div>
@@ -397,8 +399,8 @@ export default function ScriptsPage() {
               <ScrollText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">Select a script to get started</h3>
               <p className="text-muted-foreground mb-4">Choose a script from the sidebar or create a new one</p>
-              <Button onClick={handleNewScript}>
-                <Plus className="mr-2 h-4 w-4" />
+              <Button variant="brand" size="default" onClick={handleNewScript}>
+                <Plus className="w-4 h-4" />
                 Create New Script
               </Button>
             </div>
