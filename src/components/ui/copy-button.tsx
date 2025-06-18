@@ -55,7 +55,7 @@ export default function CopyButton({
       variant={variant}
       size={size}
     >
-      <div className="[&_svg]:h-[14px] [&_svg]:w-[14px] text-foreground-lighter">
+      <div className="[&_svg]:h-[14px] [&_svg]:w-[14px]">
         {isOpen ? <Check className="lucide lucide-check" /> : <Clipboard className="lucide lucide-clipboard" />}
       </div>
       <span className="truncate">{buttonText}</span>

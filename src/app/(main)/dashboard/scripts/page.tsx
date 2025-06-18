@@ -401,9 +401,11 @@ export default function ScriptsPage() {
 
             {/* Content */}
             <div className="flex-1 p-6">
-              {activeTab === "research" && renderResearchView()}
-              {activeTab === "outline" && renderOutlineView()}
-              {activeTab === "script" && renderScriptView()}
+              <div className="mx-auto w-full max-w-[1200px] px-4 @lg:px-6 @xl:px-12 @2xl:px-20 @3xl:px-24">
+                {activeTab === "research" && renderResearchView()}
+                {activeTab === "outline" && renderOutlineView()}
+                {activeTab === "script" && renderScriptView()}
+              </div>
             </div>
           </div>
         ) : (
