@@ -95,17 +95,60 @@ export default function SupabaseButtonsDemo() {
               <h2 className="text-lg font-medium mb-4">Size Variations</h2>
               <div className="flex flex-wrap items-center gap-4">
                 <Button variant="brand" size="tiny">
-                  Tiny
+                  <span className="truncate">Tiny</span>
                 </Button>
+
                 <Button variant="brand" size="sm">
-                  Small
+                  <span className="truncate">Small</span>
                 </Button>
+
                 <Button variant="brand" size="default">
-                  Default
+                  <span className="truncate">Default</span>
                 </Button>
+
                 <Button variant="brand" size="lg">
-                  Large
+                  <span className="truncate">Large</span>
                 </Button>
+              </div>
+            </section>
+
+            {/* Transparent Border Demonstrations */}
+            <section>
+              <h2 className="text-lg font-medium mb-4">Fixed Transparent Borders</h2>
+              <p className="text-muted-foreground mb-4">
+                These examples demonstrate the fixed opacity support for borders and backgrounds.
+              </p>
+              <div className="space-y-4">
+                {/* Transparent Border Examples */}
+                <div className="flex flex-wrap gap-4">
+                  <div className="p-4 border-2 border-emerald-500/60 bg-emerald-50/30 rounded-lg">
+                    <p className="text-sm font-medium">60% Emerald Border</p>
+                    <p className="text-xs text-muted-foreground">30% Background</p>
+                  </div>
+                  
+                  <div className="p-4 border-2 border-blue-500/40 bg-blue-50/20 rounded-lg">
+                    <p className="text-sm font-medium">40% Blue Border</p>
+                    <p className="text-xs text-muted-foreground">20% Background</p>
+                  </div>
+                  
+                  <div className="p-4 border-2 border-purple-500/50 bg-purple-50/25 rounded-lg">
+                    <p className="text-sm font-medium">50% Purple Border</p>
+                    <p className="text-xs text-muted-foreground">25% Background</p>
+                  </div>
+                </div>
+
+                {/* Custom Border Utilities with Opacity */}
+                <div className="flex flex-wrap gap-4">
+                  <div className="p-4 border-2 border-strong/70 bg-surface-75/50 rounded-lg">
+                    <p className="text-sm font-medium">Custom Strong Border (70%)</p>
+                    <p className="text-xs text-muted-foreground">Surface Background (50%)</p>
+                  </div>
+                  
+                  <div className="p-4 border-2 border-stronger/80 bg-card/60 rounded-lg">
+                    <p className="text-sm font-medium">Custom Stronger Border (80%)</p>
+                    <p className="text-xs text-muted-foreground">Card Background (60%)</p>
+                  </div>
+                </div>
               </div>
             </section>
 
