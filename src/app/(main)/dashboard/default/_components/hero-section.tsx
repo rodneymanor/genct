@@ -135,7 +135,8 @@ export function HeroSection({ className }: HeroSectionProps) {
         )}
       </form>
 
-      {/* Scroll to Ideas Button */}
+      {/* Scroll to Ideas Button - COMMENTED OUT FOR DOCK TESTING */}
+      {/*
       <div className="mt-12 flex flex-col items-center gap-4">
         <p className="text-muted-foreground text-sm">Or browse script ideas below</p>
         <Button
@@ -148,6 +149,7 @@ export function HeroSection({ className }: HeroSectionProps) {
           <ChevronDown className="group-hover:text-primary h-4 w-4 animate-bounce transition-all duration-300 group-hover:translate-y-1" />
         </Button>
       </div>
+      */}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sideb
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
 import { GlobalSearch } from "@/components/ui/global-search";
+import { NavigationDock } from "@/components/ui/navigation-dock";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
 import { getSidebarVariant, getSidebarCollapsible, getContentLayout } from "@/lib/layout-preferences";
@@ -50,6 +51,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           </header>
           <div>{children}</div>
           <FloatingActionButton />
+          <NavigationDock />
         </SidebarInset>
       </SidebarProvider>
     </AuthGuard>

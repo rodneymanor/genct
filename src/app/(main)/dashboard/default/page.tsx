@@ -9,12 +9,14 @@ export default function Page() {
       <div className="mx-auto max-w-6xl">
         <HeroSection />
         
-        {/* Tweet-style Feed */}
+        {/* COMMENTED OUT FOR DOCK TESTING 
+        
+        Tweet-style Feed
         <div className="mt-12">
           <ScriptTweetFeed />
         </div>
         
-        {/* Original Card Grid - Alternative View */}
+        Original Card Grid - Alternative View
         <div className="mt-16">
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-bold text-foreground mb-2">Browse All Ideas</h2>
@@ -22,6 +24,8 @@ export default function Page() {
           </div>
           <ScriptSuggestionCards />
         </div>
+        
+        END COMMENTED OUT SECTION */}
       </div>
     </div>
   );
