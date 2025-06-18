@@ -556,6 +556,20 @@ p {
   @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
 }
 
+/* Force Custom Font Loading */
+.force-custom-font {
+  font-family: "CustomFont", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-display: swap;
+}
+
+/* Ensure fonts are loaded */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    font-feature-settings: "kern" 1;
+    text-rendering: optimizeLegibility;
+  }
+}
+
 /* COMMENTED OUT PROBLEMATIC GLOBAL STYLES */
 /* These remain commented out to prevent conflicts with shadcn/ui components */
 
