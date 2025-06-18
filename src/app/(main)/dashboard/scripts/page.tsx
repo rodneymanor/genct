@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   ScrollText,
   Plus,
+  Filter,
   Search,
   Download,
   FileText,
@@ -103,15 +104,10 @@ const toneOptions = [
 ];
 
 export default function ScriptsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedScript, setSelectedScript] = useState<typeof sampleScripts[0] | null>(sampleScripts[0]);
   const [activeTab, setActiveTab] = useState<"research" | "outline" | "script">("research");
   const [selectedTone, setSelectedTone] = useState("Conversational");
   const [customChanges, setCustomChanges] = useState("");
-
-  const filteredScripts = sampleScripts.filter((script) =>
-    script.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleNewScript = () => {
     // Navigate to new script creation
@@ -282,29 +278,18 @@ export default function ScriptsPage() {
         <div className="flex h-full flex-col">
           {/* Header */}
           <div className="border-b border-border-strong p-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between">
               <h2 className="text-lg font-medium">All Scripts</h2>
-              <Button size="sm" onClick={handleNewScript}>
-                <Plus className="h-4 w-4" />
+              <Button size="sm" variant="ghost">
+                <Filter className="h-4 w-4" />
               </Button>
-            </div>
-            
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search scripts..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
             </div>
           </div>
 
           {/* Scripts List */}
           <div className="flex-1 overflow-y-auto p-2">
             <div className="space-y-2">
-              {filteredScripts.map((script) => (
+              {sampleScripts.map((script) => (
                 <div
                   key={script.id}
                   onClick={() => setSelectedScript(script)}
