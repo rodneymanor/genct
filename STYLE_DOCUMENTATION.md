@@ -204,11 +204,45 @@ function CardFooter({ className, ...props }) {
   </CardFooter>
 </Card>
 
-// Interactive Card Pattern
-<Card className="group hover:border-primary/20 cursor-pointer border-2 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
+// Interactive Card Pattern - Correct Supabase Style
+<Card className="group cursor-pointer transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
   {/* Card content with hover effects */}
+  {/* Note: Borders handled by gradient system, no need for additional border classes */}
 </Card>
 ```
+
+### 🏷️ `[COMPONENT-SCRIPT-TWEET]` Tweet-Style Script Cards
+```tsx
+/* 🔍 SEARCH: tweet, social, feed, script-ideas, twitter-style */
+// Tweet-style Card for Script Ideas
+<ScriptTweetCard
+  id="morning-habits"
+  category="Trending"
+  title="5 Morning Habits That Changed My Life"
+  description="Share personal transformation through simple morning routines that boost productivity and mindset."
+  estimatedLength="3-5 min"
+  difficulty="Easy"
+  tags={["lifestyle", "productivity", "wellness"]}
+  icon={TrendingUp}
+  trending={true}
+  engagement="High"
+  author={{
+    name: "Wellness Creator",
+    handle: "@wellnesscreator",
+  }}
+  timestamp="2h"
+/>
+
+// Tweet-style Feed Layout
+<ScriptTweetFeed className="max-w-2xl mx-auto" />
+```
+
+#### 🎨 **Tweet Card Architecture:**
+- **🐦 Twitter-inspired Layout**: Mimics Twitter's card design with avatar, author info, and engagement metrics
+- **📱 Social Media Aesthetics**: Familiar interface patterns that users recognize from social platforms
+- **⚡ Interactive Elements**: Hover states, action buttons, and engagement counters
+- **🏷️ Content Categorization**: Badges and tags for easy content discovery
+- **🎯 Call-to-Action**: Prominent "Create Script" button for immediate action
 
 ### 🏷️ `[COMPONENT-ALERT]` Alert System
 ```tsx

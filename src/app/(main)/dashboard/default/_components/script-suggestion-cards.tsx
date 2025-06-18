@@ -152,7 +152,7 @@ export function ScriptSuggestionCards({ className }: ScriptSuggestionCardsProps)
           return (
             <Card
               key={suggestion.id}
-              className="group hover:border-primary/20 cursor-pointer border-2 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+              className="group cursor-pointer transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
               onClick={() => handleUseIdea(suggestion)}
             >
               <CardHeader className="pb-3">

@@ -361,3 +361,14 @@ button:disabled {
 .panel-inner {
   @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
 }
+
+/* Fix for unwanted black borders on cards */
+.group\/panel {
+  border: none !important;
+  outline: none !important;
+}
+
+.group\/panel > [data-slot="card"] {
+  border: none !important;
+  outline: none !important;
+}
