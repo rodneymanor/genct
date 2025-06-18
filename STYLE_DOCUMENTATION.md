@@ -301,109 +301,71 @@ Example usage:
 }
 ```
 
-#### 🚨 **Why Custom Border Classes Don't Work**
-
-The root cause of heavy/dark borders was deeper than expected:
-
-1. **Tailwind v4 Behavior**: Custom classes like `border-light` aren't recognized by Tailwind
-2. **Fallback Problem**: Unrecognized border classes fall back to the generic `border` utility
-3. **CSS Variable Issue**: The `border` utility uses `--border` variable which is dark: `oklch(0.9461 0 0)`
-4. **Result**: Even "custom" border classes still rendered with the same dark color
-
 #### 🎨 **Contrast-Aware Border Strategy**
 
 **The luminance contrast problem**: `border-primary/60` shares the same **hue** as `bg-primary`, with only 40% transparency difference. This creates insufficient **luminance contrast** for the human eye to distinguish a 1px border.
 
-**Additional issues:**
-- **Hi-DPI screens**: 1px borders become even thinner physical lines
-- **Focus ring overlap**: 3px focus ring visually swallows the faint inner border
+**Critical visibility issues:**
+- **Transparent borders**: `border-transparent` renders literally nothing - browser paints no border
+- **1px width**: Too thin for Hi-DPI displays, gets lost to sub-pixel antialiasing  
+- **Same hue problem**: `border-primary-700` + `bg-primary` = minimal luminance contrast
+- **Focus ring overlap**: 3px ring visually swallows thin inner borders without offset
 - **WCAG compliance**: Need 3:1 contrast ratio minimum for non-text graphics
 
-| Background Type | Border Strategy | Reasoning |
-|----------------|-----------------|-----------|
-| **Colored buttons** (primary, destructive) | `border-transparent hover:border-primary-700 focus-visible:border-ring` | No border at rest, high-contrast border on interaction |
-| **Neutral buttons** (outline, secondary) | `border-gray-300 hover:border-gray-500` | Always visible with darker hover state |
-| **Ghost buttons** | `border-transparent hover:border-gray-400` | Clean at rest, visible on interaction |
-| **Dark mode** | `dark:border-gray-600 dark:hover:border-gray-400` | Proper contrast ratios for dark backgrounds |
+| Background Type | Border Strategy | Visibility Fixes |
+|----------------|-----------------|------------------|
+| **Colored buttons** (primary, destructive) | `border-2 border-primary-600 hover:border-primary-800` | 2px width + darker contrast colors |
+| **Neutral buttons** (outline, secondary) | `border-2 border-gray-400 hover:border-gray-600` | Always visible with proper thickness |
+| **Ghost buttons** | `border-2 border-transparent hover:border-gray-500` | Thick transparent base, visible on interaction |
+| **Focus states** | `focus-visible:ring-offset-2` | Ring offset prevents visual merging |
 
-#### ✅ **The Correct Solution**
-
-**Use actual Tailwind color classes:**
-
-| Class | Color Value | Visual Weight | Best For |
-|-------|-------------|---------------|----------|
-| `border-gray-100` | Very light gray | Ultra-light | Minimal dividers |
-| `border-gray-200` | Light gray | Light | Light backgrounds only |
-| `border-gray-300` | Medium gray | Medium | Most UI elements |
-| `border-slate-200` | Cool light gray | Light | Modern aesthetic |
-| `border-transparent` | Invisible | None | Focus-only borders |
-| `border-primary/60` | Primary color at 60% | Contextual | Colored button borders |
-
-#### 🔄 **Migration Examples**
+#### ✅ **Working Examples**
 
 ```html
-<!-- ❌ WRONG: Same hue, insufficient luminance contrast -->
-<button class="bg-primary border border-primary/60">Invisible border</button>
-
-<!-- ❌ ALSO WRONG: Light border invisible on colored background -->
-<button class="bg-primary border border-gray-200">Invisible border</button>
-
-<!-- ✅ CORRECT: Transparent at rest, high-contrast on interaction -->
-<button class="bg-primary border border-transparent hover:border-primary-700 focus-visible:border-ring">
-  Visible on interaction
+<!-- ✅ VISIBLE: Thick borders with proper contrast -->
+<button class="bg-primary text-primary-foreground border-2 border-primary-600 hover:border-primary-800 focus-visible:ring-offset-2">
+  Always visible primary button
 </button>
 
-<!-- ✅ NEUTRAL BACKGROUNDS: Always visible borders -->
-<input class="border border-gray-300 hover:border-gray-500 focus:border-primary" />
+<!-- ✅ VISIBLE: Neutral with good contrast -->
+<button class="bg-background border-2 border-gray-400 hover:border-gray-600">
+  Outline button with visible border
+</button>
 
-<!-- ✅ ALTERNATIVE: Thicker border for better visibility -->
-<button class="bg-primary border-2 border-primary-700">Always visible thick border</button>
+<!-- ✅ VISIBLE: Ghost with interaction states -->
+<button class="border-2 border-transparent hover:border-gray-500 focus-visible:border-gray-500">
+  Ghost button - visible on interaction
+</button>
 ```
 
-#### 🔬 **Testing Luminance Contrast**
+#### 🔧 **Visibility Checklist**
+
+| Fix | Implementation | Result |
+|-----|----------------|--------|
+| **Remove transparency** | Replace `border-transparent` with `border-primary-600` | Browser renders actual color |
+| **Add thickness** | Use `border-2` instead of `border` | Survives Hi-DPI antialiasing |
+| **Increase contrast** | Use `-600` and `-800` variants | Meets 3:1 WCAG ratio |
+| **Separate focus ring** | Add `focus-visible:ring-offset-2` | Ring doesn't merge with border |
+
+#### 🔬 **Testing Border Visibility**
 
 ```html
-<!-- Test 1: Same hue issue -->
-<button class="bg-blue-500 border border-blue-500/60">Hard to see</button>
-<button class="bg-blue-500 border border-blue-800">Much better</button>
+<!-- Test 1: Transparency check -->
+<button class="bg-primary border-2 border-transparent">No border (transparent)</button>
+<button class="bg-primary border-2 border-primary-600">Visible border</button>
 
-<!-- Test 2: Verify with high contrast -->
-<button class="bg-primary border border-red-500">If you see red, CSS works</button>
-<button class="bg-primary border border-primary-700">Proper contrast</button>
+<!-- Test 2: Contrast check -->
+<button class="bg-primary border-2 border-primary-700">Low contrast</button>
+<button class="bg-primary border-2 border-primary-800">High contrast</button>
 
-<!-- Test 3: Hi-DPI visibility -->
-<button class="bg-primary border border-primary-700">1px border</button>
-<button class="bg-primary border-2 border-primary-700">2px border</button>
+<!-- Test 3: Thickness check -->
+<button class="bg-primary border border-primary-600">1px border</button>
+<button class="bg-primary border-2 border-primary-600">2px border</button>
+
+<!-- Test 4: Focus ring separation -->
+<button class="bg-primary border-2 border-primary-600 focus-visible:ring-[3px]">Merged ring</button>
+<button class="bg-primary border-2 border-primary-600 focus-visible:ring-[3px] focus-visible:ring-offset-2">Separated ring</button>
 ```
-
-#### 🎯 **Best Practices**
-
-1. **Primary Choice**: `border-gray-200` for most UI elements
-2. **Invisible Borders**: `border-transparent focus:border-primary` for clean focus states
-3. **Hover Effects**: `border-gray-200 hover:border-gray-300` for subtle interactions
-4. **Dark Mode**: Tailwind automatically handles dark mode variants
-
-#### 📏 **WCAG Compliance & Visibility Guidelines**
-
-**Contrast Requirements:**
-- **Minimum**: 3:1 contrast ratio for non-text graphics (WCAG AA)
-- **Enhanced**: 4.5:1 contrast ratio for better accessibility
-- **Hi-DPI consideration**: 1px borders may need higher contrast ratios
-
-**Border Visibility Strategies:**
-
-| Strategy | When to Use | WCAG Compliance |
-|----------|-------------|-----------------|
-| **Transparent + Interaction** | Primary/destructive buttons | ✅ Focus states meet requirements |
-| **Always Visible** | Form inputs, cards | ✅ 3:1+ contrast maintained |
-| **Thicker Borders** | Accessibility-first designs | ✅ Enhanced visibility |
-| **High Contrast Colors** | -700/-800 color variants | ✅ Exceeds minimum requirements |
-
-**Testing Checklist:**
-- [ ] Test on Hi-DPI/Retina displays
-- [ ] Verify 3:1 contrast ratio with color contrast tools
-- [ ] Check focus states are clearly visible
-- [ ] Test in both light and dark modes
 
 ### ��️ `[UTILITY-ICONS]` Icon Utilities
 ```css
