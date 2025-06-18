@@ -614,17 +614,7 @@ p {
   border-color: hsl(var(--ring));
 }
 
-.border-brand {
-  border-color: hsl(var(--brand));
-}
-
-.border-brand-500 {
-  border-color: hsl(var(--brand-500));
-}
-
-.border-brand-600 {
-  border-color: hsl(var(--brand-600));
-}
+/* Removed problematic brand border classes */
 
 .border-transparent {
   border-color: transparent;
@@ -709,106 +699,6 @@ p {
 .force-custom-font {
   font-family: "CustomFont", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   font-display: swap;
-}
-
-/* Essential Utility Classes - Force Generation */
-.text-brand {
-  --tw-text-opacity: 1;
-  color: hsl(var(--brand) / var(--tw-text-opacity));
-}
-
-.border-brand {
-  border-color: hsl(var(--brand));
-}
-
-.border-brand-400 {
-  border-color: hsl(var(--brand-400));
-}
-
-.border-brand-500 {
-  border-color: hsl(var(--brand-500));
-}
-
-.border-brand-600 {
-  border-color: hsl(var(--brand-600));
-}
-
-.border-border {
-  border-color: hsl(var(--border));
-}
-
-.border-border-strong {
-  border-color: hsl(var(--border-strong));
-}
-
-.border-border-stronger {
-  border-color: hsl(var(--border-stronger));
-}
-
-.bg-brand-400 {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-400) / var(--tw-bg-opacity));
-}
-
-.bg-brand-500 {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-500) / var(--tw-bg-opacity));
-}
-
-.bg-brand-600 {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
-}
-
-/* Hover States */
-.hover\:bg-brand-500:hover {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-500) / var(--tw-bg-opacity));
-}
-
-.hover\:bg-brand-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
-}
-
-.hover\:border-brand-500:hover {
-  border-color: hsl(var(--brand-500));
-}
-
-.hover\:border-brand-600:hover {
-  border-color: hsl(var(--brand-600));
-}
-
-.hover\:border-border-strong:hover {
-  border-color: hsl(var(--border-strong));
-}
-
-/* Dark mode variants */
-.dark .dark\:bg-brand-500 {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-500) / var(--tw-bg-opacity));
-}
-
-.dark .dark\:bg-brand-600 {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
-}
-
-.dark .dark\:border-brand-500 {
-  border-color: hsl(var(--brand-500));
-}
-
-.dark .dark\:border-brand-600 {
-  border-color: hsl(var(--brand-600));
-}
-
-.dark .dark\:hover\:bg-brand-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--brand-600) / var(--tw-bg-opacity));
-}
-
-.dark .dark\:hover\:border-brand-600:hover {
-  border-color: hsl(var(--brand-600));
 }
 
 /* Ensure fonts are loaded */
@@ -924,4 +814,167 @@ COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
 
 .panel-inner {
   @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
+}
+
+/* Essential Utility Classes - Force Generation */
+.text-emerald-500 {
+  --tw-text-opacity: 1;
+  color: rgb(16 185 129 / var(--tw-text-opacity));
+}
+
+.text-emerald-600 {
+  --tw-text-opacity: 1;
+  color: rgb(5 150 105 / var(--tw-text-opacity));
+}
+
+.bg-emerald-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(52 211 153 / var(--tw-bg-opacity));
+}
+
+.bg-emerald-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 185 129 / var(--tw-bg-opacity));
+}
+
+.bg-emerald-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(5 150 105 / var(--tw-bg-opacity));
+}
+
+.border-emerald-400 {
+  border-color: rgb(52 211 153);
+}
+
+.border-emerald-500 {
+  border-color: rgb(16 185 129);
+}
+
+.border-emerald-600 {
+  border-color: rgb(5 150 105);
+}
+
+.text-emerald-900 {
+  --tw-text-opacity: 1;
+  color: rgb(6 78 59 / var(--tw-text-opacity));
+}
+
+.text-emerald-100 {
+  --tw-text-opacity: 1;
+  color: rgb(209 250 229 / var(--tw-text-opacity));
+}
+
+/* Essential Border Utilities */
+.border-gray-300 {
+  border-color: rgb(209 213 219);
+}
+
+.border-gray-400 {
+  border-color: rgb(156 163 175);
+}
+
+.border-gray-500 {
+  border-color: rgb(107 114 128);
+}
+
+.border-gray-600 {
+  border-color: rgb(75 85 99);
+}
+
+.bg-gray-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
+
+.bg-gray-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+}
+
+/* Hover States */
+.hover\:bg-emerald-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 185 129 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-emerald-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(5 150 105 / var(--tw-bg-opacity));
+}
+
+.hover\:border-emerald-500:hover {
+  border-color: rgb(16 185 129);
+}
+
+.hover\:border-emerald-600:hover {
+  border-color: rgb(5 150 105);
+}
+
+.hover\:border-gray-400:hover {
+  border-color: rgb(156 163 175);
+}
+
+.hover\:border-gray-500:hover {
+  border-color: rgb(107 114 128);
+}
+
+.hover\:border-gray-300:hover {
+  border-color: rgb(209 213 219);
+}
+
+.hover\:border-gray-600:hover {
+  border-color: rgb(75 85 99);
+}
+
+/* Dark mode variants */
+.dark .dark\:bg-emerald-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 185 129 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:bg-emerald-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(5 150 105 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:border-emerald-500 {
+  border-color: rgb(16 185 129);
+}
+
+.dark .dark\:border-emerald-600 {
+  border-color: rgb(5 150 105);
+}
+
+.dark .dark\:text-emerald-100 {
+  --tw-text-opacity: 1;
+  color: rgb(209 250 229 / var(--tw-text-opacity));
+}
+
+.dark .dark\:border-gray-600 {
+  border-color: rgb(75 85 99);
+}
+
+.dark .dark\:border-gray-500 {
+  border-color: rgb(107 114 128);
+}
+
+.dark .dark\:hover\:bg-emerald-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(5 150 105 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:hover\:border-emerald-600:hover {
+  border-color: rgb(5 150 105);
+}
+
+.dark .dark\:hover\:border-gray-500:hover {
+  border-color: rgb(107 114 128);
+}
+
+.dark .dark\:hover\:border-gray-600:hover {
+  border-color: rgb(75 85 99);
+}
+
+.dark .dark\:hover\:bg-gray-800\/30:hover {
+  background-color: rgb(31 41 55 / 0.3);
 }

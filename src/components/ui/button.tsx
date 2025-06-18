@@ -9,25 +9,25 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Supabase Green Brand Button - with proper border
+        // Supabase Green Brand Button - using actual Tailwind colors
         brand:
-          "bg-brand-400 dark:bg-brand-500 hover:bg-brand-500 dark:hover:bg-brand-600 text-foreground border border-brand-400 dark:border-brand-500 hover:border-brand-500 dark:hover:border-brand-600 focus-visible:outline-brand-600 data-[state=open]:bg-brand-400/80 dark:data-[state=open]:bg-brand-500/80 data-[state=open]:outline-brand-600",
+          "bg-emerald-400 dark:bg-emerald-500 hover:bg-emerald-500 dark:hover:bg-emerald-600 text-emerald-900 dark:text-emerald-100 border border-emerald-400 dark:border-emerald-500 hover:border-emerald-500 dark:hover:border-emerald-600 focus-visible:outline-emerald-600 data-[state=open]:bg-emerald-400/80 dark:data-[state=open]:bg-emerald-500/80",
         
         // White/Transparent Dashed Border Button
         dashed:
-          "text-foreground border border-dashed border-strong hover:border-stronger hover:bg-muted/50 dark:hover:bg-muted/30 bg-transparent focus-visible:outline-border-strong data-[state=open]:border-stronger data-[state=open]:outline-border-strong",
+          "text-foreground border border-dashed border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800/30 bg-transparent focus-visible:outline-gray-400 data-[state=open]:border-gray-400 dark:data-[state=open]:border-gray-500",
         
-        // Standard variants with lighter borders
+        // Standard variants with proper Tailwind borders
         default:
-          "bg-primary text-primary-foreground border border-border hover:bg-primary/90 hover:border-border-strong",
+          "bg-primary text-primary-foreground border border-gray-300 dark:border-gray-600 hover:bg-primary/90 hover:border-gray-400 dark:hover:border-gray-500",
         destructive:
-          "bg-destructive text-white border border-border hover:bg-destructive/90 hover:border-border-strong",
+          "bg-destructive text-white border border-gray-300 dark:border-gray-600 hover:bg-destructive/90 hover:border-gray-400 dark:hover:border-gray-500",
         outline:
-          "border bg-background border-border hover:bg-accent hover:text-accent-foreground hover:border-border-strong",
+          "border bg-background border-gray-300 dark:border-gray-600 hover:bg-accent hover:text-accent-foreground hover:border-gray-400 dark:hover:border-gray-500",
         secondary:
-          "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 hover:border-border-strong",
+          "bg-secondary text-secondary-foreground border border-gray-300 dark:border-gray-600 hover:bg-secondary/80 hover:border-gray-400 dark:hover:border-gray-500",
         ghost:
-          "border border-transparent hover:bg-accent hover:text-accent-foreground",
+          "border border-transparent hover:bg-accent hover:text-accent-foreground hover:border-gray-300 dark:hover:border-gray-600",
         link: "text-primary underline-offset-4 hover:underline border border-transparent",
       },
       size: {
