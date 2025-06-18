@@ -170,144 +170,497 @@
   border-color: hsl(var(--border-stronger));
 }
 
-/* COMMENTED OUT PROBLEMATIC GLOBAL STYLES */
-/* Uncomment sections below as needed once you've identified what works */
+/* --- General Border Color Variables --- */
+:root {
+  --rdg-border-color: #ddd; /* Default light border color */
+  --rdg-summary-border-color: #aaa; /* Border color for summary elements */
+  --border-default: var(--colors-gray-light-600); /* General default border color (for light theme) */
+  --border-strong: 0deg 0% 83.1%; /* Stronger border for light theme */
+  --border-stronger: 0deg 0% 56.1%; /* Even stronger border for light theme */
+  --border-alternative: var(--colors-gray-light-500);
+  --border-control: var(--colors-gray-light-800);
+  --border-overlay: var(--colors-gray-light-500);
+  --border-secondary: var(--colors-gray-light-400);
+  --border-muted: var(--colors-gray-light-400);
+  --border-button-default: var(--colors-gray-light-600);
+  --border-button-hover: var(--colors-gray-light-700);
+}
 
-/*
-Universal base styles - COMMENTED OUT TO PREVENT CONFLICTS
-*,
-*::before,
-*::after {
+/* --- Dark Theme Border Color Overrides --- */
+.classic-dark,
+[data-theme='classic-dark'],
+[data-theme*='dark'] {
+  --rdg-border-color: #444;
+  --rdg-summary-border-color: #555;
+  --border-default: hsl(0deg 0% 18%); /* General default border color (for dark theme) */
+  --border-strong: 0deg 0% 21.2%;
+  --border-stronger: 0deg 0% 27.1%;
+  --border-alternative: 0deg 0% 26.7%;
+  --border-control: 0deg 0% 22.4%;
+  --border-overlay: 0deg 0% 20%;
+  --border-secondary: 0deg 0% 14.1%;
+  --border-muted: 0deg 0% 14.1%;
+  --border-button-default: var(--colors-gray-dark-700);
+  --border-button-hover: var(--colors-gray-dark-800);
+}
+
+/* --- Core Grid and Cell Borders (from rdg layers) --- */
+.cj343x07-0-0-beta-41 { /* This class is used for general cells */
+  border-inline-end: 1px solid var(--rdg-border-color);
+  border-block-end: 1px solid var(--rdg-border-color);
+}
+
+.rnvodz57-0-0-beta-41 { /* This class is for the main grid root element */
+  border: 1px solid var(--rdg-border-color);
   box-sizing: border-box;
 }
 
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  tab-size: 4;
-  -webkit-tap-highlight-color: transparent;
-  scroll-behavior: smooth;
+.rnvodz57-0-0-beta-41.rdg-dark {
+  /* Dark theme rdg border properties are handled by --rdg-border-color variable */
 }
 
-body {
-  font-family: var(--font-sans);
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  line-height: 1.5;
-  font-feature-settings: "rlig" 1, "calt" 1;
-  font-variation-settings: "wght" 400;
-  letter-spacing: var(--tracking-normal);
-  font-display: swap;
+/* --- RDG Component-Specific Borders --- */
+
+/* Cells */
+.rdg-cell {
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-color: hsl(var(--border-secondary) / var(--tw-border-opacity));
 }
 
-Enhanced link and button styles - COMMENTED OUT TO PREVENT CONFLICTS
-a {
-  color: inherit;
-  text-decoration: inherit;
-  transition: color 0.2s ease;
+.rdg-cell-frozen-last {
+  border-right-width: 2px;
+  border-color: hsl(var(--border-secondary) / var(--tw-border-opacity));
 }
 
-a:hover {
-  color: hsl(var(--primary));
+.rdg-cell[aria-selected="true"] {
+  box-shadow: inset 0 0 0 1px #24b47e; /* This is a border-like effect */
 }
 
-button {
-  font-family: inherit;
-  font-size: 100%;
-  font-weight: inherit;
-  color: inherit;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
+/* Header Row */
+.h10tskcx7-0-0-beta-41 > .cj343x07-0-0-beta-41 { /* Cells within the header row */
+  border-bottom-width: 1px;
 }
 
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+.rdg-header-row .rdg-cell {
+  border-bottom-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
 }
 
-Enhanced selection styling - COMMENTED OUT TO PREVENT CONFLICTS
-::selection {
-  background-color: hsl(var(--primary) / 0.2);
-  color: hsl(var(--primary-foreground));
+/* Summary Rows */
+.tb9ughf7-0-0-beta-41 > .cj343x07-0-0-beta-41 {
+  border-block-end: 2px solid var(--rdg-summary-border-color);
 }
 
-::-moz-selection {
-  background-color: hsl(var(--primary) / 0.2);
-  color: hsl(var(--primary-foreground));
+.b1yssfnt7-0-0-beta-41 > .cj343x07-0-0-beta-41 {
+  border-block-start: 2px solid var(--rdg-summary-border-color);
 }
 
-Focus styles - COMMENTED OUT TO PREVENT CONFLICTS
-:focus-visible {
-  outline: 2px solid hsl(var(--ring));
+/* Checkbox (generic rdg version) */
+.cf71kmq7-0-0-beta-41 {
+  border: 2px solid var(--rdg-border-color);
+}
+
+.c1qt073l7-0-0-beta-41:checked + .cf71kmq7-0-0-beta-41 {
+  outline: 4px solid var(--rdg-background-color); /* This is an outline, not a border */
+  outline-offset: -6px;
+}
+
+.c1qt073l7-0-0-beta-41:focus + .cf71kmq7-0-0-beta-41 {
+  border-color: var(--rdg-checkbox-focus-color);
+}
+
+.c1lwve4p7-0-0-beta-41 .cf71kmq7-0-0-beta-41 {
+  border-color: var(--rdg-checkbox-disabled-border-color);
+}
+
+/* Checkbox (sb-grid version) */
+.sb-grid [type='checkbox'] {
+  border-width: 1px;
+  border-style: solid;
+  border-color: hsl(var(--border-strong) / var(--tw-border-opacity));
+}
+
+.sb-grid [type='checkbox']:hover {
+  border-color: hsl(var(--foreground-default) / var(--tw-border-opacity));
+}
+
+.rdg-header-row .rdg-checkbox {
+  border-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
+}
+
+.rdg-header-row .rdg-checkbox-input:checked + .rdg-checkbox {
+  border-width: 4px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
+}
+
+/* Focus Sink */
+.r190mhd37-0-0-beta-41 { /* General focus sink */
+  outline: 2px solid var(--rdg-selection-color);
+  outline-offset: -2px;
+}
+
+.r139qu9m7-0-0-beta-41:before {
+  border-inline-start: 2px solid var(--rdg-selection-color);
+}
+
+.rdg-focus-sink {
+  outline: 0; /* Base outline */
+}
+
+/* Segmented Control */
+.rdg__segmented-control {
+  border-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
+}
+
+.rdg__segmented-control__label {
+  border-width: 1px;
+  border-color: hsl(var(--border-control) / var(--tw-border-opacity));
+}
+
+/* --- Input Fields Borders --- */
+
+/* General input elements (tailwind base styles) */
+[multiple],
+[type='date'],
+[type='datetime-local'],
+[type='email'],
+[type='month'],
+[type='number'],
+[type='password'],
+[type='search'],
+[type='tel'],
+[type='text'],
+[type='time'],
+[type='url'],
+[type='week'],
+input:where(:not([type])),
+select,
+textarea {
+  border-width: 1px;
+  border-color: var(--colors-gray5); /* A specific gray color code */
+  border-radius: 0; /* Override by other classes */
+}
+
+[multiple]:focus,
+[type='date']:focus,
+[type='datetime-local']:focus,
+[type='email']:focus,
+[type='month']:focus,
+[type='number']:focus,
+[type='password']:focus,
+[type='search']:focus,
+[type='tel']:focus,
+[type='text']:focus,
+[type='time']:focus,
+[type='url']:focus,
+[type='week']:focus,
+input:where(:not([type])):focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid transparent; /* Focus outline */
+  outline-offset: 2px;
+  border-color: var(--colors-blue6); /* Blue border on focus */
+}
+
+/* Form-specific input styles */
+.form-input,
+.form-multiselect,
+.form-select,
+.form-textarea {
+  border-width: 1px;
+  border-color: var(--colors-gray5);
+}
+
+.form-input:focus,
+.form-multiselect:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border-color: var(--colors-blue6);
+}
+
+/* Form group input styles */
+.form-group input,
+.form-group input[multiple],
+.form-group input[type='date'],
+.form-group input[type='datetime-local'],
+.form-group input[type='email'],
+.form-group input[type='month'],
+.form-group input[type='number'],
+.form-group input[type='password'],
+.form-group input[type='search'],
+.form-group input[type='tel'],
+.form-group input[type='text'],
+.form-group input[type='time'],
+.form-group input[type='url'],
+.form-group input[type='week'],
+.form-group select,
+.form-group textarea,
+input.form-control {
+  border-width: 1px;
+  border-color: hsl(var(--border-strong) / var(--tw-border-opacity));
+  outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
-Scrollbar styling - COMMENTED OUT TO PREVENT CONFLICTS
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.form-group input:focus,
+.form-group input[multiple]:focus,
+.form-group input[type='date']:focus,
+.form-group input[type='datetime-local']:focus,
+.form-group input[type='email']:focus,
+.form-group input[type='month']:focus,
+.form-group input[type='number']:focus,
+.form-group input[type='password']:focus,
+.form-group input[type='search']:focus,
+.form-group input[type='tel']:focus,
+.form-group input[type='text']:focus,
+.form-group input[type='time']:focus,
+.form-group input[type='url']:focus,
+.form-group input[type='week']:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+input.form-control:focus {
+  border-color: hsl(var(--border-stronger) / var(--tw-border-opacity));
+  /* Added ring on focus */
+  --tw-ring-color: hsl(var(--border-overlay) / var(--tw-ring-opacity));
 }
 
-::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
-  border-radius: 4px;
+.form-group input:focus,
+.form-group input:focus .form-control:focus,
+.form-group input[multiple]:focus,
+.form-group input[type='date']:focus,
+.form-group input[type='datetime-local']:focus,
+.form-group input[type='email']:focus,
+.form-group input[type='month']:focus,
+.form-group input[type='number']:focus,
+.form-group input[type='password']:focus,
+.form-group input[type='search']:focus,
+.form-group input[type='tel']:focus,
+.form-group input[type='text']:focus,
+.form-group input[type='time']:focus,
+.form-group input[type='url']:focus,
+.form-group input[type='week']:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  box-shadow: 0 0 0 2px rgba(62, 207, 142, 0.1);
 }
 
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
+/* Invalid input state */
+input.is-invalid {
+  border-width: 1px;
+  border-color: var(--colors-red7);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+input.is-invalid:focus {
+  --tw-ring-color: var(--colors-red5);
 }
 
-REMOVED PANEL UTILITIES AND SURFACE BACKGROUND
-.bg-surface-75 {
-  background-color: hsl(var(--surface-75));
+/* Billing input */
+.billing-input-fixed {
+  border-width: 1px;
 }
 
-.panel-gradient {
-  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
+/* Text Editor Input (rdg.TextEditor layer) */
+.t7vyx3i7-0-0-beta-41 {
+  border: 2px solid #ccc;
 }
 
-.panel-inner {
-  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
+.t7vyx3i7-0-0-beta-41:focus {
+  border-color: var(--rdg-selection-color);
+  outline: none; /* Override default outline */
 }
 
-COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
-.border-card {
-  border-color: hsl(var(--foreground-lighter));
+/* React Datepicker Input */
+.react-datepicker__input-container input {
+  border-width: 1px;
+  border-color: hsl(var(--background-surface-100) / var(--tw-border-opacity));
 }
 
-.border-refined {
-  border-color: hsl(var(--foreground-lighter));
+/* --- Button Borders --- */
+
+/* General button styles (tailwind base styles) */
+[type='button'],
+[type='reset'],
+[type='submit'],
+button {
+  border-width: 0; /* Default border-width is 0 for these */
+  border-style: solid;
+  border-color: hsl(var(--border-default) / 1); /* From `*,:after,:before` */
 }
 
-.card-gradient-border {
-  background: linear-gradient(to bottom, hsl(var(--border)), hsl(var(--border) / 0.5));
+/* Input type submit */
+input[type='submit'] {
+  border-width: 1px;
+  border-color: var(--colors-green5);
 }
 
-.dark .card-gradient-border {
-  background: linear-gradient(to bottom, hsl(var(--border)), hsl(var(--surface-75)));
+/* Storage Container buttons */
+.storage-container .sbui-btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
-.card-hover-border {
-  background-color: hsl(var(--border-stronger));
+.storage-container .sbui-btn-default {
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0) !important;
 }
 
-.group\/panel {
-  border: none !important;
-  outline: none !important;
+/* Section block footer buttons */
+.section-block--footer button:not(.mr-0) {
+  /* No direct border property, but might inherit or be styled by other utility classes */
 }
 
-.group\/panel > [data-slot="card"] {
-  border: none !important;
-  outline: none !important;
+/* Specific button in rdg.TextEditor (might be for internal use) */
+.sb-grid-select-editor button {
+  border-radius: 0;
+  border-style: none;
+  box-shadow: none !important;
 }
 
-.lucide {
-  stroke-width: 1;
+/* --- Other Notable Borders --- */
+
+/* React Contexify (Context Menu) */
+.react-contexify {
+  border-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
 }
-*/
+
+/* React Datepicker Popover and Portal */
+.react-datepicker-popper {
+  border-width: 2px;
+  border-color: hsl(var(--background-default) / var(--tw-border-opacity));
+}
+
+.react-datepicker__portal {
+  border-width: 2px;
+  border-color: hsl(var(--background-default) / var(--tw-border-opacity));
+}
+
+/* React Datepicker Day cells */
+.react-datepicker__day {
+  border-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
+}
+
+.react-datepicker__day--in-range {
+  border-color: hsl(var(--brand-300) / var(--tw-border-opacity));
+}
+
+.react-datepicker__day--in-selecting-range {
+  border-color: hsl(var(--brand-400) / var(--tw-border-opacity));
+}
+
+/* General outline for focus states */
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.outline-2 {
+  outline-width: 2px;
+}
+
+.outline-offset-1 {
+  outline-offset: 1px;
+}
+
+.outline-offset-4 {
+  outline-offset: 4px;
+}
+
+/* General ring for focus states */
+.ring {
+  /* Defines a 3px ring */
+}
+
+.ring-0 {
+  /* Resets ring to 0px */
+}
+
+.ring-1 {
+  /* 1px ring */
+}
+
+.ring-2 {
+  /* 2px ring */
+}
+
+/* Table container borders */
+.table-container thead th {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
+}
+
+.table-container thead th:first-child {
+  border-left-width: 1px;
+}
+
+.table-container thead th:last-child {
+  border-right-width: 1px;
+}
+
+.table-container tbody td {
+  border-bottom-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
+}
+
+.table-container tbody td:first-child {
+  border-left-width: 1px;
+}
+
+.table-container tbody td:last-child {
+  border-right-width: 1px;
+}
+
+.table-container--borderless thead th {
+  border-top: none;
+}
+
+.table-container--borderless thead th:first-child {
+  border-left: none;
+}
+
+.table-container--borderless thead th:last-child {
+  border-right: none;
+}
+
+.table-container--borderless tbody td:first-child {
+  border-left: none;
+}
+
+.table-container--borderless tbody td:last-child {
+  border-right: none;
+}
+
+.table-container--borderless tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Docs Section Borders */
+.Docs .doc-section {
+  border-bottom-width: 1px;
+  border-color: hsl(var(--border-default) / var(--tw-border-opacity));
+}
+
+/* Specific `hr` element (divider) */
+hr {
+  border-top-width: 1px;
+  border-color: hsl(var(--border-default) / 1);
+}
+
+/* Box-sizing for all elements */
+*,
+:after,
+:before {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: hsl(var(--border-default) / 1);
+}
+
+/* COMMENTED OUT PROBLEMATIC GLOBAL STYLES */
