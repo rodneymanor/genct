@@ -81,7 +81,7 @@
   --font-family-mono: var(--font-mono);
 }
 
-@custom-variant dark (&:is(.dark *)) {
+@custom-variant dark {
   @theme {
     /* Dark mode - direct HSL values */
     --color-background: 0 0% 9%;
