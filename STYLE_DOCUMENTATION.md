@@ -301,73 +301,81 @@ Example usage:
 }
 ```
 
-#### 🎨 **Contrast-Aware Border Strategy**
+#### 🎨 **Simplified Border Strategy**
 
-**The luminance contrast problem**: `border-primary/60` shares the same **hue** as `bg-primary`, with only 40% transparency difference. This creates insufficient **luminance contrast** for the human eye to distinguish a 1px border.
+**The elegant solution**: Use neutral `border-gray-300` for all buttons. This provides consistent visibility against any background color without complex color matching.
 
-**Critical visibility issues:**
-- **Transparent borders**: `border-transparent` renders literally nothing - browser paints no border
-- **1px width**: Too thin for Hi-DPI displays, gets lost to sub-pixel antialiasing  
-- **Same hue problem**: `border-primary-700` + `bg-primary` = minimal luminance contrast
-- **Focus ring overlap**: 3px ring visually swallows thin inner borders without offset
-- **WCAG compliance**: Need 3:1 contrast ratio minimum for non-text graphics
+**Why this works better:**
+- **Always visible**: Gray borders contrast well against colored backgrounds
+- **Simpler markup**: Single border color instead of complex color matching
+- **Better performance**: No hover border changes, only fill opacity changes
+- **WCAG compliant**: Neutral gray meets 3:1 contrast ratio on colored backgrounds
+- **Hi-DPI friendly**: 1px borders stay crisp, 2px borders can look heavy
 
-| Background Type | Border Strategy | Visibility Fixes |
-|----------------|-----------------|------------------|
-| **Colored buttons** (primary, destructive) | `border-2 border-primary-600 hover:border-primary-800` | 2px width + darker contrast colors |
-| **Neutral buttons** (outline, secondary) | `border-2 border-gray-400 hover:border-gray-600` | Always visible with proper thickness |
-| **Ghost buttons** | `border-2 border-transparent hover:border-gray-500` | Thick transparent base, visible on interaction |
-| **Focus states** | `focus-visible:ring-offset-2` | Ring offset prevents visual merging |
+| Button Type | Border Strategy | Key Benefits |
+|-------------|-----------------|--------------|
+| **All colored buttons** | `border border-gray-300 hover:bg-primary/90` | Consistent gray border, only fill changes on hover |
+| **Outline buttons** | `border border-gray-300 hover:bg-accent` | Always visible, clean interaction |
+| **Ghost buttons** | `border-transparent hover:border-gray-300` | Clean at rest, visible on interaction |
+| **Focus states** | `focus-visible:ring-2 focus-visible:ring-offset-2` | 2px ring with offset for clear separation |
+| **Dark mode** | `dark:border-gray-600` | Appropriate contrast for dark backgrounds |
 
-#### ✅ **Working Examples**
+#### ✅ **Clean Implementation**
 
 ```html
-<!-- ✅ VISIBLE: Thick borders with proper contrast -->
-<button class="bg-primary text-primary-foreground border-2 border-primary-600 hover:border-primary-800 focus-visible:ring-offset-2">
-  Always visible primary button
+<!-- ✅ SIMPLE & EFFECTIVE: Neutral border, clean classes -->
+<button class="bg-primary text-primary-foreground border border-gray-300 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-600">
+  Primary button
 </button>
 
-<!-- ✅ VISIBLE: Neutral with good contrast -->
-<button class="bg-background border-2 border-gray-400 hover:border-gray-600">
-  Outline button with visible border
+<!-- ✅ OUTLINE: Always visible border -->
+<button class="border bg-background border-gray-300 hover:bg-accent hover:text-accent-foreground dark:border-gray-600">
+  Outline button
 </button>
 
-<!-- ✅ VISIBLE: Ghost with interaction states -->
-<button class="border-2 border-transparent hover:border-gray-500 focus-visible:border-gray-500">
-  Ghost button - visible on interaction
+<!-- ✅ GHOST: Transparent to visible -->
+<button class="border border-transparent hover:bg-accent hover:border-gray-300 dark:hover:border-gray-600">
+  Ghost button
 </button>
 ```
 
-#### 🔧 **Visibility Checklist**
-
-| Fix | Implementation | Result |
-|-----|----------------|--------|
-| **Remove transparency** | Replace `border-transparent` with `border-primary-600` | Browser renders actual color |
-| **Add thickness** | Use `border-2` instead of `border` | Survives Hi-DPI antialiasing |
-| **Increase contrast** | Use `-600` and `-800` variants | Meets 3:1 WCAG ratio |
-| **Separate focus ring** | Add `focus-visible:ring-offset-2` | Ring doesn't merge with border |
-
-#### 🔬 **Testing Border Visibility**
+#### 📊 **Before vs After Comparison**
 
 ```html
-<!-- Test 1: Transparency check -->
-<button class="bg-primary border-2 border-transparent">No border (transparent)</button>
-<button class="bg-primary border-2 border-primary-600">Visible border</button>
+<!-- ❌ COMPLEX: 30+ utility classes, color matching issues -->
+<button class="bg-primary text-primary-foreground border-2 border-primary-600 hover:bg-primary/90 hover:border-primary-800 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-offset-2">
+  Complex button
+</button>
 
-<!-- Test 2: Contrast check -->
-<button class="bg-primary border-2 border-primary-700">Low contrast</button>
-<button class="bg-primary border-2 border-primary-800">High contrast</button>
-
-<!-- Test 3: Thickness check -->
-<button class="bg-primary border border-primary-600">1px border</button>
-<button class="bg-primary border-2 border-primary-600">2px border</button>
-
-<!-- Test 4: Focus ring separation -->
-<button class="bg-primary border-2 border-primary-600 focus-visible:ring-[3px]">Merged ring</button>
-<button class="bg-primary border-2 border-primary-600 focus-visible:ring-[3px] focus-visible:ring-offset-2">Separated ring</button>
+<!-- ✅ SIMPLE: 11 utility classes, always works -->
+<button class="bg-primary text-primary-foreground border border-gray-300 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-600">
+  Simple button
+</button>
 ```
 
-### ��️ `[UTILITY-ICONS]` Icon Utilities
+#### 🎯 **Why This Approach Wins**
+
+| Issue | Complex Approach | Simple Approach |
+|-------|------------------|-----------------|
+| **Visibility** | Color matching often fails | Neutral gray always contrasts |
+| **Maintenance** | Different borders per variant | Single border strategy |
+| **Performance** | Hover changes multiple properties | Only fill opacity changes |
+| **Accessibility** | Complex focus states | Clean ring with offset |
+| **Hi-DPI** | 2px borders can look heavy | 1px stays crisp |
+| **Class count** | 30+ utilities per button | 11 utilities per button |
+
+#### 🔬 **Quick Visibility Test**
+
+```html
+<!-- Test: Gray border vs color-matched border -->
+<button class="bg-blue-500 border border-blue-600">Hard to see</button>
+<button class="bg-blue-500 border border-gray-300">Always visible</button>
+
+<button class="bg-red-500 border border-red-600">Hard to see</button>
+<button class="bg-red-500 border border-gray-300">Always visible</button>
+```
+
+### 🏷️ `[UTILITY-ICONS]` Icon Utilities
 ```css
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */
