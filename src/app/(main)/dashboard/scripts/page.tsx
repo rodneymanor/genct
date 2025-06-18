@@ -133,7 +133,7 @@ export default function ScriptsPage() {
   const renderResearchView = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Research Sources</h3>
+        <h3 className="text-lg font-medium">Research Sources</h3>
         <Button size="sm">
           <Plus className="mr-2 h-4 w-4" />
           Add Source
@@ -183,7 +183,7 @@ export default function ScriptsPage() {
   const renderOutlineView = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Script Outline</h3>
+        <h3 className="text-lg font-medium">Script Outline</h3>
         <Button size="sm">
           <Plus className="mr-2 h-4 w-4" />
           Add Component
@@ -225,7 +225,7 @@ export default function ScriptsPage() {
   const renderScriptView = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Script Editor</h3>
+        <h3 className="text-lg font-medium">Script Editor</h3>
         <div className="flex items-center gap-2">
           <Select value={selectedTone} onValueChange={setSelectedTone}>
             <SelectTrigger className="w-40">
@@ -283,7 +283,7 @@ export default function ScriptsPage() {
           {/* Header */}
           <div className="border-b border-border-strong p-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">All Scripts</h2>
+              <h2 className="text-lg font-medium">All Scripts</h2>
               <Button size="sm" onClick={handleNewScript}>
                 <Plus className="h-4 w-4" />
               </Button>
@@ -341,7 +341,7 @@ export default function ScriptsPage() {
             <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 2xl:px-24 py-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold mb-2">{selectedScript.title}</h1>
+                  <h1 className="text-2xl font-medium mb-2">{selectedScript.title}</h1>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <div className={`w-2 h-2 rounded-full ${statusConfig[selectedScript.status as keyof typeof statusConfig].color}`} />
@@ -410,7 +410,7 @@ export default function ScriptsPage() {
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
               <ScrollText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Select a script to get started</h3>
+              <h3 className="text-lg font-medium mb-2">Select a script to get started</h3>
               <p className="text-muted-foreground mb-4">Choose a script from the sidebar or create a new one</p>
               <Button onClick={handleNewScript}>
                 <Plus className="mr-2 h-4 w-4" />
