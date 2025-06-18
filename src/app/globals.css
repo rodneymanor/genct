@@ -362,6 +362,14 @@ button:disabled {
   @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
 }
 
+/* Global border utility replacing shadow-xs */
+.border-default {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / var(--tw-border-opacity));
+  border-width: 1px;
+  border-style: solid;
+}
+
 /* Fix for unwanted black borders on cards */
 .group\/panel {
   border: none !important;

@@ -266,7 +266,15 @@ const alertVariants = cva(
 
 ### 🏷️ `[UTILITY-BORDERS]` Border Utilities
 ```css
-/* 🔍 SEARCH: border, outline, stroke */
+/* 🔍 SEARCH: border, outline, stroke, border-default */
+/* Global default border replacing shadow-xs */
+.border-default {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / var(--tw-border-opacity));
+  border-width: 1px;
+  border-style: solid;
+}
+
 .border-strong {
   border-color: hsl(var(--border-strong));
 }
@@ -283,6 +291,12 @@ const alertVariants = cva(
   border-color: hsl(var(--foreground-lighter));
 }
 ```
+
+#### 🎨 **Border System Migration:**
+- **🚫 Deprecated**: `shadow-xs` - Replaced with `border-default` for consistent styling
+- **✅ New Standard**: `border-default` - Global border utility with proper CSS variables
+- **🎯 Usage**: Apply `border-default` class instead of `shadow-xs` for consistent borders
+- **🌙 Theme Adaptive**: Automatically adapts to light/dark themes via CSS variables
 
 ### 🏷️ `[UTILITY-SURFACES]` Surface & Background Utilities
 ```css

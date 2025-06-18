@@ -117,8 +117,8 @@ export function HeroSection({ className }: HeroSectionProps) {
               "absolute bottom-4 right-4 h-[38px] w-[38px] rounded-md border transition-all duration-200 ease-out outline-none",
               "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-offset-1",
               trimmedValue
-                ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary shadow-xs"
-                : "bg-background hover:bg-accent hover:text-accent-foreground text-foreground border-border shadow-xs"
+                ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary border-default"
+                : "bg-background hover:bg-accent hover:text-accent-foreground text-foreground border-border border-default"
             )}
             disabled={!trimmedValue}
           >

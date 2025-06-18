@@ -103,14 +103,14 @@ export function FloatingActionButton({ className }: FloatingActionButtonProps) {
       id: 'note',
       label: 'Quick Note',
       icon: FileText,
-      color: 'bg-chart-4 hover:bg-chart-4/90 text-primary-foreground shadow-xs',
+      color: 'bg-chart-4 hover:bg-chart-4/90 text-primary-foreground border-default',
       onClick: () => handleActionClick('note'),
     },
     {
       id: 'recording',
       label: 'Voice Memo',
       icon: Mic,
-      color: 'bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-xs',
+      color: 'bg-destructive hover:bg-destructive/90 text-destructive-foreground border-default',
       onClick: () => handleActionClick('recording'),
     },
   ];
