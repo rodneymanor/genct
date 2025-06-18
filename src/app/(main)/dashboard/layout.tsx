@@ -24,7 +24,8 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
 
   return (
     <AuthGuard>
-      <SidebarProvider defaultOpen={defaultOpen}>
+      {/* SIDEBAR AND TOP BAR HIDDEN FOR DOCK TESTING */}
+      {/* <SidebarProvider defaultOpen={defaultOpen}>
         <AppSidebar variant={sidebarVariant} collapsible={sidebarCollapsible} />
         <SidebarInset
           className={cn(
@@ -53,7 +54,16 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           <FloatingActionButton />
           <NavigationDock />
         </SidebarInset>
-      </SidebarProvider>
+      </SidebarProvider> */}
+      
+      {/* DOCK-ONLY LAYOUT FOR TESTING */}
+      <div className="min-h-screen w-full">
+        <main className="w-full">
+          {children}
+        </main>
+        <FloatingActionButton />
+        <NavigationDock />
+      </div>
     </AuthGuard>
   );
 }
