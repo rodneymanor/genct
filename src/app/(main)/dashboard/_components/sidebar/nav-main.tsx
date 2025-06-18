@@ -104,6 +104,27 @@ const NavItemCollapsed = ({
   item: NavMainItem;
   isActive: (url: string, subItems?: NavMainItem["subItems"]) => boolean;
 }) => {
+  // If item has no subItems, render as a simple link button
+  if (!item.subItems || item.subItems.length === 0) {
+    return (
+      <SidebarMenuItem key={item.title}>
+        <SidebarMenuButton
+          asChild
+          disabled={item.comingSoon}
+          tooltip={item.title}
+          isActive={isActive(item.url)}
+        >
+          <Link href={item.url} target={item.newTab ? "_blank" : undefined}>
+            {item.icon && <item.icon />}
+            <span className="sr-only">{item.title}</span>
+            {item.comingSoon && <IsComingSoon />}
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  }
+
+  // If item has subItems, render with dropdown menu
   return (
     <SidebarMenuItem key={item.title}>
       <DropdownMenu>
@@ -118,7 +139,7 @@ const NavItemCollapsed = ({
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" align="start">
-          {item.subItems?.map((subItem) => (
+          {item.subItems.map((subItem) => (
             <DropdownMenuItem key={subItem.title} asChild>
               <SidebarMenuSubButton
                 key={subItem.title}
