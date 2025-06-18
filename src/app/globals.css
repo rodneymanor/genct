@@ -225,11 +225,50 @@ body {
 
 /* Supabase Panel System */
 .panel-gradient {
-  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
+  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all duration-300 hover:shadow-lg hover:shadow-black/5 hover:scale-[1.02] hover:-translate-y-1 flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
 }
 
 .panel-inner {
-  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
+  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full transition-all duration-300 group-hover/panel:bg-surface-75/95;
+}
+
+/* Advanced Supabase-Style Utilities */
+.glass-morphism {
+  @apply bg-background/80 backdrop-blur-xl border border-border/50;
+}
+
+.glass-morphism-strong {
+  @apply bg-background/60 backdrop-blur-2xl border border-border/30 shadow-2xl shadow-black/10;
+}
+
+.supabase-glow {
+  @apply shadow-lg shadow-primary/20 dark:shadow-primary/10;
+}
+
+.supabase-glow-strong {
+  @apply shadow-xl shadow-primary/30 dark:shadow-primary/20;
+}
+
+.interactive-lift {
+  @apply transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5;
+}
+
+.interactive-press {
+  @apply transition-all duration-150 active:scale-[0.98] active:shadow-sm;
+}
+
+/* Enhanced Focus States */
+.focus-supabase {
+  @apply focus-visible:ring-[3px] focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:shadow-lg focus-visible:shadow-primary/20;
+}
+
+/* Typography Enhancements */
+.text-supabase {
+  @apply tracking-tight font-medium;
+}
+
+.text-supabase-heading {
+  @apply tracking-tight font-semibold text-foreground/90;
 }
 
 /* Icon Consistency */

@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils"
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div className={cn(
-      "group/panel rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full",
+      "group/panel rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all duration-300 hover:shadow-lg hover:shadow-black/5 hover:scale-[1.02] hover:-translate-y-1 flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full",
       className
     )}>
       <div
         data-slot="card"
-        className="z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 flex flex-col gap-6 bg-surface-75 w-full h-full text-card-foreground py-6"
+        className="z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 flex flex-col gap-6 bg-surface-75 w-full h-full text-card-foreground py-6 transition-all duration-300 group-hover/panel:bg-surface-75/95"
         {...props}
       />
     </div>
