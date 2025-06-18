@@ -11,16 +11,14 @@ interface CopyButtonProps {
   className?: string
   size?: "sm" | "default" | "lg"
   variant?: "default" | "ghost" | "outline"
-  showDemo?: boolean // For demo purposes
 }
 
-export function CopyButton({ 
+export default function CopyButton({ 
   textToCopy, 
-  buttonText = "Copy", 
+  buttonText = "Copy as SQL", 
   className,
   size = "sm",
-  variant = "outline",
-  showDemo = false
+  variant = "ghost"
 }: CopyButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -28,28 +26,30 @@ export function CopyButton({
     try {
       await navigator.clipboard.writeText(textToCopy)
       setIsOpen(true)
-      
-      // Reset state after a delay
       setTimeout(() => setIsOpen(false), 2000)
     } catch (err) {
       console.error('Failed to copy text: ', err)
     }
   }
 
-  const button = (
+  return (
     <Button
       type="button"
       onClick={handleClick}
       data-state={isOpen ? "open" : "closed"}
       className={cn(
-        // Custom Supabase-inspired styles that don't conflict with base button
-        "relative transition-all duration-200 font-regular",
-        // Custom tiny size (overrides sm when needed)
-        size === "sm" && "text-xs px-2.5 py-1 h-[26px]",
-        // Enhanced focus styles (works with base focus)
-        "focus-visible:ring-offset-1",
-        // State-specific border enhancements
-        "data-[state=open]:border-border-stronger",
+        // Base styles
+        "relative justify-center cursor-pointer inline-flex items-center space-x-2 text-center font-regular ease-out duration-200 rounded-md outline-none transition-all outline-0",
+        // Focus styles
+        "focus-visible:outline-4 focus-visible:outline-offset-1 focus-visible:outline-border-strong",
+        // Border and background
+        "border text-foreground bg-transparent border-strong hover:border-foreground-muted",
+        // Size (tiny)
+        "text-xs px-2.5 py-1 h-[26px]",
+        // State-specific styles
+        "data-[state=open]:border-stronger data-[state=open]:outline-border-strong",
+        // Pointer events
+        "pointer-events-auto",
         className
       )}
       variant={variant}
@@ -60,27 +60,5 @@ export function CopyButton({
       </div>
       <span className="truncate">{buttonText}</span>
     </Button>
-  )
-
-  // If showDemo is true, wrap in demo container
-  if (showDemo) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        {button}
-      </div>
-    )
-  }
-
-  return button
-}
-
-// Default export for backwards compatibility
-export default function Component() {
-  return (
-    <CopyButton 
-      textToCopy="SELECT * FROM users WHERE active = true;" 
-      buttonText="Copy as SQL"
-      showDemo={true}
-    />
   )
 }

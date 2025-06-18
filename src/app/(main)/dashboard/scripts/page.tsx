@@ -19,7 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CopyButton } from "@/components/ui/copy-button";
+import CopyButton from "@/components/ui/copy-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
