@@ -303,13 +303,13 @@ const alertVariants = cva(
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */
 .lucide {
-  stroke-width: 1.5;
+  stroke-width: 1;
 }
 ```
 
 #### 🎨 **Icon Styling:**
 - **Default Weight**: `lucide-react` icons default to a heavy `stroke-width` of `2`.
-- **Global Override**: We apply a global style to the `.lucide` class to set a lighter `stroke-width: 1.5;` for a more refined, Supabase-like aesthetic.
+- **Global Override**: We apply a global style to the `.lucide` class to set a lighter `stroke-width: 1;` for a more refined, Supabase-like aesthetic.
 - **Consistency**: This ensures all icons used in the application maintain a consistent and light appearance without needing manual props.
 
 ### 🏷️ `[UTILITY-SURFACES]` Surface & Background Utilities

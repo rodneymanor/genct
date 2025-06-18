@@ -386,5 +386,5 @@ button:disabled {
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */
 .lucide {
-  stroke-width: 1.5;
+  stroke-width: 1;
 }
