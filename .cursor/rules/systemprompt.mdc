@@ -21,7 +21,7 @@ When modifying components, strictly adhere to the following design principles an
     * Ensure all borders, by default, have `border-width: 0; border-style: solid;` and `border-color: hsl(var(--border-default)/1);`.
     * For focus states, borders should be `none` and replaced with a ring.
 
-* **Borders:**
+* **shadows:**
 No component in the app has shadows in it's default state . 
 Only on hover effects or transitions.
 

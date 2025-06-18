@@ -6,7 +6,6 @@ import {
   ScrollText,
   Plus,
   Search,
-  Copy,
   Download,
   FileText,
   Lightbulb,
@@ -20,6 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CopyButton } from "@/components/ui/copy-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -118,13 +118,6 @@ export default function ScriptsPage() {
     window.location.href = "/dashboard/scripts/editor/new";
   };
 
-  const handleCopyScript = () => {
-    if (selectedScript) {
-      navigator.clipboard.writeText(selectedScript.script);
-      alert("Script copied to clipboard!");
-    }
-  };
-
   const handleDownloadScript = () => {
     if (selectedScript) {
       const element = document.createElement("a");
@@ -147,13 +140,13 @@ export default function ScriptsPage() {
         </Button>
       </div>
       {selectedScript?.research.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-8">
+        <div className="panel-gradient">
+          <div className="panel-inner flex flex-col items-center justify-center py-8">
             <Globe className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground text-center">No research sources yet</p>
             <p className="text-sm text-muted-foreground">Add sources to strengthen your script</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ) : (
         <div className="grid gap-4">
           {selectedScript?.research.map((source, index) => (
@@ -197,13 +190,13 @@ export default function ScriptsPage() {
         </Button>
       </div>
       {selectedScript?.outline.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-8">
+        <div className="panel-gradient">
+          <div className="panel-inner flex flex-col items-center justify-center py-8">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground text-center">No outline components yet</p>
             <p className="text-sm text-muted-foreground">Build your script structure</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ) : (
         <div className="space-y-3">
           {selectedScript?.outline.map((component) => (
@@ -361,10 +354,12 @@ export default function ScriptsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={handleCopyScript}>
-                    <Copy className="mr-2 h-4 w-4" />
-                    Copy Script
-                  </Button>
+                  <CopyButton 
+                    textToCopy={selectedScript?.script ?? ""} 
+                    buttonText="Copy Script"
+                    size="sm"
+                    variant="outline"
+                  />
                   <Button variant="outline" size="sm" onClick={handleDownloadScript}>
                     <Download className="mr-2 h-4 w-4" />
                     Download Script
