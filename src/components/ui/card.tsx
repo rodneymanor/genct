@@ -2,14 +2,13 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/* 🔍 SEARCH: card, panel, gradient, border, supabase */
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
-      className={cn(
-        "group/panel rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full",
-        className
-      )}
-    >
+    <div className={cn(
+      "group/panel rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full",
+      className
+    )}>
       <div
         data-slot="card"
         className="z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 flex flex-col gap-6 bg-surface-75 w-full h-full text-card-foreground py-6 shadow-sm"
@@ -19,6 +18,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/* 🔍 SEARCH: card-header, container-query, grid */
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -32,6 +32,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/* 🔍 SEARCH: card-title, typography, heading */
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -42,6 +43,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/* 🔍 SEARCH: card-description, muted-text, subtitle */
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -52,6 +54,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/* 🔍 SEARCH: card-action, grid-positioning, buttons */
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -65,6 +68,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/* 🔍 SEARCH: card-content, padding, main-content */
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -75,6 +79,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/* 🔍 SEARCH: card-footer, actions, bottom-content */
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

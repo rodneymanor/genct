@@ -104,10 +104,10 @@ a:hover {
 
 ## 🧩 Component Styles
 
-### 🏷️ `[COMPONENT-CARD]` Card System
+### 🏷️ `[COMPONENT-CARD]` Card System - Supabase Architecture
 ```tsx
-/* 🔍 SEARCH: card, panel, gradient, border */
-// Main Card Component
+/* 🔍 SEARCH: card, panel, gradient, border, supabase */
+// Main Card Component - Supabase Style with Gradient Border
 function Card({ className, ...props }) {
   return (
     <div className={cn(
@@ -123,7 +123,8 @@ function Card({ className, ...props }) {
   )
 }
 
-// Card Sub-components
+// Card Sub-components with Searchable Tags
+/* 🔍 SEARCH: card-header, container-query, grid */
 function CardHeader({ className, ...props }) {
   return (
     <div className={cn(
@@ -133,18 +134,52 @@ function CardHeader({ className, ...props }) {
   )
 }
 
+/* 🔍 SEARCH: card-title, typography, heading */
 function CardTitle({ className, ...props }) {
   return (
     <div className={cn("leading-none font-semibold", className)} {...props} />
   )
 }
 
+/* 🔍 SEARCH: card-description, muted-text, subtitle */
 function CardDescription({ className, ...props }) {
   return (
     <div className={cn("text-muted-foreground text-sm", className)} {...props} />
   )
 }
+
+/* 🔍 SEARCH: card-action, grid-positioning, buttons */
+function CardAction({ className, ...props }) {
+  return (
+    <div className={cn(
+      "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+      className
+    )} {...props} />
+  )
+}
+
+/* 🔍 SEARCH: card-content, padding, main-content */
+function CardContent({ className, ...props }) {
+  return (
+    <div className={cn("px-6", className)} {...props} />
+  )
+}
+
+/* 🔍 SEARCH: card-footer, actions, bottom-content */
+function CardFooter({ className, ...props }) {
+  return (
+    <div className={cn("flex items-center px-6 [.border-t]:pt-6", className)} {...props} />
+  )
+}
 ```
+
+#### 🎨 **Card Architecture Breakdown:**
+- **🔧 Outer Container**: `group/panel` with gradient border system (`p-px bg-gradient-to-b`)
+- **🎯 Inner Content**: `bg-surface-75` with proper rounded corners and overflow handling  
+- **📱 Responsive Design**: Different border radius on mobile vs desktop (`rounded-lg md:rounded-xl`)
+- **✨ Interactive States**: Hover shadows (`hover:shadow-md`) and background transitions
+- **♿ Accessibility**: Proper semantic markup with `data-slot` attributes for component identification
+- **🌙 Dark Mode**: Automatic theme adaptation (`dark:to-border/30`)
 
 ### 🏷️ `[COMPONENT-CARD-VARIANTS]` Card Usage Patterns
 ```tsx
