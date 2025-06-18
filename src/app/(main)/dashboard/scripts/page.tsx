@@ -338,7 +338,7 @@ export default function ScriptsPage() {
         {selectedScript ? (
           <div className="flex h-full flex-col">
             {/* Header */}
-            <div className="border-b border-border-strong p-6">
+            <div className="mx-auto w-full max-w-[1200px] px-4 @lg:px-6 @xl:px-12 @2xl:px-20 @3xl:px-24 py-6">
               <div className="flex items-start justify-between">
                 <div>
                   <h1 className="text-2xl font-bold mb-2">{selectedScript.title}</h1>
@@ -400,12 +400,10 @@ export default function ScriptsPage() {
             </div>
 
             {/* Content */}
-            <div className="flex-1 p-6">
-              <div className="mx-auto w-full max-w-[1200px] px-4 @lg:px-6 @xl:px-12 @2xl:px-20 @3xl:px-24">
-                {activeTab === "research" && renderResearchView()}
-                {activeTab === "outline" && renderOutlineView()}
-                {activeTab === "script" && renderScriptView()}
-              </div>
+            <div className="flex-1 mx-auto w-full max-w-[1200px] px-4 @lg:px-6 @xl:px-12 @2xl:px-20 @3xl:px-24 pb-6">
+              {activeTab === "research" && renderResearchView()}
+              {activeTab === "outline" && renderOutlineView()}
+              {activeTab === "script" && renderScriptView()}
             </div>
           </div>
         ) : (
