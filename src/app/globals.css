@@ -805,3 +805,23 @@ COMMENTED OUT OTHER UTILITIES - UNCOMMENT AS NEEDED
   border-left-width: 1px;
   border-left-color: hsl(var(--sidebar-border));
 }
+
+/* Remove all custom border and color utilities - they're causing conflicts */
+
+/* Sidebar Border - Simple approach */
+[data-side="left"] .sidebar-container {
+  border-right: 1px solid hsl(var(--sidebar-border));
+}
+
+[data-side="right"] .sidebar-container {
+  border-left: 1px solid hsl(var(--sidebar-border));
+}
+
+/* Panel Gradient Utility */
+.panel-gradient {
+  @apply rounded-lg md:rounded-xl p-px bg-gradient-to-b from-border to-border/50 dark:to-border/30 transition-all hover:shadow-md flex items-center justify-center hover:bg-none hover:!bg-border-stronger relative w-full h-full;
+}
+
+.panel-inner {
+  @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
+}

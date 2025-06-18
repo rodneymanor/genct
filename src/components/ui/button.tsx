@@ -9,23 +9,23 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Supabase Green Brand Button - darker on hover
+        // Supabase Green Brand Button - with proper border
         brand:
-          "border bg-brand-400 dark:bg-brand-500 hover:bg-brand-500 dark:hover:bg-brand-600 text-foreground border-brand-500/75 dark:border-brand/30 hover:border-brand-600 dark:hover:border-brand focus-visible:outline-brand-600 data-[state=open]:bg-brand-400/80 dark:data-[state=open]:bg-brand-500/80 data-[state=open]:outline-brand-600",
+          "bg-brand-400 dark:bg-brand-500 hover:bg-brand-500 dark:hover:bg-brand-600 text-foreground border border-brand-400 dark:border-brand-500 hover:border-brand-500 dark:hover:border-brand-600 focus-visible:outline-brand-600 data-[state=open]:bg-brand-400/80 dark:data-[state=open]:bg-brand-500/80 data-[state=open]:outline-brand-600",
         
-        // White/Transparent Dashed Border Button - darker on hover
+        // White/Transparent Dashed Border Button
         dashed:
           "text-foreground border border-dashed border-strong hover:border-stronger hover:bg-muted/50 dark:hover:bg-muted/30 bg-transparent focus-visible:outline-border-strong data-[state=open]:border-stronger data-[state=open]:outline-border-strong",
         
-        // Standard variants (simplified)
+        // Standard variants with lighter borders
         default:
-          "bg-primary text-primary-foreground border border-gray-300 hover:bg-primary/90 dark:border-gray-600",
+          "bg-primary text-primary-foreground border border-border hover:bg-primary/90 hover:border-border-strong",
         destructive:
-          "bg-destructive text-white border border-gray-300 hover:bg-destructive/90 dark:border-gray-600",
+          "bg-destructive text-white border border-border hover:bg-destructive/90 hover:border-border-strong",
         outline:
-          "border bg-background border-gray-300 hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-gray-600",
+          "border bg-background border-border hover:bg-accent hover:text-accent-foreground hover:border-border-strong",
         secondary:
-          "bg-secondary text-secondary-foreground border border-gray-300 hover:bg-secondary/80 dark:border-gray-600",
+          "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 hover:border-border-strong",
         ghost:
           "border border-transparent hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline border border-transparent",

@@ -75,7 +75,7 @@ export function HeroSection({ className }: HeroSectionProps) {
       {/* Hero Headline */}
       <div className="mb-8 max-w-3xl text-center">
         <h1 className="mb-4 text-3xl font-black tracking-tight md:text-4xl lg:text-5xl">
-          What will You <span className="text-primary">Script Today</span>?
+          What will You <span className="text-brand font-black">Script Today</span>?
         </h1>
         <p className="text-muted-foreground mb-8 text-lg md:text-xl">
           Describe what you want to create and I&apos;ll help you craft compelling content that resonates with your
@@ -91,7 +91,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-gray-200 px-6 py-4 pr-24 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
+            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-border px-6 py-4 pr-24 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
             autoFocus
           />
 
@@ -117,8 +117,8 @@ export function HeroSection({ className }: HeroSectionProps) {
               "absolute bottom-4 right-4 h-[38px] w-[38px] rounded-md border transition-all duration-200 ease-out outline-none",
               "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-offset-1",
               trimmedValue
-                ? "bg-primary hover:bg-primary/90 text-primary-foreground border-gray-200"
-                : "bg-background hover:bg-accent hover:text-accent-foreground text-foreground border-gray-200"
+                ? "bg-primary hover:bg-primary/90 text-primary-foreground border-border"
+                : "bg-background hover:bg-accent hover:text-accent-foreground text-foreground border-border"
             )}
             disabled={!trimmedValue}
           >
