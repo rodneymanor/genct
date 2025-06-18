@@ -149,7 +149,7 @@ export default function SupabaseButtonsDemo() {
                   </div>
                   <div className="space-y-2">
                     <h3 className="text-sm font-medium">Hover State</h3>
-                    <Button variant="brand" size="tiny" className="hover:bg-brand/80">
+                    <Button variant="brand" size="tiny">
                       Hover me
                     </Button>
                   </div>

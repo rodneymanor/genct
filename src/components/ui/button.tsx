@@ -9,13 +9,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Supabase Green Brand Button
+        // Supabase Green Brand Button - darker on hover
         brand:
-          "border bg-brand-400 dark:bg-brand-500 hover:bg-brand/80 dark:hover:bg-brand/50 text-foreground border-brand-500/75 dark:border-brand/30 hover:border-brand-600 dark:hover:border-brand focus-visible:outline-brand-600 data-[state=open]:bg-brand-400/80 dark:data-[state=open]:bg-brand-500/80 data-[state=open]:outline-brand-600",
+          "border bg-brand-400 dark:bg-brand-500 hover:bg-brand-500 dark:hover:bg-brand-600 text-foreground border-brand-500/75 dark:border-brand/30 hover:border-brand-600 dark:hover:border-brand focus-visible:outline-brand-600 data-[state=open]:bg-brand-400/80 dark:data-[state=open]:bg-brand-500/80 data-[state=open]:outline-brand-600",
         
-        // White/Transparent Dashed Border Button
+        // White/Transparent Dashed Border Button - darker on hover
         dashed:
-          "text-foreground border border-dashed border-strong hover:border-stronger bg-transparent focus-visible:outline-border-strong data-[state=open]:border-stronger data-[state=open]:outline-border-strong",
+          "text-foreground border border-dashed border-strong hover:border-stronger hover:bg-muted/50 dark:hover:bg-muted/30 bg-transparent focus-visible:outline-border-strong data-[state=open]:border-stronger data-[state=open]:outline-border-strong",
         
         // Standard variants (simplified)
         default:
