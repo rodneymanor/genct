@@ -100,13 +100,24 @@ export function HeroSection({ className }: HeroSectionProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="text-muted-foreground hover:text-primary absolute bottom-4 right-16"
+            className={cn(
+              // Base Supabase styles
+              "relative justify-center cursor-pointer inline-flex items-center text-center font-regular ease-out duration-200 rounded-md outline-none transition-all outline-0",
+              // Focus styles (Supabase)
+              "focus-visible:outline-4 focus-visible:outline-offset-1 focus-visible:outline-border-strong",
+              // Position and size
+              "absolute bottom-4 right-16 h-[32px] w-[32px]",
+              // Border and background
+              "border text-foreground-lighter bg-transparent border-strong hover:border-foreground-muted hover:text-primary",
+              // Pointer events
+              "pointer-events-auto",
+            )}
             onClick={() => {
               // TODO: Implement voice input
               console.log("Voice input clicked");
             }}
           >
-            <Mic className="h-5 w-5" />
+            <Mic className="h-4 w-4" />
           </Button>
 
           {/* Submit Button */}
@@ -114,15 +125,22 @@ export function HeroSection({ className }: HeroSectionProps) {
             type="submit"
             size="icon"
             className={cn(
-              "absolute bottom-4 right-4 h-[38px] w-[38px] rounded-md border transition-all duration-200 ease-out outline-none",
-              "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-offset-1",
+              // Base Supabase styles
+              "relative justify-center cursor-pointer inline-flex items-center text-center font-regular ease-out duration-200 rounded-md outline-none transition-all outline-0",
+              // Focus styles (Supabase)
+              "focus-visible:outline-4 focus-visible:outline-offset-1 focus-visible:outline-border-strong",
+              // Position and size
+              "absolute bottom-4 right-4 h-[32px] w-[32px]",
+              // Border and background states
               trimmedValue
-                ? "bg-primary hover:bg-primary/90 text-primary-foreground border-gray-200"
-                : "bg-background hover:bg-accent hover:text-accent-foreground text-foreground border-gray-200"
+                ? "border border-strong text-primary-foreground bg-primary hover:bg-primary/90 hover:border-foreground-muted"
+                : "border text-foreground bg-transparent border-strong hover:border-foreground-muted",
+              // Pointer events
+              "pointer-events-auto",
             )}
             disabled={!trimmedValue}
           >
-            <ArrowUp className="h-5 w-5" />
+            <ArrowUp className="h-4 w-4" />
           </Button>
         </div>
 
