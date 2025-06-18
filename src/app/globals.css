@@ -73,6 +73,13 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   
+  /* Border width values */
+  --border-width: 1px;
+  --border-width-0: 0px;
+  --border-width-2: 2px;
+  --border-width-4: 4px;
+  --border-width-8: 8px;
+  
   /* Font families */
   --font-family-sans: var(--font-sans);
   --font-family-custom: var(--font-custom);
@@ -217,14 +224,19 @@
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
-  /* Removed global border-color override to prevent conflicts with Tailwind utilities */
+  border-color: hsl(var(--color-border) / 1);
+  
+  /* Essential Tailwind CSS variables for utilities */
+  --tw-border-style: solid;
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
   --tw-ring-offset-width: 0px;
   --tw-ring-offset-color: #fff;
   --tw-ring-color: rgb(147 197 253/0.5);
   --tw-ring-offset-shadow: 0 0 #0000;
   --tw-ring-shadow: 0 0 #0000;
   --tw-shadow: 0 0 #0000;
-  /* Removed global opacity variables - let Tailwind manage them per-utility */
 }
 
 html {
