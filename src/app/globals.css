@@ -341,7 +341,7 @@ button:disabled {
 
 /* Border utilities documentation - Use proper Tailwind classes */
 /* 🏷️ [UTILITY-BORDERS] */
-/* 🔍 SEARCH: border, outline, stroke, border-gray, border-slate */
+/* 🔍 SEARCH: border, outline, stroke, border-gray, border-slate, panel-borders */
 
 /* 
 IMPORTANT: Use actual Tailwind color classes for borders, not custom utilities.
@@ -357,6 +357,18 @@ Recommended border classes:
 Example usage:
 <input class="border border-gray-200 focus:border-primary" />
 <div class="border border-slate-200 hover:border-gray-300" />
+
+PANEL BORDERS - MANDATORY REQUIREMENT:
+All panel borders (sidebars, content areas, dividers) MUST use border-strong class:
+- border-strong      (Supabase standard panel border)
+- border-stronger    (Stronger emphasis borders)
+
+Correct panel usage:
+<div class="border-r border-strong">Sidebar</div>
+<div class="border-b border-strong">Header</div>
+<div class="border border-strong">Panel</div>
+
+NEVER use plain 'border' without border-strong for panels!
 */
 
 /* Fix for unwanted black borders on cards */

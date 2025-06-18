@@ -285,10 +285,10 @@ export default function ScriptsPage() {
   return (
     <div className="flex h-[calc(100vh-4rem)] w-full">
       {/* Left Sidebar - Scripts List */}
-      <div className="hidden md:block w-80 border-r bg-muted/30">
+      <div className="hidden md:block w-80 border-r border-border-strong bg-muted/30">
         <div className="flex h-full flex-col">
           {/* Header */}
-          <div className="border-b p-4">
+          <div className="border-b border-border-strong p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">All Scripts</h2>
               <Button size="sm" onClick={handleNewScript}>
@@ -345,7 +345,7 @@ export default function ScriptsPage() {
         {selectedScript ? (
           <div className="flex h-full flex-col">
             {/* Header */}
-            <div className="border-b p-6">
+            <div className="border-b border-border-strong p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <h1 className="text-2xl font-bold mb-2">{selectedScript.title}</h1>
