@@ -84,7 +84,7 @@ export function HeroSection({ className }: HeroSectionProps) {
       </div>
 
       {/* Main Input Section */}
-      <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
+      <form onSubmit={handleSubmit} className="mx-auto w-full" style={{ maxWidth: '640px' }}>
         <div className="relative">
           <Textarea
             value={value}
