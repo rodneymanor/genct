@@ -74,12 +74,11 @@ export function HeroSection({ className }: HeroSectionProps) {
     <div className={cn("flex flex-col items-center justify-center py-12 md:py-16 lg:py-20", className)}>
       {/* Hero Headline */}
       <div className="mb-8 max-w-3xl text-center">
-        <h1 className="mb-4 text-3xl font-black tracking-tight md:text-4xl lg:text-5xl">
-          What will You <span className="text-emerald-500 font-black">Script Today</span>?
+        <h1 className="mb-4 font-[500] tracking-tighter text-4xl sm:text-5xl md:text-6xl">
+          What will You <span className="text-emerald-500 font-[500]">Script Today</span>?
         </h1>
         <p className="text-muted-foreground mb-8 text-lg md:text-xl">
-          Describe what you want to create and I&apos;ll help you craft compelling content that resonates with your
-          audience
+          Create compelling content that resonates with audiences
         </p>
       </div>
 
