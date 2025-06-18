@@ -7,6 +7,8 @@ import {
   Lightbulb,
   Sparkles,
   FolderOpen,
+  Settings,
+  Mail,
   type LucideIcon,
 } from "lucide-react";
 
@@ -63,7 +65,18 @@ export const sidebarItems: NavGroup[] = [
         subItems: [
           { title: "AI Suggestions", url: "/dashboard/inspiration/ai-suggestions", icon: Sparkles },
           { title: "Collections", url: "/dashboard/inspiration/collections", icon: FolderOpen },
+          { title: "Email Demo", url: "/dashboard/inspiration/email-demo", icon: Mail },
         ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    items: [
+      {
+        title: "Settings",
+        url: "/dashboard/settings",
+        icon: Settings,
       },
     ],
   },

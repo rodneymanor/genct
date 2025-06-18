@@ -1,0 +1,288 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+import { collection, addDoc, getDocs, query, where, limit, Timestamp } from 'firebase/firestore';
+
+import { db } from '@/lib/firebase';
+
+interface EmailData {
+  from: string;
+  to: string;
+  subject: string;
+  body: string;
+  userId?: string; // Will be determined from email alias
+}
+
+interface ProcessedLink {
+  url: string;
+  platform: 'instagram' | 'tiktok' | 'other';
+  extracted: boolean;
+  content?: any;
+}
+
+// Helper function to extract social media links from email content
+function extractSocialMediaLinks(content: string): string[] {
+  const patterns = [
+    /https?:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/[^\s]+/gi,
+    /https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/[^\s]+/gi,
+  ];
+  
+  const links: string[] = [];
+  patterns.forEach(pattern => {
+    const matches = content.match(pattern);
+    if (matches) {
+      links.push(...matches);
+    }
+  });
+  
+  // Remove duplicates
+  return [...new Set(links)];
+}
+
+// Helper function to determine platform from URL
+function getPlatformFromUrl(url: string): 'instagram' | 'tiktok' | 'other' {
+  if (url.includes('instagram.com') || url.includes('instagr.am')) {
+    return 'instagram';
+  } else if (url.includes('tiktok.com') || url.includes('vm.tiktok.com')) {
+    return 'tiktok';
+  }
+  return 'other';
+}
+
+// Helper function to find user by email alias (simplified - in real implementation you'd have user alias mapping)
+async function findUserByEmailAlias(emailAlias: string): Promise<string | null> {
+  try {
+    // In a real implementation, you'd have a user_aliases collection
+    // For now, we'll use a simple mapping or return a default user
+    // This is where you'd implement the ImprovMX alias to user mapping
+    
+    // For demo purposes, let's assume the email alias contains the user ID
+    // In production, you'd query a user_aliases collection
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('emailAlias', '==', emailAlias), limit(1));
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      return querySnapshot.docs[0].id;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error finding user by email alias:', error);
+    return null;
+  }
+}
+
+// Helper function to get or create default collection
+async function getOrCreateDefaultCollection(userId: string): Promise<string> {
+  try {
+    // Look for existing "Email Inbox" collection
+    const collectionsRef = collection(db, 'collections');
+    const q = query(
+      collectionsRef, 
+      where('userId', '==', userId),
+      where('name', '==', 'Email Inbox'),
+      limit(1)
+    );
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      return querySnapshot.docs[0].id;
+    }
+    
+    // Create default collection
+    const newCollectionRef = await addDoc(collectionsRef, {
+      name: 'Email Inbox',
+      description: 'Links received via email',
+      userId,
+      items: [],
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+      itemCount: 0,
+      color: 'bg-purple-100',
+    });
+    
+    return newCollectionRef.id;
+  } catch (error) {
+    console.error('Error getting/creating default collection:', error);
+    throw error;
+  }
+}
+
+// POST - Process incoming email with social media links
+export async function POST(request: NextRequest) {
+  try {
+    const emailData: EmailData = await request.json();
+    
+    if (!emailData.from || !emailData.to || !emailData.body) {
+      return NextResponse.json(
+        { error: 'Email data is incomplete' },
+        { status: 400 }
+      );
+    }
+
+    // Extract social media links from email body
+    const links = extractSocialMediaLinks(emailData.body);
+    
+    if (links.length === 0) {
+      return NextResponse.json({
+        success: true,
+        message: 'No social media links found in email',
+        processed: [],
+      });
+    }
+
+    // Find user by email alias
+    const userId = await findUserByEmailAlias(emailData.to);
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User not found for email alias' },
+        { status: 404 }
+      );
+    }
+
+    // Process each link
+    const processedLinks: ProcessedLink[] = [];
+    
+    for (const url of links) {
+      const platform = getPlatformFromUrl(url);
+      
+      try {
+        // Extract content using our existing API
+        const extractResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/social-media/extract-content`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ urls: [url] }),
+        });
+        
+        const extractData = await extractResponse.json();
+        
+        if (extractData.success && extractData.extracted.length > 0) {
+          processedLinks.push({
+            url,
+            platform,
+            extracted: true,
+            content: extractData.extracted[0],
+          });
+        } else {
+          processedLinks.push({
+            url,
+            platform,
+            extracted: false,
+          });
+        }
+      } catch (error) {
+        console.error(`Error processing link ${url}:`, error);
+        processedLinks.push({
+          url,
+          platform,
+          extracted: false,
+        });
+      }
+    }
+
+    // Get or create default collection
+    const collectionId = await getOrCreateDefaultCollection(userId);
+
+    // Add successfully extracted content to collection
+    const itemsToAdd = processedLinks
+      .filter(link => link.extracted && link.content)
+      .map(link => link.content);
+
+    if (itemsToAdd.length > 0) {
+      // Add items to collection using our existing API
+      const addResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/collections/${collectionId}/items`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: itemsToAdd,
+          userId,
+        }),
+      });
+      
+      const addData = await addResponse.json();
+      
+      if (!addData.success) {
+        throw new Error('Failed to add items to collection');
+      }
+    }
+
+    // Store email processing record
+    const emailRecordsRef = collection(db, 'email_records');
+    await addDoc(emailRecordsRef, {
+      from: emailData.from,
+      to: emailData.to,
+      subject: emailData.subject,
+      userId,
+      linksFound: links.length,
+      linksProcessed: processedLinks.filter(l => l.extracted).length,
+      collectionId,
+      processedAt: Timestamp.now(),
+      links: processedLinks,
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: `Processed ${processedLinks.filter(l => l.extracted).length} of ${links.length} links`,
+      processed: processedLinks,
+      collectionId,
+    });
+
+  } catch (error) {
+    console.error('Error processing email links:', error);
+    return NextResponse.json(
+      { error: 'Failed to process email links' },
+      { status: 500 }
+    );
+  }
+}
+
+// GET - Retrieve email processing history for a user
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const emailRecordsRef = collection(db, 'email_records');
+    const q = query(
+      emailRecordsRef,
+      where('userId', '==', userId),
+      // orderBy('processedAt', 'desc'),
+      limit(50)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const records: any[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      records.push({
+        id: doc.id,
+        ...data,
+        processedAt: data.processedAt?.toDate?.()?.toISOString() || data.processedAt,
+      });
+    });
+
+    return NextResponse.json({
+      success: true,
+      records,
+    });
+
+  } catch (error) {
+    console.error('Error fetching email records:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch email records' },
+      { status: 500 }
+    );
+  }
+} 
