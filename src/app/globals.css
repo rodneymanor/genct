@@ -385,6 +385,6 @@ button:disabled {
 /* 🏷️ [UTILITY-ICONS] */
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */
-.lucide {
+svg.lucide {
   stroke-width: 1;
 }
