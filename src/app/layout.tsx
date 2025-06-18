@@ -19,22 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <html lang="en" className="light" suppressHydrationWarning>
       <head>
-        {/* Font preloading for better performance */}
-        <link
-          rel="preload"
-          href="/CustomFont-Book.54303b32.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin=""
-        />
-        <link
-          rel="preload"
-          href="/CustomFont-Medium.0cc7d245.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin=""
-        />
-        {/* Fallback font preloading */}
+        {/* Google Fonts preconnect for better performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
