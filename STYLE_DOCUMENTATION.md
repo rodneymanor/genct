@@ -266,11 +266,44 @@ const alertVariants = cva(
 
 ### 🏷️ `[UTILITY-BORDERS]` Border Utilities
 ```css
-/* 🔍 SEARCH: border, outline, stroke, border-default */
-/* Global default border replacing shadow-xs */
+/* 🔍 SEARCH: border, outline, stroke, border-default, border-light, border-subtle */
+
+/* Ultra-light border for minimal aesthetic */
+.border-subtle {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 0.15);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Light border - good for most UI elements */
+.border-light {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 0.3);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Default border - balanced visibility */
 .border-default {
   --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / var(--tw-border-opacity));
+  border-color: hsl(var(--border) / 0.5);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Medium border - for emphasis */
+.border-medium {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 0.7);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Strong border - for high contrast needs */
+.border-strong-custom {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 1);
   border-width: 1px;
   border-style: solid;
 }
@@ -292,13 +325,42 @@ const alertVariants = cva(
 }
 ```
 
-#### 🎨 **Border System Migration:**
-- **🚫 Deprecated**: `shadow-xs` - Replaced with `border-default` for consistent styling
-- **✅ New Standard**: `border-default` - Global border utility with proper CSS variables (1px)
-- **🎯 Usage**: Apply `border-default` class instead of `shadow-xs` for consistent borders.
-- **🌙 Theme Adaptive**: Automatically adapts to light/dark themes via CSS variables
+#### 🚨 **Why Borders Appeared "Dark & Heavy"**
 
-### 🏷️ `[UTILITY-ICONS]` Icon Utilities
+The original issue wasn't stroke-width - it was **border color opacity**:
+
+1. **Problem**: `border-default` was using `hsl(var(--border) / 1)` (100% opacity)
+2. **CSS Variable**: `--border: oklch(0.9461 0 0)` in light mode is quite dark (~95% gray)
+3. **Result**: Heavy, prominent borders that looked "thick" even at 1px width
+4. **Solution**: Use opacity-based border system for lighter, more subtle appearance
+
+#### 🎨 **Border Weight Guide**
+
+| Class | Opacity | Best For | Visual Weight |
+|-------|---------|----------|---------------|
+| `border-subtle` | 15% | Minimal dividers, very light separation | Ultra-light |
+| `border-light` | 30% | Most UI elements, cards, inputs | Light |
+| `border-default` | 50% | Standard components, balanced visibility | Medium |
+| `border-medium` | 70% | Emphasis, important boundaries | Strong |
+| `border-strong-custom` | 100% | High contrast, accessibility needs | Heavy |
+
+#### 🔄 **Migration Strategy**
+
+```html
+<!-- ❌ OLD: Heavy, dark borders -->
+<div class="border-2 border-gray-300">Heavy border</div>
+
+<!-- ✅ NEW: Light, subtle borders -->
+<div class="border-light">Light border</div>
+<div class="border-subtle">Ultra-light border</div>
+```
+
+#### 🌙 **Theme Compatibility**
+- All border utilities automatically adapt to light/dark themes
+- Opacity-based system ensures consistent visual weight across themes
+- No need for separate `dark:` classes - the base `--border` variable handles theme switching
+
+### ��️ `[UTILITY-ICONS]` Icon Utilities
 ```css
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */

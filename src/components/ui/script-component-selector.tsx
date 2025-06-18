@@ -45,7 +45,7 @@ export function ComponentSelector({
           <div
             key={option.id}
             className={cn(
-              "relative p-4 rounded-lg border-default cursor-pointer transition-all duration-200",
+              "relative p-4 rounded-lg border-light cursor-pointer transition-all duration-200",
               selected?.id === option.id
                 ? "border-primary bg-primary/5"
                 : "border-border hover:border-primary/50 hover:bg-muted/50"
@@ -82,7 +82,7 @@ export function ComponentSelector({
                 )}
               </div>
               <div className={cn(
-                "w-5 h-5 rounded-full border-default flex items-center justify-center ml-3 flex-shrink-0",
+                "w-5 h-5 rounded-full border-light flex items-center justify-center ml-3 flex-shrink-0",
                 selected?.id === option.id
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-muted-foreground/30"

@@ -328,7 +328,7 @@ export function QuickRecordingCapture({ isOpen, onClose, onSave }: QuickRecordin
               placeholder="Recording title (optional)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="text-base font-medium border-default"
+              className="text-base font-medium border-light"
             />
           </div>
 
@@ -357,13 +357,13 @@ export function QuickRecordingCapture({ isOpen, onClose, onSave }: QuickRecordin
               <kbd className="px-2 py-1 bg-muted rounded text-xs ml-1">⌘ Enter</kbd> to save
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={handleClose} className="border-default">
+              <Button variant="outline" onClick={handleClose} className="border-light">
                 Cancel
               </Button>
               <Button 
                 onClick={handleSave} 
                 disabled={!audioBlob || isTranscribing}
-                className="min-w-[80px] border-default"
+                className="min-w-[80px] border-light"
               >
                 {isTranscribing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

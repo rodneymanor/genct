@@ -362,10 +362,46 @@ button:disabled {
   @apply z-10 rounded-[7px] md:rounded-[11px] relative overflow-hidden flex-1 bg-surface-75 w-full h-full;
 }
 
-/* Global border utility replacing shadow-xs */
+/* Global border utility system - replacing heavy shadow-xs */
+/* 🏷️ [UTILITY-BORDERS] */
+/* 🔍 SEARCH: border, outline, stroke, border-default, border-light, border-subtle */
+
+/* Ultra-light border for minimal aesthetic */
+.border-subtle {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 0.15);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Light border - good for most UI elements */
+.border-light {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 0.3);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Default border - balanced visibility */
 .border-default {
   --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / var(--tw-border-opacity));
+  border-color: hsl(var(--border) / 0.5);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Medium border - for emphasis */
+.border-medium {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 0.7);
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Strong border - for high contrast needs */
+.border-strong-custom {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / 1);
   border-width: 1px;
   border-style: solid;
 }
@@ -385,6 +421,6 @@ button:disabled {
 /* 🏷️ [UTILITY-ICONS] */
 /* 🔍 SEARCH: icon, svg, stroke, lucide */
 /* Override default lucide-react stroke-width to be lighter */
-svg.lucide {
+.lucide {
   stroke-width: 1;
 }
