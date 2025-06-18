@@ -370,6 +370,14 @@ button:disabled {
   border-style: solid;
 }
 
+/* Thicker border variant for special cases */
+.border-default-2 {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--border) / var(--tw-border-opacity));
+  border-width: 2px;
+  border-style: solid;
+}
+
 /* Fix for unwanted black borders on cards */
 .group\/panel {
   border: none !important;
