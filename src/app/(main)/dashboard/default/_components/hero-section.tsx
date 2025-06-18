@@ -100,7 +100,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="text-muted-foreground hover:text-primary absolute top-4 right-16"
+            className="text-muted-foreground hover:text-primary absolute bottom-4 right-16"
             onClick={() => {
               // TODO: Implement voice input
               console.log("Voice input clicked");
@@ -114,7 +114,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             type="submit"
             size="icon"
             className={cn(
-              "absolute top-4 right-4 h-[38px] w-[38px] rounded-md border transition-all duration-200 ease-out outline-none",
+              "absolute bottom-4 right-4 h-[38px] w-[38px] rounded-md border transition-all duration-200 ease-out outline-none",
               "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-offset-1",
               trimmedValue
                 ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary shadow-xs"
