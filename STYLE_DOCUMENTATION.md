@@ -275,14 +275,6 @@ const alertVariants = cva(
   border-style: solid;
 }
 
-/* Thicker border variant for special cases */
-.border-default-2 {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--border) / var(--tw-border-opacity));
-  border-width: 2px;
-  border-style: solid;
-}
-
 .border-strong {
   border-color: hsl(var(--border-strong));
 }
@@ -303,10 +295,8 @@ const alertVariants = cva(
 #### 🎨 **Border System Migration:**
 - **🚫 Deprecated**: `shadow-xs` - Replaced with `border-default` for consistent styling
 - **✅ New Standard**: `border-default` - Global border utility with proper CSS variables (1px)
-- **✅ Thick Variant**: `border-default-2` - 2px border with same color system
-- **🎯 Usage**: Apply `border-default` or `border-default-2` instead of `shadow-xs` or `border-2`
+- **🎯 Usage**: Apply `border-default` class instead of `shadow-xs` for consistent borders.
 - **🌙 Theme Adaptive**: Automatically adapts to light/dark themes via CSS variables
-- **⚠️ Avoid Conflicts**: Don't mix `border-default` with Tailwind's `border-2`, `border-4`, etc.
 
 ### 🏷️ `[UTILITY-SURFACES]` Surface & Background Utilities
 ```css

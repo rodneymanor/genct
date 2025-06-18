@@ -91,7 +91,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-default-2 px-6 py-4 pr-24 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
+            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-default px-6 py-4 pr-24 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
             autoFocus
           />
 
