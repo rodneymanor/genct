@@ -64,7 +64,7 @@ export default function ScriptEditorPage() {
 
       {/* Chat Container */}
       <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-[700px]">
+        <div className="w-full ">
           <ScriptChatEditor
             initialPrompt={promptFromUrl || undefined}
             scriptState={state}

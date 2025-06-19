@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+
 import { Send, Clock, CheckCircle, Loader2, Sparkles, ArrowLeft } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -594,7 +596,10 @@ export function ScriptChatEditor({
   };
 
   return (
-    <div className="w-full max-w-[600px] mx-auto h-[600px] flex bg-transparent">
+    <div className={cn(
+      "w-full h-[600px] flex bg-transparent transition-all duration-300 ease-in-out",
+      showComponentSelection ? "max-w-none" : "max-w-[600px] mx-auto"
+    )}>
       {/* Chat Container */}
       <div className={cn(
         "flex flex-col bg-transparent transition-all duration-300 ease-in-out",
