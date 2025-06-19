@@ -19,33 +19,203 @@ interface ProcessedLink {
   content?: any;
 }
 
-// Helper function to extract social media links from email content
-function extractSocialMediaLinks(content: string): string[] {
-  const patterns = [
-    /https?:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/[^\s]+/gi,
-    /https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/[^\s]+/gi,
-  ];
+// Import the social media extraction logic directly
+async function extractSocialMediaContent(urls: string[]) {
+  const results = [];
   
-  const links: string[] = [];
-  patterns.forEach(pattern => {
-    const matches = content.match(pattern);
-    if (matches) {
-      links.push(...matches);
+  for (const url of urls) {
+    if (typeof url !== 'string') {
+      results.push(null);
+      continue;
     }
-  });
+
+    // Check if it's an Instagram URL
+    if (url.includes('instagram.com') || url.includes('instagr.am')) {
+      const shortcode = extractInstagramShortcode(url);
+      if (shortcode) {
+        const content = await fetchInstagramContent(shortcode);
+        results.push(content);
+      } else {
+        results.push(null);
+      }
+    }
+    // Check if it's a TikTok URL
+    else if (url.includes('tiktok.com') || url.includes('vm.tiktok.com')) {
+      let videoId = extractTikTokVideoId(url);
+      console.log('🔍 Extracted TikTok video ID from URL:', url, '-> ID:', videoId);
+      
+      // If it's a short URL format (non-numeric), try to resolve it
+      if (videoId && !/^\d+$/.test(videoId)) {
+        console.log('🔄 Detected short URL format, attempting to resolve...');
+        const resolvedVideoId = await resolveTikTokShortUrl(url);
+        if (resolvedVideoId && /^\d+$/.test(resolvedVideoId)) {
+          videoId = resolvedVideoId;
+          console.log('✅ Resolved to numeric video ID:', videoId);
+        } else {
+          console.log('❌ Failed to resolve to numeric video ID');
+        }
+      }
+      
+      if (videoId && /^\d+$/.test(videoId)) {
+        const content = await fetchTikTokContent(videoId);
+        results.push(content);
+      } else {
+        console.log('❌ No valid numeric video ID found for TikTok URL:', url);
+        results.push(null);
+      }
+    }
+    else {
+      results.push(null);
+    }
+  }
+
+  const successfulExtractions = results.filter(result => result !== null);
   
-  // Remove duplicates
-  return [...new Set(links)];
+  return {
+    success: true,
+    extracted: successfulExtractions,
+    total: urls.length,
+    successful: successfulExtractions.length,
+  };
 }
 
-// Helper function to determine platform from URL
-function getPlatformFromUrl(url: string): 'instagram' | 'tiktok' | 'other' {
-  if (url.includes('instagram.com') || url.includes('instagr.am')) {
-    return 'instagram';
-  } else if (url.includes('tiktok.com') || url.includes('vm.tiktok.com')) {
-    return 'tiktok';
+// Helper functions (copied from social media extraction API)
+function extractInstagramShortcode(url: string): string | null {
+  const match = url.match(/(?:instagram\.com|instagr\.am)\/p\/([A-Za-z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+async function resolveTikTokShortUrl(shortUrl: string): Promise<string | null> {
+  try {
+    console.log('🔍 Resolving TikTok short URL:', shortUrl);
+    
+    // Follow redirects to get the full URL
+    const response = await fetch(shortUrl, {
+      method: 'HEAD',
+      redirect: 'manual'
+    });
+    
+    const location = response.headers.get('location');
+    console.log('📍 Redirect location:', location);
+    
+    if (location) {
+      // Extract video ID from the full URL
+      const videoId = extractTikTokVideoId(location);
+      console.log('🎬 Extracted video ID from redirect:', videoId);
+      return videoId;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('❌ Error resolving TikTok short URL:', error);
+    return null;
   }
-  return 'other';
+}
+
+function extractTikTokVideoId(url: string): string | null {
+  const patterns = [
+    /tiktok\.com\/@[^/]+\/video\/(\d+)/,
+    /vm\.tiktok\.com\/([A-Za-z0-9]+)/,
+    /tiktok\.com\/t\/([A-Za-z0-9]+)/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+async function fetchInstagramContent(shortcode: string): Promise<any | null> {
+  try {
+    console.log('🔍 Fetching Instagram content for shortcode:', shortcode);
+    
+    const response = await fetch(
+      `https://instagram-scrapper-posts-reels-stories-downloader.p.rapidapi.com/reel_by_shortcode?shortcode=${shortcode}`,
+      {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': process.env.RAPIDAPI_KEY || '7d8697833dmsh0919d85dc19515ap1175f7jsn0f8bb6dae84e',
+          'x-rapidapi-host': 'instagram-scrapper-posts-reels-stories-downloader.p.rapidapi.com',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log('❌ Instagram API error status:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    
+    return {
+      platform: 'instagram',
+      url: `https://instagram.com/p/${shortcode}`,
+      title: (typeof data.caption === 'string' ? data.caption : data.caption?.text) || 'Instagram Post',
+      description: (typeof data.caption === 'string' ? data.caption : data.caption?.text) || '',
+      thumbnail: data.thumbnail_url,
+      author: data.username,
+      likes: data.like_count,
+      views: data.view_count,
+      extractedAt: new Date().toISOString(),
+    };
+  } catch (error) {
+    console.error('❌ Error fetching Instagram content:', error);
+    return null;
+  }
+}
+
+async function fetchTikTokContent(videoId: string): Promise<any | null> {
+  try {
+    console.log('🔍 Fetching TikTok content for video ID:', videoId);
+    
+    const response = await fetch(
+      `https://tiktok-scrapper-videos-music-challenges-downloader.p.rapidapi.com/video/${videoId}`,
+      {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': process.env.RAPIDAPI_KEY || '7d8697833dmsh0919d85dc19515ap1175f7jsn0f8bb6dae84e',
+          'x-rapidapi-host': 'tiktok-scrapper-videos-music-challenges-downloader.p.rapidapi.com',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log('❌ TikTok API error status:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+
+    // Check if the API returned an error
+    if (data.status === 'error') {
+      console.log('❌ TikTok API returned error:', data.error);
+      return null;
+    }
+
+    // Check if we have the required data structure
+    const awemeDetail = data.data?.aweme_detail;
+    if (!awemeDetail) {
+      console.log('❌ TikTok API response missing aweme_detail');
+      return null;
+    }
+
+    return {
+      platform: 'tiktok',
+      url: `https://tiktok.com/@${awemeDetail.author?.unique_id || 'user'}/video/${videoId}`,
+      title: awemeDetail.desc || 'TikTok Video',
+      description: awemeDetail.desc,
+      thumbnail: awemeDetail.video?.cover?.url_list?.[0],
+      author: awemeDetail.author?.nickname || awemeDetail.author?.unique_id,
+      likes: awemeDetail.statistics?.digg_count,
+      views: awemeDetail.statistics?.play_count,
+      duration: awemeDetail.video?.duration,
+      extractedAt: new Date().toISOString(),
+    };
+  } catch (error) {
+    console.error('❌ Error fetching TikTok content:', error);
+    return null;
+  }
 }
 
 // Helper function to find user by email alias (simplified - in real implementation you'd have user alias mapping)
@@ -132,6 +302,35 @@ async function getOrCreateDefaultCollection(userId: string): Promise<string> {
   }
 }
 
+// Helper function to extract social media links from email content
+function extractSocialMediaLinks(content: string): string[] {
+  const patterns = [
+    /https?:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/[^\s]+/gi,
+    /https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/[^\s]+/gi,
+  ];
+  
+  const links: string[] = [];
+  patterns.forEach(pattern => {
+    const matches = content.match(pattern);
+    if (matches) {
+      links.push(...matches);
+    }
+  });
+  
+  // Remove duplicates
+  return [...new Set(links)];
+}
+
+// Helper function to determine platform from URL
+function getPlatformFromUrl(url: string): 'instagram' | 'tiktok' | 'other' {
+  if (url.includes('instagram.com') || url.includes('instagr.am')) {
+    return 'instagram';
+  } else if (url.includes('tiktok.com') || url.includes('vm.tiktok.com')) {
+    return 'tiktok';
+  }
+  return 'other';
+}
+
 // POST - Process incoming email with social media links
 export async function POST(request: NextRequest) {
   try {
@@ -175,8 +374,9 @@ export async function POST(request: NextRequest) {
       const platform = getPlatformFromUrl(url);
       
       try {
+        console.log('🔗 Processing URL:', url);
+        
         // Extract content using our existing API
-        console.log('🔗 Calling social media extraction API for URL:', url);
         const extractResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/social-media/extract-content`, {
           method: 'POST',
           headers: {
@@ -185,31 +385,22 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({ urls: [url] }),
         });
         
-        console.log('📡 Social media API response status:', extractResponse.status);
-        console.log('📡 Social media API response headers:', Object.fromEntries(extractResponse.headers.entries()));
+        console.log('📡 API response status:', extractResponse.status);
         
         if (!extractResponse.ok) {
-          console.log('❌ Social media API error status:', extractResponse.status);
-          const errorText = await extractResponse.text();
-          console.log('❌ Social media API error body:', errorText);
-          throw new Error(`Social media API error: ${extractResponse.status}`);
+          console.log('❌ API error:', extractResponse.status, extractResponse.statusText);
+          processedLinks.push({
+            url,
+            platform,
+            extracted: false,
+          });
+          continue;
         }
         
-        const responseText = await extractResponse.text();
-        console.log('📄 Social media API raw response:', responseText.substring(0, 500));
+        const extractData = await extractResponse.json();
+        console.log('✅ API response:', extractData);
         
-        let extractData;
-        try {
-          extractData = JSON.parse(responseText);
-        } catch (parseError) {
-          console.log('❌ Failed to parse social media API response as JSON:', parseError);
-          console.log('📄 Full response text:', responseText);
-          throw parseError;
-        }
-        
-        console.log('✅ Social media API parsed data:', JSON.stringify(extractData, null, 2));
-        
-        if (extractData.success && extractData.extracted.length > 0) {
+        if (extractData.success && extractData.extracted && extractData.extracted.length > 0) {
           processedLinks.push({
             url,
             platform,
@@ -224,7 +415,7 @@ export async function POST(request: NextRequest) {
           });
         }
       } catch (error) {
-        console.error(`Error processing link ${url}:`, error);
+        console.error(`❌ Error processing link ${url}:`, error);
         processedLinks.push({
           url,
           platform,
