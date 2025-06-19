@@ -407,13 +407,25 @@ export async function POST(request: NextRequest) {
         const collectionDocRef = doc(collectionRef, collectionId);
         const collectionItemsRef = collection(collectionDocRef, 'items');
         
-        // Add each item to the collection
+        // Add each item to the collection with proper data sanitization
         for (const item of itemsToAdd) {
-          await addDoc(collectionItemsRef, {
-            ...item,
+          // Sanitize data - remove undefined values and convert to proper types
+          const sanitizedItem = {
+            platform: item.platform || 'unknown',
+            url: item.url || '',
+            title: item.title || 'Untitled',
+            description: item.description || '',
+            thumbnail: item.thumbnail || null, // Convert undefined to null
+            author: item.author || 'Unknown',
+            likes: typeof item.likes === 'number' ? item.likes : 0,
+            views: typeof item.views === 'number' ? item.views : 0,
+            duration: typeof item.duration === 'number' ? item.duration : 0,
+            extractedAt: item.extractedAt || new Date().toISOString(),
             addedAt: Timestamp.now(),
             userId,
-          });
+          };
+          
+          await addDoc(collectionItemsRef, sanitizedItem);
         }
         
         console.log(`✅ Successfully added ${itemsToAdd.length} items to collection ${collectionId}`);
@@ -423,18 +435,36 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Store email processing record
+    // Store email processing record with sanitized data
     const emailRecordsRef = collection(db, 'email_records');
+    const sanitizedProcessedLinks = processedLinks.map(link => ({
+      url: link.url,
+      platform: link.platform,
+      extracted: link.extracted,
+      content: link.content ? {
+        platform: link.content.platform || 'unknown',
+        url: link.content.url || '',
+        title: link.content.title || 'Untitled',
+        description: link.content.description || '',
+        thumbnail: link.content.thumbnail || null,
+        author: link.content.author || 'Unknown',
+        likes: typeof link.content.likes === 'number' ? link.content.likes : 0,
+        views: typeof link.content.views === 'number' ? link.content.views : 0,
+        duration: typeof link.content.duration === 'number' ? link.content.duration : 0,
+        extractedAt: link.content.extractedAt || new Date().toISOString(),
+      } : null,
+    }));
+    
     await addDoc(emailRecordsRef, {
       from: emailData.from,
       to: emailData.to,
-      subject: emailData.subject,
+      subject: emailData.subject || 'No Subject',
       userId,
       linksFound: links.length,
       linksProcessed: processedLinks.filter(l => l.extracted).length,
       collectionId,
       processedAt: Timestamp.now(),
-      links: processedLinks,
+      links: sanitizedProcessedLinks,
     });
 
     return NextResponse.json({
