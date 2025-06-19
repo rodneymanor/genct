@@ -10,9 +10,7 @@ import { getSidebarVariant, getSidebarCollapsible, getContentLayout } from "@/li
 import { cn } from "@/lib/utils";
 
 import { AccountSwitcher } from "./_components/sidebar/account-switcher";
-import { LayoutControls } from "./_components/sidebar/layout-controls";
 import { QuickStatsButton } from "./_components/sidebar/quick-stats-button";
-import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const defaultOpen = false;
@@ -38,12 +36,6 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               <GlobalSearch className="flex-1" />
               <div className="flex items-center gap-2">
                 <QuickStatsButton />
-                <LayoutControls
-                  contentLayout={contentLayout}
-                  variant={sidebarVariant}
-                  collapsible={sidebarCollapsible}
-                />
-                <ThemeSwitcher />
                 <AccountSwitcher users={users} />
               </div>
             </div>
