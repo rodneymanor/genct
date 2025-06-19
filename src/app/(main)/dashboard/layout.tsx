@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { FloatingActionButton } from "@/components/ui/floating-action-button";
+import { FloatingNotificationPanel } from "@/components/ui/floating-notification-panel";
 import { GlobalSearch } from "@/components/ui/global-search";
 import { NotificationButton } from "@/components/ui/notification-button";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -43,7 +43,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
             </div>
           </header>
           <div>{children}</div>
-          <FloatingActionButton />
+          <FloatingNotificationPanel />
         </SidebarInset>
       </SidebarProvider>
     </AuthGuard>
