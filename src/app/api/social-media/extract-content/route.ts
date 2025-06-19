@@ -46,6 +46,8 @@ function extractTikTokVideoId(url: string): string | null {
 // Function to fetch Instagram content
 async function fetchInstagramContent(shortcode: string): Promise<SocialMediaContent | null> {
   try {
+    console.log('🔍 Fetching Instagram content for shortcode:', shortcode);
+    
     const response = await fetch(
       `https://instagram-scrapper-posts-reels-stories-downloader.p.rapidapi.com/reel_by_shortcode?shortcode=${shortcode}`,
       {
@@ -57,17 +59,35 @@ async function fetchInstagramContent(shortcode: string): Promise<SocialMediaCont
       }
     );
 
+    console.log('📡 Instagram API response status:', response.status);
+    console.log('📡 Instagram API response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
+      console.log('❌ Instagram API error status:', response.status);
+      const errorText = await response.text();
+      console.log('❌ Instagram API error body:', errorText);
       throw new Error(`Instagram API error: ${response.status}`);
     }
 
-    const data = await response.json();
+    const responseText = await response.text();
+    console.log('📄 Instagram API raw response:', responseText.substring(0, 500));
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.log('❌ Failed to parse Instagram API response as JSON:', parseError);
+      console.log('📄 Full response text:', responseText);
+      return null;
+    }
+    
+    console.log('✅ Instagram API parsed data:', JSON.stringify(data, null, 2).substring(0, 1000));
     
     return {
       platform: 'instagram',
       url: `https://instagram.com/p/${shortcode}`,
-      title: data.caption || 'Instagram Post',
-      description: data.caption,
+      title: (typeof data.caption === 'string' ? data.caption : data.caption?.text) || 'Instagram Post',
+      description: (typeof data.caption === 'string' ? data.caption : data.caption?.text) || '',
       thumbnail: data.thumbnail_url,
       author: data.username,
       likes: data.like_count,
@@ -75,7 +95,7 @@ async function fetchInstagramContent(shortcode: string): Promise<SocialMediaCont
       extractedAt: new Date().toISOString(),
     };
   } catch (error) {
-    console.error('Error fetching Instagram content:', error);
+    console.error('❌ Error fetching Instagram content:', error);
     return null;
   }
 }
@@ -83,6 +103,8 @@ async function fetchInstagramContent(shortcode: string): Promise<SocialMediaCont
 // Function to fetch TikTok content
 async function fetchTikTokContent(videoId: string): Promise<SocialMediaContent | null> {
   try {
+    console.log('🔍 Fetching TikTok content for video ID:', videoId);
+    
     const response = await fetch(
       `https://tiktok-scrapper-videos-music-challenges-downloader.p.rapidapi.com/video/${videoId}`,
       {
@@ -94,11 +116,29 @@ async function fetchTikTokContent(videoId: string): Promise<SocialMediaContent |
       }
     );
 
+    console.log('📡 TikTok API response status:', response.status);
+    console.log('📡 TikTok API response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
+      console.log('❌ TikTok API error status:', response.status);
+      const errorText = await response.text();
+      console.log('❌ TikTok API error body:', errorText);
       throw new Error(`TikTok API error: ${response.status}`);
     }
 
-    const data = await response.json();
+    const responseText = await response.text();
+    console.log('📄 TikTok API raw response:', responseText.substring(0, 500));
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.log('❌ Failed to parse TikTok API response as JSON:', parseError);
+      console.log('📄 Full response text:', responseText);
+      return null;
+    }
+    
+    console.log('✅ TikTok API parsed data:', JSON.stringify(data, null, 2).substring(0, 1000));
     
     return {
       platform: 'tiktok',
@@ -113,7 +153,7 @@ async function fetchTikTokContent(videoId: string): Promise<SocialMediaContent |
       extractedAt: new Date().toISOString(),
     };
   } catch (error) {
-    console.error('Error fetching TikTok content:', error);
+    console.error('❌ Error fetching TikTok content:', error);
     return null;
   }
 }
