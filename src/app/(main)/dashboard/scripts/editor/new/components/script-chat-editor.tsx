@@ -2,27 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { Check, X, Send, Sparkles, RefreshCw } from "lucide-react";
+import { Send, Sparkles, Clock, CheckCircle, Loader2, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-
-interface ScriptOutlineComponent {
-  id: string;
-  title: string;
-  description: string;
-  isSelected: boolean;
-  alternatives: {
-    id: string;
-    title: string;
-    content: string;
-    description: string;
-  }[];
-}
 
 interface ChatMessage {
   id: string;
@@ -30,73 +16,112 @@ interface ChatMessage {
   user: { name: string };
   createdAt: string;
   isOwnMessage?: boolean;
+  type?: 'message' | 'system' | 'progress' | 'script-component';
+  metadata?: any;
 }
 
 interface ScriptChatEditorProps {
   roomName: string;
   username: string;
   onScriptUpdate?: (script: any) => void;
+  initialPrompt?: string;
 }
 
-const initialOutline: ScriptOutlineComponent[] = [
-  {
-    id: "hook",
-    title: "Hook",
-    description: "Grab attention in the first 3-5 seconds",
-    isSelected: false,
-    alternatives: [
-      { id: "hook-1", title: "Question Hook", content: "Start with a compelling question", description: "Engage viewers with curiosity" },
-      { id: "hook-2", title: "Statistic Hook", content: "Open with surprising data", description: "Use numbers to shock and inform" },
-      { id: "hook-3", title: "Story Hook", content: "Begin with a personal anecdote", description: "Connect emotionally from the start" },
-      { id: "hook-4", title: "Contradiction Hook", content: "Challenge common beliefs", description: "Create cognitive dissonance" },
-    ]
-  },
-  {
-    id: "bridge",
-    title: "Bridge",
-    description: "Connect the hook to your main topic",
-    isSelected: false,
-    alternatives: [
-      { id: "bridge-1", title: "Problem Bridge", content: "Identify the core problem", description: "Set up the need for a solution" },
-      { id: "bridge-2", title: "Context Bridge", content: "Provide background information", description: "Give viewers necessary context" },
-      { id: "bridge-3", title: "Personal Bridge", content: "Share your connection to the topic", description: "Build credibility and relatability" },
-      { id: "bridge-4", title: "Preview Bridge", content: "Tease what's coming next", description: "Create anticipation" },
-    ]
-  },
-  {
-    id: "climax",
-    title: "Climax",
-    description: "Deliver your main message or solution",
-    isSelected: false,
-    alternatives: [
-      { id: "climax-1", title: "Solution Reveal", content: "Present the main solution", description: "Deliver the core value" },
-      { id: "climax-2", title: "Insight Share", content: "Reveal key insights", description: "Provide 'aha' moments" },
-      { id: "climax-3", title: "Story Resolution", content: "Complete the narrative arc", description: "Satisfy the story setup" },
-      { id: "climax-4", title: "Demonstration", content: "Show rather than tell", description: "Provide concrete examples" },
-    ]
-  },
-  {
-    id: "conclusion",
-    title: "Conclusion",
-    description: "Wrap up with a strong ending",
-    isSelected: false,
-    alternatives: [
-      { id: "conclusion-1", title: "Call to Action", content: "Direct viewers to take action", description: "Drive engagement" },
-      { id: "conclusion-2", title: "Summary Wrap", content: "Recap key points", description: "Reinforce main messages" },
-      { id: "conclusion-3", title: "Question Ending", content: "Leave viewers thinking", description: "Encourage reflection" },
-      { id: "conclusion-4", title: "Future Tease", content: "Hint at upcoming content", description: "Build anticipation for next video" },
-    ]
-  },
-];
+interface ScriptGenerationStage {
+  id: string;
+  title: string;
+  description: string;
+  status: 'pending' | 'active' | 'complete';
+  progress?: number;
+  details?: string[];
+}
 
-// Simple local chat component
-function LocalChat({ messages, onSendMessage, username }: {
-  messages: ChatMessage[];
-  onSendMessage: (message: string) => void;
-  username: string;
-}) {
+// Timeline Progress Component
+function ScriptGenerationTimeline({ stages }: { stages: ScriptGenerationStage[] }) {
+  return (
+    <div className="space-y-4 py-4">
+      {stages.map((stage, index) => (
+        <div key={stage.id} className="flex items-start gap-3">
+          <div className="flex flex-col items-center">
+            <div className={cn(
+              "w-6 h-6 rounded-full border-2 flex items-center justify-center",
+              stage.status === 'complete' && "bg-green-500 border-green-500 text-white",
+              stage.status === 'active' && "bg-blue-500 border-blue-500 text-white animate-pulse",
+              stage.status === 'pending' && "border-gray-300 bg-background"
+            )}>
+              {stage.status === 'complete' && <CheckCircle className="w-3 h-3" />}
+              {stage.status === 'active' && <Loader2 className="w-3 h-3 animate-spin" />}
+              {stage.status === 'pending' && <span className="w-2 h-2 bg-gray-300 rounded-full" />}
+            </div>
+            {index < stages.length - 1 && (
+              <div className={cn(
+                "w-0.5 h-8 mt-1",
+                stage.status === 'complete' ? "bg-green-500" : "bg-gray-200"
+              )} />
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <h4 className={cn(
+                "font-medium text-sm",
+                stage.status === 'complete' && "text-green-700",
+                stage.status === 'active' && "text-blue-700"
+              )}>
+                {stage.title}
+              </h4>
+              {stage.status === 'active' && stage.progress !== undefined && (
+                <span className="text-xs text-blue-600">({stage.progress}%)</span>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">{stage.description}</p>
+            {stage.details && stage.details.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {stage.details.map((detail, i) => (
+                  <div key={i} className="text-xs text-muted-foreground flex items-center gap-1">
+                    <div className="w-1 h-1 bg-current rounded-full" />
+                    {detail}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Script Component Display
+function ScriptComponentDisplay({ component }: { component: any }) {
+  return (
+    <div className="border-l-2 border-blue-500 pl-4 py-2 bg-blue-50/50 rounded-r-lg">
+      <div className="flex items-center gap-2 mb-2">
+        <Sparkles className="w-4 h-4 text-blue-600" />
+        <h4 className="font-semibold text-sm text-blue-800">{component.type}</h4>
+      </div>
+      <div className="space-y-2">
+        <div>
+          <h5 className="font-medium text-sm">{component.title}</h5>
+          <p className="text-sm text-gray-700 mt-1">{component.content}</p>
+        </div>
+        {component.details && (
+          <div className="text-xs text-gray-600 bg-white/50 rounded p-2">
+            <strong>Details:</strong> {component.details}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function ScriptChatEditor({ roomName, username, onScriptUpdate, initialPrompt }: ScriptChatEditorProps) {
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStages, setGenerationStages] = useState<ScriptGenerationStage[]>([]);
+  const [scriptComponents, setScriptComponents] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showOutline, setShowOutline] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -104,336 +129,373 @@ function LocalChat({ messages, onSendMessage, username }: {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [chatMessages]);
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newMessage.trim()) {
-      onSendMessage(newMessage.trim());
-      setNewMessage("");
+  // Initialize with welcome message
+  useEffect(() => {
+    const welcomeMessage: ChatMessage = {
+      id: "welcome",
+      content: "Hi! I'm your script writing assistant. I'll help you create compelling content step by step. What would you like to create a script about?",
+      user: { name: "Script Assistant" },
+      createdAt: new Date().toISOString(),
+      isOwnMessage: false,
+      type: 'system'
+    };
+    setChatMessages([welcomeMessage]);
+
+    // Auto-start if initial prompt is provided
+    if (initialPrompt) {
+      setTimeout(() => {
+        handleStartGeneration(initialPrompt);
+      }, 1000);
+    }
+  }, [initialPrompt]);
+
+  const handleStartGeneration = async (prompt: string) => {
+    // Add user message
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      content: prompt,
+      user: { name: username },
+      createdAt: new Date().toISOString(),
+      isOwnMessage: true,
+      type: 'message'
+    };
+    setChatMessages(prev => [...prev, userMessage]);
+
+    // Add system response
+    const systemMessage: ChatMessage = {
+      id: (Date.now() + 1).toString(),
+      content: "Perfect! I'll help you create a script about that. Let me start by researching and analyzing the topic to build the best possible content.",
+      user: { name: "Script Assistant" },
+      createdAt: new Date().toISOString(),
+      isOwnMessage: false,
+      type: 'system'
+    };
+    setChatMessages(prev => [...prev, systemMessage]);
+
+    // Initialize generation stages
+    const stages: ScriptGenerationStage[] = [
+      {
+        id: 'research',
+        title: 'Research',
+        description: 'Gathering resources and information',
+        status: 'active',
+        progress: 0,
+        details: []
+      },
+      {
+        id: 'analysis',
+        title: 'Analysis',
+        description: 'Analyzing content and extracting insights',
+        status: 'pending'
+      },
+      {
+        id: 'generation',
+        title: 'Script Creation',
+        description: 'Generating script components',
+        status: 'pending'
+      },
+      {
+        id: 'completion',
+        title: 'Finalization',
+        description: 'Completing your script',
+        status: 'pending'
+      }
+    ];
+
+    setGenerationStages(stages);
+    setIsGenerating(true);
+
+    // Add progress message
+    const progressMessage: ChatMessage = {
+      id: (Date.now() + 2).toString(),
+      content: '',
+      user: { name: "Script Assistant" },
+      createdAt: new Date().toISOString(),
+      isOwnMessage: false,
+      type: 'progress',
+      metadata: { stages }
+    };
+    setChatMessages(prev => [...prev, progressMessage]);
+
+    // Simulate the actual script generation process
+    await simulateScriptGeneration(prompt);
+  };
+
+  const simulateScriptGeneration = async (prompt: string) => {
+    try {
+      // Stage 1: Research
+      await simulateResearchStage();
+      
+      // Stage 2: Analysis  
+      await simulateAnalysisStage();
+      
+      // Stage 3: Generation
+      await simulateGenerationStage(prompt);
+      
+      // Stage 4: Completion
+      await simulateCompletionStage();
+      
+    } catch (error) {
+      console.error('Script generation error:', error);
+      // Add error message
+      const errorMessage: ChatMessage = {
+        id: Date.now().toString(),
+        content: "I encountered an issue while generating your script. Let me try a different approach. Could you provide a bit more detail about what you'd like to focus on?",
+        user: { name: "Script Assistant" },
+        createdAt: new Date().toISOString(),
+        isOwnMessage: false,
+        type: 'system'
+      };
+      setChatMessages(prev => [...prev, errorMessage]);
+      setIsGenerating(false);
     }
   };
 
+  const simulateResearchStage = async () => {
+    const resourcesFound = ['Academic articles', 'Industry reports', 'Expert interviews', 'Case studies', 'Recent news'];
+    
+    for (let i = 0; i < resourcesFound.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      setGenerationStages(prev => prev.map(stage => 
+        stage.id === 'research' 
+          ? { 
+              ...stage, 
+              progress: ((i + 1) / resourcesFound.length) * 100,
+              details: [...(stage.details || []), `Found ${i + 1} resource: ${resourcesFound[i]}`]
+            }
+          : stage
+      ));
+
+      // Update progress message
+      setChatMessages(prev => prev.map(msg => 
+        msg.type === 'progress' 
+          ? { ...msg, metadata: { ...msg.metadata, stages: generationStages } }
+          : msg
+      ));
+    }
+
+    // Complete research stage
+    setGenerationStages(prev => prev.map(stage => 
+      stage.id === 'research' 
+        ? { ...stage, status: 'complete' as const }
+        : stage.id === 'analysis'
+        ? { ...stage, status: 'active' as const }
+        : stage
+    ));
+  };
+
+  const simulateAnalysisStage = async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setGenerationStages(prev => prev.map(stage => 
+      stage.id === 'analysis' 
+        ? { ...stage, status: 'complete' as const }
+        : stage.id === 'generation'
+        ? { ...stage, status: 'active' as const }
+        : stage
+    ));
+
+    const analysisMessage: ChatMessage = {
+      id: Date.now().toString(),
+      content: "Great! I've analyzed the research and identified key themes and compelling angles for your script. Now I'll start creating the script components.",
+      user: { name: "Script Assistant" },
+      createdAt: new Date().toISOString(),
+      isOwnMessage: false,
+      type: 'system'
+    };
+    setChatMessages(prev => [...prev, analysisMessage]);
+  };
+
+  const simulateGenerationStage = async (prompt: string) => {
+    const components = [
+      {
+        type: 'Hook',
+        title: 'Opening Question',
+        content: `What if I told you that ${prompt.toLowerCase()} is about to change everything we thought we knew?`,
+        details: 'This hook uses curiosity and contradiction to immediately grab attention'
+      },
+      {
+        type: 'Context',
+        title: 'Background Setup',
+        content: `To understand why this matters, we need to look at the current landscape and what most people are missing.`,
+        details: 'Provides necessary context while building anticipation'
+      },
+      {
+        type: 'Main Content',
+        title: 'Core Insights',
+        content: `Here are the three key insights that will reshape how you think about ${prompt.toLowerCase()}...`,
+        details: 'Delivers the main value proposition with structured insights'
+      },
+      {
+        type: 'Call to Action',
+        title: 'Next Steps',
+        content: `Now that you understand this, here's what you should do next to take advantage of this knowledge.`,
+        details: 'Provides clear, actionable next steps for the audience'
+      }
+    ];
+
+    for (let i = 0; i < components.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const component = components[i];
+      setScriptComponents(prev => [...prev, component]);
+      
+      // Add component message
+      const componentMessage: ChatMessage = {
+        id: Date.now().toString() + i,
+        content: '',
+        user: { name: "Script Assistant" },
+        createdAt: new Date().toISOString(),
+        isOwnMessage: false,
+        type: 'script-component',
+        metadata: { component }
+      };
+      setChatMessages(prev => [...prev, componentMessage]);
+      
+      onScriptUpdate?.(component);
+    }
+
+    setGenerationStages(prev => prev.map(stage => 
+      stage.id === 'generation' 
+        ? { ...stage, status: 'complete' as const }
+        : stage.id === 'completion'
+        ? { ...stage, status: 'active' as const }
+        : stage
+    ));
+  };
+
+  const simulateCompletionStage = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setGenerationStages(prev => prev.map(stage => 
+      stage.id === 'completion' 
+        ? { ...stage, status: 'complete' as const }
+        : stage
+    ));
+
+    const completionMessage: ChatMessage = {
+      id: Date.now().toString(),
+      content: "Perfect! Your script is complete. I've created a compelling narrative flow with all the essential components. You can now review each section, make adjustments, or ask me to modify any part. What would you like to work on next?",
+      user: { name: "Script Assistant" },
+      createdAt: new Date().toISOString(),
+      isOwnMessage: false,
+      type: 'system'
+    };
+    setChatMessages(prev => [...prev, completionMessage]);
+    setIsGenerating(false);
+  };
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMessage.trim() || isGenerating) return;
+
+    if (!isGenerating && scriptComponents.length === 0) {
+      handleStartGeneration(newMessage.trim());
+    } else {
+      // Handle regular chat
+      const userMessage: ChatMessage = {
+        id: Date.now().toString(),
+        content: newMessage.trim(),
+        user: { name: username },
+        createdAt: new Date().toISOString(),
+        isOwnMessage: true,
+        type: 'message'
+      };
+      setChatMessages(prev => [...prev, userMessage]);
+
+      // Auto-respond
+      setTimeout(() => {
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          content: "I can help you refine that part of your script. Which specific section would you like me to adjust or improve?",
+          user: { name: "Script Assistant" },
+          createdAt: new Date().toISOString(),
+          isOwnMessage: false,
+          type: 'system'
+        };
+        setChatMessages(prev => [...prev, assistantMessage]);
+      }, 1000);
+    }
+
+    setNewMessage("");
+  };
+
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-[600px] w-full bg-background border-0">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 ? (
-          <div className="text-center text-sm text-muted-foreground">
-            Welcome to the Script Editor! Click on outline components to build your script.
-          </div>
-        ) : null}
-        <div className="space-y-2">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.isOwnMessage ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={cn(
-                  'max-w-[75%] w-fit flex flex-col gap-1',
-                  message.isOwnMessage && 'items-end'
-                )}
-              >
-                <div
-                  className={cn(
+        {chatMessages.map((message) => (
+          <div key={message.id} className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+            {message.type === 'progress' ? (
+              <div className="max-w-md">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Clock className="w-4 h-4 text-blue-600" />
+                    <span className="font-medium text-sm text-blue-800">Script Generation Progress</span>
+                  </div>
+                  <ScriptGenerationTimeline stages={generationStages} />
+                </div>
+              </div>
+            ) : message.type === 'script-component' ? (
+              <div className="max-w-2xl">
+                <ScriptComponentDisplay component={message.metadata.component} />
+              </div>
+            ) : (
+              <div className={`flex ${message.isOwnMessage ? 'justify-end' : 'justify-start'}`}>
+                <div className={cn('max-w-[75%] w-fit flex flex-col gap-1', {
+                  'items-end': message.isOwnMessage,
+                })}>
+                  <div className={cn(
                     'py-2 px-3 rounded-xl text-sm w-fit',
                     message.isOwnMessage 
                       ? 'bg-primary text-primary-foreground' 
+                      : message.type === 'system'
+                      ? 'bg-blue-50 text-blue-900 border border-blue-200'
                       : 'bg-muted text-foreground'
-                  )}
-                >
-                  {message.content}
+                  )}>
+                    {message.content}
+                  </div>
+                  <span className="text-xs text-muted-foreground px-2">
+                    {new Date(message.createdAt).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: true,
+                    })}
+                  </span>
                 </div>
-                <span className="text-xs text-muted-foreground px-2">
-                  {new Date(message.createdAt).toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                  })}
-                </span>
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </div>
+        ))}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSend} className="flex gap-2 border-t p-4">
+      <form onSubmit={handleSendMessage} className="flex gap-2 border-t border-border p-4">
         <Input
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          className="flex-1"
+          placeholder={
+            isGenerating 
+              ? "Script generation in progress..." 
+              : scriptComponents.length === 0
+              ? "Describe your script idea..."
+              : "Ask for changes or improvements..."
+          }
+          disabled={isGenerating}
+          className="flex-1 border-0 shadow-none focus-visible:ring-1"
         />
-        <Button type="submit" disabled={!newMessage.trim()}>
+        <Button 
+          type="submit" 
+          disabled={!newMessage.trim() || isGenerating}
+          className="rounded-full"
+        >
           <Send className="h-4 w-4" />
         </Button>
       </form>
-    </div>
-  );
-}
-
-export function ScriptChatEditor({ roomName, username, onScriptUpdate }: ScriptChatEditorProps) {
-  const [outline, setOutline] = useState<ScriptOutlineComponent[]>(initialOutline);
-  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
-  const [selectedAlternative, setSelectedAlternative] = useState<string | null>(null);
-  const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const chatRef = useRef<HTMLDivElement>(null);
-
-  // Add welcome message
-  useEffect(() => {
-    const welcomeMessage: ChatMessage = {
-      id: "welcome",
-      content: "Welcome to the Script Editor! I'll help you build your script step by step. Click on any outline component to get started.",
-      user: { name: "Script Assistant" },
-      createdAt: new Date().toISOString(),
-      isOwnMessage: false,
-    };
-    setChatMessages([welcomeMessage]);
-  }, []);
-
-  // Handle component selection
-  const handleComponentClick = (componentId: string) => {
-    setSelectedComponent(componentId);
-    setSelectedAlternative(null);
-    setIsRightPanelOpen(true);
-    
-    // Update outline to show selected state
-    setOutline(prev => prev.map(comp => ({
-      ...comp,
-      isSelected: comp.id === componentId
-    })));
-  };
-
-  // Handle alternative selection
-  const handleAlternativeSelect = (alternativeId: string) => {
-    setSelectedAlternative(alternativeId);
-  };
-
-  // Handle confirm selection
-  const handleConfirm = () => {
-    if (selectedComponent && selectedAlternative) {
-      const component = outline.find(c => c.id === selectedComponent);
-      const alternative = component?.alternatives.find(a => a.id === selectedAlternative);
-      
-      if (component && alternative) {
-        // Add message to chat
-        const newMessage: ChatMessage = {
-          id: Date.now().toString(),
-          content: `Great choice! I've added "${alternative.title}" for your ${component.title.toLowerCase()}. ${alternative.content}`,
-          user: { name: "Script Assistant" },
-          createdAt: new Date().toISOString(),
-          isOwnMessage: false,
-        };
-        
-        setChatMessages(prev => [...prev, newMessage]);
-        
-        // Notify parent of script update
-        onScriptUpdate?.({
-          componentId: selectedComponent,
-          alternativeId: selectedAlternative,
-          content: alternative.content,
-          title: alternative.title,
-        });
-      }
-    }
-    
-    // Close panel and reset selection
-    setIsRightPanelOpen(false);
-    setSelectedComponent(null);
-    setSelectedAlternative(null);
-    setOutline(prev => prev.map(comp => ({ ...comp, isSelected: false })));
-  };
-
-  // Handle cancel
-  const handleCancel = () => {
-    setIsRightPanelOpen(false);
-    setSelectedComponent(null);
-    setSelectedAlternative(null);
-    setOutline(prev => prev.map(comp => ({ ...comp, isSelected: false })));
-  };
-
-  // Handle user messages
-  const handleSendMessage = (message: string) => {
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      content: message,
-      user: { name: username },
-      createdAt: new Date().toISOString(),
-      isOwnMessage: true,
-    };
-    
-    setChatMessages(prev => [...prev, userMessage]);
-    
-    // Auto-respond with helpful suggestions
-    setTimeout(() => {
-      const assistantMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        content: "I can help you with that! Try clicking on one of the outline components above to explore specific options for your script.",
-        user: { name: "Script Assistant" },
-        createdAt: new Date().toISOString(),
-        isOwnMessage: false,
-      };
-      setChatMessages(prev => [...prev, assistantMessage]);
-    }, 1000);
-  };
-
-  const selectedComponentData = outline.find(c => c.id === selectedComponent);
-
-  return (
-    <div className="relative h-[600px] w-full overflow-hidden rounded-lg border bg-background">
-      {/* Main Chat Container */}
-      <motion.div
-        className="absolute inset-0 flex flex-col"
-        animate={{
-          x: isRightPanelOpen ? -200 : 0,
-          scale: isRightPanelOpen ? 0.95 : 1,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 30,
-        }}
-      >
-        {/* Script Outline Overlay */}
-        <AnimatePresence>
-          {!isRightPanelOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm"
-            >
-              <div className="max-w-2xl space-y-4 p-8">
-                <div className="text-center">
-                  <h2 className="mb-2 text-2xl font-bold">Script Outline</h2>
-                  <p className="text-muted-foreground">Click on any component to explore alternatives</p>
-                </div>
-                
-                <div className="grid gap-4">
-                  {outline.map((component, index) => (
-                    <motion.div
-                      key={component.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Card
-                        className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-md",
-                          component.isSelected && "ring-2 ring-primary"
-                        )}
-                        onClick={() => handleComponentClick(component.id)}
-                      >
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h3 className="font-semibold">{component.title}</h3>
-                              <p className="text-sm text-muted-foreground">{component.description}</p>
-                            </div>
-                            <Badge variant="secondary">{index + 1}</Badge>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </div>
-                
-                {/* Background alternatives preview */}
-                <div className="absolute inset-0 -z-10 opacity-10">
-                  {outline.map((component) => (
-                    <div key={component.id} className="space-y-1">
-                      {component.alternatives.map((alt) => (
-                        <div key={alt.id} className="text-xs text-muted-foreground">
-                          {alt.title}: {alt.content}
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Chat Interface */}
-        <div ref={chatRef} className="h-full">
-          <LocalChat
-            messages={chatMessages}
-            onSendMessage={handleSendMessage}
-            username={username}
-          />
-        </div>
-      </motion.div>
-
-      {/* Right Panel */}
-      <AnimatePresence>
-        {isRightPanelOpen && selectedComponentData && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-            }}
-            className="absolute right-0 top-0 h-full w-80 border-l bg-background shadow-lg"
-          >
-            <div className="flex h-full flex-col">
-              {/* Header */}
-              <div className="border-b p-4">
-                <h3 className="font-semibold">{selectedComponentData.title} Options</h3>
-                <p className="text-sm text-muted-foreground">{selectedComponentData.description}</p>
-              </div>
-
-              {/* Alternatives */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {selectedComponentData.alternatives.map((alternative) => (
-                  <Card
-                    key={alternative.id}
-                    className={cn(
-                      "cursor-pointer transition-all duration-200 hover:shadow-sm",
-                      selectedAlternative === alternative.id && "ring-2 ring-primary bg-primary/5"
-                    )}
-                    onClick={() => handleAlternativeSelect(alternative.id)}
-                  >
-                    <CardContent className="p-3">
-                      <h4 className="font-medium text-sm">{alternative.title}</h4>
-                      <p className="text-xs text-muted-foreground mt-1">{alternative.description}</p>
-                      <p className="text-sm mt-2">{alternative.content}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Actions */}
-              <div className="border-t p-4">
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleConfirm}
-                    disabled={!selectedAlternative}
-                    className="flex-1"
-                  >
-                    <Check className="mr-2 h-4 w-4" />
-                    Confirm
-                  </Button>
-                  <Button
-                    onClick={handleCancel}
-                    variant="outline"
-                    size="icon"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 } 

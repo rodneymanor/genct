@@ -199,46 +199,49 @@ export default function ScriptEditorPage() {
       {/* Main Content with Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="chat" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Chat Editor
-          </TabsTrigger>
-          <TabsTrigger value="traditional" className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
-            Traditional
-          </TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="traditional">Traditional</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="chat" className="mt-6">
-          <Card>
-            <CardContent className="p-6">
-              <ScriptChatEditor
-                roomName={roomName}
-                username={username}
-                onScriptUpdate={handleScriptUpdate}
-              />
-              
-              {/* Script Updates Summary */}
-              {scriptUpdates.length > 0 && (
-                <div className="mt-6 space-y-2">
-                  <h3 className="font-semibold">Script Components Selected:</h3>
-                  <div className="grid gap-2">
-                    {scriptUpdates.map((update, index) => (
-                      <div key={index} className="rounded-md border p-3 text-sm">
-                        <span className="font-medium">{update.componentId}:</span> {update.content}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        <TabsContent value="chat">
+          <ScriptChatEditor
+            roomName={roomName}
+            username={username}
+            onScriptUpdate={handleScriptUpdate}
+            initialPrompt={promptFromUrl || undefined}
+          />
         </TabsContent>
-        
-        <TabsContent value="traditional" className="mt-6">
+        <TabsContent value="traditional">
           {renderTraditionalContent()}
         </TabsContent>
       </Tabs>
+
+      {/* Script Components Summary */}
+      {scriptUpdates.length > 0 && (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg">Generated Script Components</h3>
+              <div className="grid gap-4">
+                {scriptUpdates.map((update, index) => (
+                  <div key={index} className="border-l-4 border-blue-500 pl-4 py-3 bg-blue-50/50 rounded-r-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-semibold text-sm text-blue-800">{update.type}</span>
+                      <span className="text-xs text-blue-600">#{index + 1}</span>
+                    </div>
+                    <h4 className="font-medium text-sm mb-1">{update.title}</h4>
+                    <p className="text-sm text-gray-700 mb-2">{update.content}</p>
+                    {update.details && (
+                      <p className="text-xs text-gray-600 bg-white/50 rounded p-2">
+                        <strong>Details:</strong> {update.details}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
-}
+} 
