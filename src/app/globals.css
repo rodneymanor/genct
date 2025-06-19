@@ -222,7 +222,7 @@
 /* Enhanced Global Styles */
 *, *::before, *::after {
   box-sizing: border-box;
-  border-width: 1;
+  border-width: 1.5;
   border-style: solid;
   border-color: hsl(var(--color-border) / 1);
   
