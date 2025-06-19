@@ -119,13 +119,6 @@ async function fetchTikTokContent(videoId: string): Promise<SocialMediaContent |
     console.log('📡 TikTok API response status:', response.status);
     console.log('📡 TikTok API response headers:', Object.fromEntries(response.headers.entries()));
 
-    if (!response.ok) {
-      console.log('❌ TikTok API error status:', response.status);
-      const errorText = await response.text();
-      console.log('❌ TikTok API error body:', errorText);
-      throw new Error(`TikTok API error: ${response.status}`);
-    }
-
     const responseText = await response.text();
     console.log('📄 TikTok API raw response:', responseText.substring(0, 500));
 
@@ -139,7 +132,19 @@ async function fetchTikTokContent(videoId: string): Promise<SocialMediaContent |
     }
     
     console.log('✅ TikTok API parsed data:', JSON.stringify(data, null, 2).substring(0, 1000));
-    
+
+    // Check if the API returned an error
+    if (data.status === 'error' || !response.ok) {
+      console.log('❌ TikTok API returned error:', data.error || `HTTP ${response.status}`);
+      return null;
+    }
+
+    // Check if we have the required data
+    if (!data.author || !data.desc) {
+      console.log('❌ TikTok API response missing required fields');
+      return null;
+    }
+
     return {
       platform: 'tiktok',
       url: `https://tiktok.com/@${data.author?.unique_id}/video/${videoId}`,
@@ -190,10 +195,12 @@ export async function POST(request: NextRequest) {
       // Check if it's a TikTok URL
       else if (url.includes('tiktok.com') || url.includes('vm.tiktok.com')) {
         const videoId = extractTikTokVideoId(url);
+        console.log('🔍 Extracted TikTok video ID from URL:', url, '-> ID:', videoId);
         if (videoId) {
           const content = await fetchTikTokContent(videoId);
           results.push(content);
         } else {
+          console.log('❌ Failed to extract video ID from TikTok URL:', url);
           results.push(null);
         }
       }

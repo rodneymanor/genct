@@ -44,7 +44,7 @@ export default function EmailDemoPage() {
     body: `Check out these amazing videos:
 
 https://www.instagram.com/p/Cxo55OIt_Mj/
-https://www.tiktok.com/@username/video/1234567890
+https://www.tiktok.com/@charlidamelio/video/7016547143650561282
 
 Let me know what you think!`,
   });
