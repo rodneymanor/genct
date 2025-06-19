@@ -4,14 +4,13 @@ import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sideb
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { FloatingNotificationPanel } from "@/components/ui/floating-notification-panel";
 import { GlobalSearch } from "@/components/ui/global-search";
-import { NotificationButton } from "@/components/ui/notification-button";
+import HelpNotificationsButtons from "@/components/ui/help-notifications-buttons";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
 import { getSidebarVariant, getSidebarCollapsible, getContentLayout } from "@/lib/layout-preferences";
 import { cn } from "@/lib/utils";
 
 import { AccountSwitcher } from "./_components/sidebar/account-switcher";
-import { QuickStatsButton } from "./_components/sidebar/quick-stats-button";
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const defaultOpen = false;
@@ -36,8 +35,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
             <div className="flex w-full items-center gap-2 px-4 lg:px-6">
               <GlobalSearch className="flex-1" />
               <div className="flex items-center gap-2">
-                <NotificationButton />
-                <QuickStatsButton />
+                <HelpNotificationsButtons />
                 <AccountSwitcher users={users} />
               </div>
             </div>
