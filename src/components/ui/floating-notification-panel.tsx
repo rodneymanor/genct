@@ -8,9 +8,9 @@ import { ShineBorder } from "@/components/magicui/shine-border";
 import { useAuth } from "@/contexts/auth-context";
 
 interface FloatingNotificationPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  notifications: Array<{
+  isOpen?: boolean;
+  onClose?: () => void;
+  notifications?: Array<{
     id: string;
     type: 'email' | 'social_link' | 'idea';
     title: string;
@@ -21,13 +21,20 @@ interface FloatingNotificationPanelProps {
 }
 
 export function FloatingNotificationPanel({ 
-  isOpen, 
-  onClose, 
-  notifications 
-}: FloatingNotificationPanelProps) {
+  isOpen: propIsOpen, 
+  onClose: propOnClose, 
+  notifications = [] 
+}: FloatingNotificationPanelProps = {}) {
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [internalNotifications, setInternalNotifications] = useState<typeof notifications>([]);
+  
+  // Use prop values if provided, otherwise use internal state
+  const isOpen = propIsOpen !== undefined ? propIsOpen : internalIsOpen;
+  const onClose = propOnClose || (() => setInternalIsOpen(false));
+  const displayNotifications = notifications.length > 0 ? notifications : internalNotifications;
   
   // Use user-specific email alias or default for demo
   const ideaEmail = user?.email === "rodney@rodneymanor.com" 
@@ -67,7 +74,7 @@ export function FloatingNotificationPanel({
     setIsExpanded(!isExpanded);
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = displayNotifications.filter(n => !n.read).length;
 
   return (
     <AnimatePresence>
@@ -110,7 +117,7 @@ export function FloatingNotificationPanel({
                       Idea Inbox
                     </h3>
                     <p className="text-xs text-foreground-light">
-                      {notifications.length} total, {unreadCount} unread
+                      {displayNotifications.length} total, {unreadCount} unread
                     </p>
                   </div>
                 </div>
@@ -191,7 +198,7 @@ export function FloatingNotificationPanel({
 
                   {/* Notifications List */}
                   <div className="p-4 space-y-3">
-                    {notifications.length === 0 ? (
+                    {displayNotifications.length === 0 ? (
                       <div className="text-center py-8">
                         <Mail className="h-8 w-8 text-foreground-light mx-auto mb-3" />
                         <p className="text-sm text-foreground-light">
@@ -202,7 +209,7 @@ export function FloatingNotificationPanel({
                         </p>
                       </div>
                     ) : (
-                      notifications.map((notification) => (
+                      displayNotifications.map((notification) => (
                         <motion.div
                           key={notification.id}
                           initial={{ opacity: 0, y: 20 }}
