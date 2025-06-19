@@ -26,33 +26,47 @@ Format the response as a complete script ready for recording.
 }
 
 async function callGeminiAPI(prompt: string) {
+  console.log('🔑 Using Gemini API Key:', process.env.GEMINI_API_KEY ? 'Present' : 'Missing');
+  console.log('🌐 Calling Gemini API URL:', GEMINI_API_URL);
+  
+  const requestBody = {
+    contents: [
+      {
+        parts: [{ text: prompt }],
+      },
+    ],
+    generationConfig: {
+      temperature: 0.7,
+      topK: 40,
+      topP: 0.95,
+    },
+  };
+
+  console.log('📤 Request body:', JSON.stringify(requestBody, null, 2));
+
   const response = await fetch(GEMINI_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.GEMINI_API_KEY}`,
+      "x-goog-api-key": process.env.GEMINI_API_KEY!,
     },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [{ text: prompt }],
-        },
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-      },
-    }),
+    body: JSON.stringify(requestBody),
   });
 
+  console.log('📥 Response status:', response.status);
+  console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
+
   if (!response.ok) {
-    throw new Error("Failed to call Gemini API");
+    const errorText = await response.text();
+    console.error('❌ Gemini API error response:', errorText);
+    throw new Error(`Gemini API error (${response.status}): ${errorText}`);
   }
 
   const data = await response.json();
+  console.log('📄 Response data:', JSON.stringify(data, null, 2));
 
   if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+    console.error('❌ Invalid response structure:', data);
     throw new Error("Invalid response from Gemini API");
   }
 
@@ -60,23 +74,38 @@ async function callGeminiAPI(prompt: string) {
 }
 
 export async function POST(req: NextRequest) {
+  console.log('🚀 Starting final script generation...');
+  
   if (!process.env.GEMINI_API_KEY) {
+    console.error('❌ Gemini API key not configured');
     return Response.json({ error: "Gemini API key not configured" }, { status: 500 });
   }
 
-  const { videoIdea, selectedComponents } = await req.json();
-
-  if (!videoIdea || !selectedComponents) {
-    return Response.json({ error: "Video idea and selected components are required" }, { status: 400 });
-  }
-
   try {
+    const { videoIdea, selectedComponents } = await req.json();
+    console.log('📝 Video idea:', videoIdea);
+    console.log('🧩 Selected components:', selectedComponents);
+
+    if (!videoIdea || !selectedComponents) {
+      console.error('❌ Missing required parameters');
+      return Response.json({ error: "Video idea and selected components are required" }, { status: 400 });
+    }
+
     const prompt = createFinalScriptPrompt(videoIdea, selectedComponents);
+    console.log('💭 Generated prompt:', prompt);
+    
     const finalScript = await callGeminiAPI(prompt);
+    console.log('✅ Final script generated successfully, length:', finalScript.length);
 
     return Response.json({ finalScript });
   } catch (error) {
-    console.error("Error generating final script:", error);
-    return Response.json({ error: "Failed to generate final script" }, { status: 500 });
+    console.error("❌ Error generating final script:", error);
+    
+    // Return a more detailed error message
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    return Response.json({ 
+      error: "Failed to generate final script", 
+      details: errorMessage 
+    }, { status: 500 });
   }
 }

@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { Send, Clock, CheckCircle, Loader2, Sparkles, ArrowLeft, Check, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { Send, Clock, CheckCircle, Loader2, Sparkles, ArrowLeft, Check, X, Edit } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -238,7 +240,7 @@ function ScriptOutlineDisplay({
       </div>
 
       {/* Hook Section */}
-      {components.hooks && Array.isArray(components.hooks) && components.hooks.length > 0 ? (
+      {components.hooks && Array.isArray(components.hooks) && components.hooks.length > 0 && (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Hook</h4>
           <button
@@ -246,19 +248,19 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
-              {(getSelectedOrFirst('hook', components.hooks)?.preview as string) || 
+              {String((getSelectedOrFirst('hook', components.hooks)?.preview as string) || 
                ((getSelectedOrFirst('hook', components.hooks)?.content as string)?.substring(0, 80) + '...') || 
-               (getSelectedOrFirst('hook', components.hooks)?.title as string)}
+               (getSelectedOrFirst('hook', components.hooks)?.title as string) || 'Hook Option')}
             </div>
             <div className="text-xs text-gray-600 mt-1">
               {selectedComponents.hook ? 'Selected' : 'Click to choose from options'}
             </div>
           </button>
         </div>
-      ) : null}
+      )}
 
       {/* Bridge Section */}
-      {components.bridges && Array.isArray(components.bridges) && components.bridges.length > 0 ? (
+      {components.bridges && Array.isArray(components.bridges) && components.bridges.length > 0 && (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Bridge</h4>
           <button
@@ -266,19 +268,19 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
-              {(getSelectedOrFirst('bridge', components.bridges)?.preview as string) || 
+              {String((getSelectedOrFirst('bridge', components.bridges)?.preview as string) || 
                ((getSelectedOrFirst('bridge', components.bridges)?.content as string)?.substring(0, 80) + '...') || 
-               (getSelectedOrFirst('bridge', components.bridges)?.title as string)}
+               (getSelectedOrFirst('bridge', components.bridges)?.title as string) || 'Bridge Option')}
             </div>
             <div className="text-xs text-gray-600 mt-1">
               {selectedComponents.bridge ? 'Selected' : 'Click to choose from options'}
             </div>
           </button>
         </div>
-      ) : null}
+      )}
 
       {/* Golden Nugget Section */}
-      {components.goldenNuggets && Array.isArray(components.goldenNuggets) && components.goldenNuggets.length > 0 ? (
+      {components.goldenNuggets && Array.isArray(components.goldenNuggets) && components.goldenNuggets.length > 0 && (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Golden Nugget</h4>
           <button
@@ -286,18 +288,18 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
-              {(getSelectedOrFirst('goldenNugget', components.goldenNuggets)?.title as string) || 
-               'Golden Nugget 1'}
+              {String((getSelectedOrFirst('goldenNugget', components.goldenNuggets)?.title as string) || 
+               'Golden Nugget 1')}
             </div>
             <div className="text-xs text-gray-600 mt-1">
               {selectedComponents.goldenNugget ? 'Selected' : 'Click to choose from options'}
             </div>
           </button>
         </div>
-      ) : null}
+      )}
 
       {/* Call to Action Section */}
-      {components.wtas && Array.isArray(components.wtas) && components.wtas.length > 0 ? (
+      {components.wtas && Array.isArray(components.wtas) && components.wtas.length > 0 && (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Call to Action</h4>
           <button
@@ -305,11 +307,11 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm flex items-center gap-2">
-              {(getSelectedOrFirst('wta', components.wtas)?.preview as string) || 
+              {String((getSelectedOrFirst('wta', components.wtas)?.preview as string) || 
                ((getSelectedOrFirst('wta', components.wtas)?.content as string)?.substring(0, 80) + '...') || 
-               (getSelectedOrFirst('wta', components.wtas)?.title as string)}
+               (getSelectedOrFirst('wta', components.wtas)?.title as string) || 'Call to Action')}
               <span className="text-xs text-gray-500 px-2 py-1 rounded capitalize">
-                {(getSelectedOrFirst('wta', components.wtas)?.actionType as string) || 'engagement'}
+                {String((getSelectedOrFirst('wta', components.wtas)?.actionType as string) || 'engagement')}
               </span>
             </div>
             <div className="text-xs text-gray-600 mt-1">
@@ -317,7 +319,7 @@ function ScriptOutlineDisplay({
             </div>
           </button>
         </div>
-      ) : null}
+      )}
 
       {/* Finalize Script Button */}
       <div className="pt-4 border-t border-gray-200">
@@ -489,6 +491,7 @@ export function ScriptChatEditor({
   canGenerateScript,
   isGenerating
 }: ScriptChatEditorProps) {
+  const router = useRouter();
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [hasStarted, setHasStarted] = useState(false);
@@ -731,6 +734,33 @@ export function ScriptChatEditor({
     }
   };
 
+  // Handle navigation to script editor when script is complete
+  useEffect(() => {
+    if (scriptState.step === 'complete' && scriptState.finalScript) {
+      // Add a small delay to show the completion message
+      setTimeout(() => {
+        navigateToScriptEditor(scriptState.finalScript as string, scriptState.analysis);
+      }, 2000);
+    }
+  }, [scriptState.step, scriptState.finalScript]);
+
+  const navigateToScriptEditor = (script: string, analysis?: any) => {
+    const scriptId = Date.now().toString();
+    const title = `Script - ${scriptState.videoIdea || 'Untitled'}`;
+    
+    // Create URL with script data
+    const params = new URLSearchParams({
+      script: encodeURIComponent(script),
+      title: encodeURIComponent(title),
+    });
+
+    if (analysis) {
+      params.set('analysis', encodeURIComponent(JSON.stringify(analysis)));
+    }
+
+    router.push(`/dashboard/scripts/editor/${scriptId}?${params.toString()}`);
+  };
+
   return (
     <div className={cn(
       "w-full h-[600px] flex bg-transparent transition-all duration-300 ease-in-out",
@@ -769,9 +799,43 @@ export function ScriptChatEditor({
                       <CheckCircle className="w-4 h-4 text-green-600" />
                       <span className="font-medium text-sm text-green-800">Your Script is Ready!</span>
                     </div>
-                    <div className="bg-white rounded p-3 text-sm whitespace-pre-wrap font-mono">
-                      {message.content}
+                    <div className="bg-white rounded p-3 text-sm whitespace-pre-wrap font-mono mb-4 max-h-40 overflow-y-auto">
+                      {message.content.length > 500 ? message.content.substring(0, 500) + '...' : message.content}
                     </div>
+                    <div className="flex gap-2">
+                      <Button 
+                        onClick={() => navigateToScriptEditor(message.content, scriptState.analysis)}
+                        className="bg-black hover:bg-gray-800 text-white"
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Script
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        onClick={() => navigator.clipboard.writeText(message.content)}
+                      >
+                        Copy Script
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : scriptState.step === 'error' && scriptState.error ? (
+                <div className="max-w-full">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <X className="w-4 h-4 text-red-600" />
+                      <span className="font-medium text-sm text-red-800">Generation Failed</span>
+                    </div>
+                    <div className="bg-white rounded p-3 text-sm mb-4">
+                      <p className="text-red-700">{scriptState.error}</p>
+                    </div>
+                    <Button 
+                      onClick={() => window.location.reload()}
+                      variant="outline"
+                      className="border-red-300 text-red-700 hover:bg-red-50"
+                    >
+                      Try Again
+                    </Button>
                   </div>
                 </div>
               ) : (
@@ -813,7 +877,9 @@ export function ScriptChatEditor({
                 : scriptState.step === 'selecting-components'
                 ? "Select components above or ask questions..."
                 : scriptState.step === 'complete'
-                ? "Ask for changes or improvements..."
+                ? "Script completed! Click 'Edit Script' to modify it."
+                : scriptState.step === 'error'
+                ? "Generation failed. Try refreshing the page."
                 : "Please wait for the current step to complete..."
             }
             disabled={isGenerating && scriptState.step !== 'selecting-components' && scriptState.step !== 'complete'}
