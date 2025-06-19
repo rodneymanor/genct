@@ -130,4 +130,55 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       { status: 500 }
     );
   }
+}
+
+// GET - Fetch items from a collection
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+    const collectionId = params.id;
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Verify collection exists and belongs to user
+    const collectionRef = doc(db, 'collections', collectionId);
+    const collectionDoc = await getDoc(collectionRef);
+
+    if (!collectionDoc.exists()) {
+      return NextResponse.json(
+        { error: 'Collection not found' },
+        { status: 404 }
+      );
+    }
+
+    const collectionData = collectionDoc.data();
+    if (collectionData.userId !== userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 403 }
+      );
+    }
+
+    // Return items from the collection
+    const items = collectionData.items || [];
+
+    return NextResponse.json({
+      success: true,
+      items,
+      count: items.length,
+    });
+
+  } catch (error) {
+    console.error('Error fetching collection items:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch collection items' },
+      { status: 500 }
+    );
+  }
 } 

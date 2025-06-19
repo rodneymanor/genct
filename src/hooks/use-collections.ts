@@ -163,7 +163,7 @@ export function useCollections() {
 
   // Get email processing history
   const getEmailHistory = async (userId: string) => {
-    const response = await fetch(`/api/email/history?userId=${userId}`);
+    const response = await fetch(`/api/email/process-links?userId=${userId}`);
     const data = await response.json();
     
     if (!data.success) {

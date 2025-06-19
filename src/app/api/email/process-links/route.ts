@@ -266,6 +266,13 @@ async function findUserByEmailAlias(emailAlias: string): Promise<string | null> 
   }
 }
 
+// Helper function to extract hashtags from text
+function extractHashtags(text: string): string[] {
+  const hashtagRegex = /#[\w]+/g;
+  const matches = text.match(hashtagRegex);
+  return matches ? matches.map(tag => tag.substring(1)) : []; // Remove the # symbol
+}
+
 // Helper function to get or create default collection
 async function getOrCreateDefaultCollection(userId: string): Promise<string> {
   try {
@@ -298,6 +305,42 @@ async function getOrCreateDefaultCollection(userId: string): Promise<string> {
     return newCollectionRef.id;
   } catch (error) {
     console.error('Error getting/creating default collection:', error);
+    throw error;
+  }
+}
+
+// Helper function to get or create "All Videos" collection
+async function getOrCreateAllVideosCollection(userId: string): Promise<string> {
+  try {
+    // Look for existing "All Videos" collection
+    const collectionsRef = collection(db, 'collections');
+    const q = query(
+      collectionsRef, 
+      where('userId', '==', userId),
+      where('name', '==', 'All Videos'),
+      limit(1)
+    );
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      return querySnapshot.docs[0].id;
+    }
+    
+    // Create "All Videos" collection
+    const newCollectionRef = await addDoc(collectionsRef, {
+      name: 'All Videos',
+      description: 'All video content from TikTok and Instagram Reels',
+      userId,
+      items: [],
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+      itemCount: 0,
+      color: 'bg-red-100',
+    });
+    
+    return newCollectionRef.id;
+  } catch (error) {
+    console.error('Error getting/creating All Videos collection:', error);
     throw error;
   }
 }
@@ -394,6 +437,9 @@ export async function POST(request: NextRequest) {
 
     // Get or create default collection
     const collectionId = await getOrCreateDefaultCollection(userId);
+    
+    // Get or create "All Videos" collection for video content
+    const allVideosCollectionId = await getOrCreateAllVideosCollection(userId);
 
     // Add successfully extracted content to collection
     const itemsToAdd = processedLinks
@@ -401,37 +447,78 @@ export async function POST(request: NextRequest) {
       .map(link => link.content);
 
     if (itemsToAdd.length > 0) {
-      // Add items to collection directly using Firestore
+      // Add items to Email Inbox collection using the correct API structure
       try {
-        const collectionRef = collection(db, 'collections');
-        const collectionDocRef = doc(collectionRef, collectionId);
-        const collectionItemsRef = collection(collectionDocRef, 'items');
-        
-        // Add each item to the collection with proper data sanitization
-        for (const item of itemsToAdd) {
-          // Sanitize data - remove undefined values and convert to proper types
-          const sanitizedItem = {
-            platform: item.platform || 'unknown',
-            url: item.url || '',
-            title: item.title || 'Untitled',
-            description: item.description || '',
-            thumbnail: item.thumbnail || null, // Convert undefined to null
-            author: item.author || 'Unknown',
-            likes: typeof item.likes === 'number' ? item.likes : 0,
-            views: typeof item.views === 'number' ? item.views : 0,
-            duration: typeof item.duration === 'number' ? item.duration : 0,
-            extractedAt: item.extractedAt || new Date().toISOString(),
-            addedAt: Timestamp.now(),
+        const response = await fetch(`http://localhost:3000/api/collections/${collectionId}/items`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: itemsToAdd.map(item => ({
+              platform: item.platform || 'unknown',
+              url: item.url || '',
+              title: item.title || 'Untitled',
+              description: item.description || '',
+              thumbnail: item.thumbnail || null,
+              author: item.author || 'Unknown',
+              likes: typeof item.likes === 'number' ? item.likes : 0,
+              views: typeof item.views === 'number' ? item.views : 0,
+              duration: typeof item.duration === 'number' ? item.duration : 0,
+              extractedAt: item.extractedAt || new Date().toISOString(),
+            })),
             userId,
-          };
-          
-          await addDoc(collectionItemsRef, sanitizedItem);
+          }),
+        });
+
+        if (response.ok) {
+          console.log(`✅ Successfully added ${itemsToAdd.length} items to Email Inbox collection ${collectionId}`);
+        } else {
+          console.error('❌ Error adding items to Email Inbox collection:', await response.text());
         }
-        
-        console.log(`✅ Successfully added ${itemsToAdd.length} items to collection ${collectionId}`);
       } catch (error) {
-        console.error('❌ Error adding items to collection:', error);
+        console.error('❌ Error adding items to Email Inbox collection:', error);
         // Don't throw error, just log it - the extraction was successful
+      }
+
+      // Add video content to "All Videos" collection
+      const videoItems = itemsToAdd.filter(item => 
+        item.platform === 'tiktok' || item.platform === 'instagram'
+      );
+
+      if (videoItems.length > 0) {
+        try {
+          const response = await fetch(`http://localhost:3000/api/collections/${allVideosCollectionId}/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: videoItems.map(item => ({
+                platform: item.platform || 'unknown',
+                url: item.url || '',
+                title: item.title || 'Untitled',
+                description: item.description || '',
+                thumbnail: item.thumbnail || null,
+                author: item.author || 'Unknown',
+                likes: typeof item.likes === 'number' ? item.likes : 0,
+                views: typeof item.views === 'number' ? item.views : 0,
+                duration: typeof item.duration === 'number' ? item.duration : 0,
+                extractedAt: item.extractedAt || new Date().toISOString(),
+                // Additional video-specific metadata
+                videoType: item.platform === 'tiktok' ? 'TikTok Video' : 'Instagram Reel',
+                hashtags: item.title ? extractHashtags(item.title) : [],
+                source: 'email_processing',
+              })),
+              userId,
+            }),
+          });
+
+          if (response.ok) {
+            console.log(`✅ Successfully added ${videoItems.length} video items to All Videos collection ${allVideosCollectionId}`);
+          } else {
+            console.error('❌ Error adding video items to All Videos collection:', await response.text());
+          }
+        } catch (error) {
+          console.error('❌ Error adding video items to All Videos collection:', error);
+          // Don't throw error, just log it - the extraction was successful
+        }
       }
     }
 
