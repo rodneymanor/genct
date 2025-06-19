@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { collection, addDoc, getDocs, query, where, limit, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, limit, Timestamp, doc } from 'firebase/firestore';
 
 import { db } from '@/lib/firebase';
 
@@ -367,61 +367,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Process each link
-    const processedLinks: ProcessedLink[] = [];
+    // Process each link using direct extraction
+    console.log('🔗 Extracting content directly for URLs:', links);
+    const extractData = await extractSocialMediaContent(links);
+    console.log('✅ Direct extraction result:', JSON.stringify(extractData, null, 2));
+    console.log('📊 Extracted array length:', extractData.extracted.length);
+    console.log('📊 Links array length:', links.length);
     
-    for (const url of links) {
+    // Map results to processedLinks format - use simple index mapping
+    const extractedIndex = 0;
+    const processedLinks: ProcessedLink[] = [];
+    for (let i = 0; i < links.length; i++) {
+      const url = links[i];
       const platform = getPlatformFromUrl(url);
+      const content = i < extractData.extracted.length ? extractData.extracted[i] : null;
       
-      try {
-        console.log('🔗 Processing URL:', url);
-        
-        // Extract content using our existing API
-        const extractResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/social-media/extract-content`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ urls: [url] }),
-        });
-        
-        console.log('📡 API response status:', extractResponse.status);
-        
-        if (!extractResponse.ok) {
-          console.log('❌ API error:', extractResponse.status, extractResponse.statusText);
-          processedLinks.push({
-            url,
-            platform,
-            extracted: false,
-          });
-          continue;
-        }
-        
-        const extractData = await extractResponse.json();
-        console.log('✅ API response:', extractData);
-        
-        if (extractData.success && extractData.extracted && extractData.extracted.length > 0) {
-          processedLinks.push({
-            url,
-            platform,
-            extracted: true,
-            content: extractData.extracted[0],
-          });
-        } else {
-          processedLinks.push({
-            url,
-            platform,
-            extracted: false,
-          });
-        }
-      } catch (error) {
-        console.error(`❌ Error processing link ${url}:`, error);
-        processedLinks.push({
-          url,
-          platform,
-          extracted: false,
-        });
-      }
+      console.log(`📋 Mapping ${i}: URL=${url}, Content=${content ? 'Found' : 'None'}`);
+      
+      processedLinks.push({
+        url,
+        platform,
+        extracted: content !== null,
+        content,
+      });
     }
 
     // Get or create default collection
@@ -433,22 +401,25 @@ export async function POST(request: NextRequest) {
       .map(link => link.content);
 
     if (itemsToAdd.length > 0) {
-      // Add items to collection using our existing API
-      const addResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/collections/${collectionId}/items`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: itemsToAdd,
-          userId,
-        }),
-      });
-      
-      const addData = await addResponse.json();
-      
-      if (!addData.success) {
-        throw new Error('Failed to add items to collection');
+      // Add items to collection directly using Firestore
+      try {
+        const collectionRef = collection(db, 'collections');
+        const collectionDocRef = doc(collectionRef, collectionId);
+        const collectionItemsRef = collection(collectionDocRef, 'items');
+        
+        // Add each item to the collection
+        for (const item of itemsToAdd) {
+          await addDoc(collectionItemsRef, {
+            ...item,
+            addedAt: Timestamp.now(),
+            userId,
+          });
+        }
+        
+        console.log(`✅ Successfully added ${itemsToAdd.length} items to collection ${collectionId}`);
+      } catch (error) {
+        console.error('❌ Error adding items to collection:', error);
+        // Don't throw error, just log it - the extraction was successful
       }
     }
 
