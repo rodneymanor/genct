@@ -28,6 +28,34 @@ function extractInstagramShortcode(url: string): string | null {
   return null;
 }
 
+// Helper function to resolve TikTok short URLs to get actual video ID
+async function resolveTikTokShortUrl(shortUrl: string): Promise<string | null> {
+  try {
+    console.log('🔍 Resolving TikTok short URL:', shortUrl);
+    
+    // Follow redirects to get the full URL
+    const response = await fetch(shortUrl, {
+      method: 'HEAD',
+      redirect: 'manual'
+    });
+    
+    const location = response.headers.get('location');
+    console.log('📍 Redirect location:', location);
+    
+    if (location) {
+      // Extract video ID from the full URL
+      const videoId = extractTikTokVideoId(location);
+      console.log('🎬 Extracted video ID from redirect:', videoId);
+      return videoId;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('❌ Error resolving TikTok short URL:', error);
+    return null;
+  }
+}
+
 // Helper function to extract TikTok video ID from URL
 function extractTikTokVideoId(url: string): string | null {
   const patterns = [
@@ -194,13 +222,26 @@ export async function POST(request: NextRequest) {
       }
       // Check if it's a TikTok URL
       else if (url.includes('tiktok.com') || url.includes('vm.tiktok.com')) {
-        const videoId = extractTikTokVideoId(url);
+        let videoId = extractTikTokVideoId(url);
         console.log('🔍 Extracted TikTok video ID from URL:', url, '-> ID:', videoId);
-        if (videoId) {
+        
+        // If it's a short URL format (non-numeric), try to resolve it
+        if (videoId && !/^\d+$/.test(videoId)) {
+          console.log('🔄 Detected short URL format, attempting to resolve...');
+          const resolvedVideoId = await resolveTikTokShortUrl(url);
+          if (resolvedVideoId && /^\d+$/.test(resolvedVideoId)) {
+            videoId = resolvedVideoId;
+            console.log('✅ Resolved to numeric video ID:', videoId);
+          } else {
+            console.log('❌ Failed to resolve to numeric video ID');
+          }
+        }
+        
+        if (videoId && /^\d+$/.test(videoId)) {
           const content = await fetchTikTokContent(videoId);
           results.push(content);
         } else {
-          console.log('❌ Failed to extract video ID from TikTok URL:', url);
+          console.log('❌ No valid numeric video ID found for TikTok URL:', url);
           results.push(null);
         }
       }
