@@ -243,7 +243,7 @@ function ScriptOutlineDisplay({
           <h4 className="font-medium text-sm text-black">Hook</h4>
           <button
             onClick={() => onComponentClick('hook')}
-            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
               {getSelectedOrFirst('hook', components.hooks)?.preview || 
@@ -263,7 +263,7 @@ function ScriptOutlineDisplay({
           <h4 className="font-medium text-sm text-black">Bridge</h4>
           <button
             onClick={() => onComponentClick('bridge')}
-            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
               {getSelectedOrFirst('bridge', components.bridges)?.preview || 
@@ -283,7 +283,7 @@ function ScriptOutlineDisplay({
           <h4 className="font-medium text-sm text-black">Golden Nugget</h4>
           <button
             onClick={() => onComponentClick('goldenNugget')}
-            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
               {getSelectedOrFirst('goldenNugget', components.goldenNuggets)?.title || 
@@ -302,7 +302,7 @@ function ScriptOutlineDisplay({
           <h4 className="font-medium text-sm text-black">Call to Action</h4>
           <button
             onClick={() => onComponentClick('wta')}
-            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm flex items-center gap-2">
               {getSelectedOrFirst('wta', components.wtas)?.preview || 
