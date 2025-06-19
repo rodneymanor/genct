@@ -9,7 +9,6 @@ import {
   FolderOpen,
   Settings,
   Mail,
-  Monitor,
   type LucideIcon,
 } from "lucide-react";
 
@@ -86,4 +85,4 @@ export const sidebarItems: NavGroup[] = [
       },
     ],
   },
-];
+]; 
