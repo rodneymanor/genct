@@ -14,7 +14,7 @@ interface ChatMessage {
   user: { name: string };
   createdAt: string;
   isOwnMessage?: boolean;
-  type?: 'message' | 'system' | 'progress' | 'component-selection' | 'script-complete';
+  type?: 'message' | 'system' | 'progress' | 'component-selection' | 'script-complete' | 'script-outline';
   metadata?: Record<string, unknown>;
 }
 
@@ -28,6 +28,15 @@ interface ScriptChatEditorProps {
   extractedSourcesCount: number;
   canGenerateScript: boolean;
   isGenerating: boolean;
+}
+
+interface ScriptGenerationStage {
+  id: string;
+  title: string;
+  description: string;
+  status: 'pending' | 'active' | 'complete';
+  progress?: number;
+  details?: string[];
 }
 
 // Timeline Progress Component
@@ -196,18 +205,162 @@ function ProgressTimeline({ step, sourcesCount, extractedSourcesCount }: {
   );
 }
 
-// Component Selection Display
-function ComponentSelectionDisplay({ 
+// Script Outline Display Component
+function ScriptOutlineDisplay({ 
+  components, 
+  selectedComponents,
+  onComponentClick,
+  onFinalizeScript
+}: { 
+  components: Record<string, unknown>; 
+  selectedComponents: Record<string, Record<string, unknown>>;
+  onComponentClick: (type: string) => void;
+  onFinalizeScript: () => void;
+}) {
+  const getFirstComponent = (componentArray: any[]) => {
+    return componentArray && componentArray.length > 0 ? componentArray[0] : null;
+  };
+
+  const getSelectedOrFirst = (type: string, componentArray: any[]) => {
+    return selectedComponents[type] || getFirstComponent(componentArray);
+  };
+
+  const allComponentsSelected = () => {
+    const requiredTypes = ['hook', 'bridge', 'goldenNugget', 'wta'];
+    return requiredTypes.every(type => selectedComponents[type]);
+  };
+
+  return (
+    <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+      <div className="flex items-center gap-2 mb-3">
+        <Sparkles className="w-4 h-4 text-gray-600" />
+        <span className="font-medium text-sm text-gray-800">Script Outline</span>
+      </div>
+
+      {/* Hook Section */}
+      {components.hooks && Array.isArray(components.hooks) && components.hooks.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-black">Hook</h4>
+          <button
+            onClick={() => onComponentClick('hook')}
+            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            <div className="font-medium text-sm">
+              {getSelectedOrFirst('hook', components.hooks)?.preview || 
+               getSelectedOrFirst('hook', components.hooks)?.content?.substring(0, 80) + '...' || 
+               getSelectedOrFirst('hook', components.hooks)?.title}
+            </div>
+            <div className="text-xs text-gray-600 mt-1">
+              {selectedComponents.hook ? 'Selected' : 'Click to choose from options'}
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Bridge Section */}
+      {components.bridges && Array.isArray(components.bridges) && components.bridges.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-black">Bridge</h4>
+          <button
+            onClick={() => onComponentClick('bridge')}
+            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            <div className="font-medium text-sm">
+              {getSelectedOrFirst('bridge', components.bridges)?.preview || 
+               getSelectedOrFirst('bridge', components.bridges)?.content?.substring(0, 80) + '...' || 
+               getSelectedOrFirst('bridge', components.bridges)?.title}
+            </div>
+            <div className="text-xs text-gray-600 mt-1">
+              {selectedComponents.bridge ? 'Selected' : 'Click to choose from options'}
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Golden Nugget Section */}
+      {components.goldenNuggets && Array.isArray(components.goldenNuggets) && components.goldenNuggets.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-black">Golden Nugget</h4>
+          <button
+            onClick={() => onComponentClick('goldenNugget')}
+            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            <div className="font-medium text-sm">
+              {getSelectedOrFirst('goldenNugget', components.goldenNuggets)?.title || 
+               `Golden Nugget 1`}
+            </div>
+            <div className="text-xs text-gray-600 mt-1">
+              {selectedComponents.goldenNugget ? 'Selected' : 'Click to choose from options'}
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Call to Action Section */}
+      {components.wtas && Array.isArray(components.wtas) && components.wtas.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-black">Call to Action</h4>
+          <button
+            onClick={() => onComponentClick('wta')}
+            className="w-full text-left p-3 bg-white rounded border hover:border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            <div className="font-medium text-sm flex items-center gap-2">
+              {getSelectedOrFirst('wta', components.wtas)?.preview || 
+               getSelectedOrFirst('wta', components.wtas)?.content?.substring(0, 80) + '...' || 
+               getSelectedOrFirst('wta', components.wtas)?.title}
+              <span className="text-xs text-gray-500 px-2 py-1 rounded capitalize">
+                {getSelectedOrFirst('wta', components.wtas)?.actionType || 'engagement'}
+              </span>
+            </div>
+            <div className="text-xs text-gray-600 mt-1">
+              {selectedComponents.wta ? 'Selected' : 'Click to choose from options'}
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Finalize Script Button */}
+      <div className="pt-4 border-t border-gray-200">
+        <Button 
+          onClick={onFinalizeScript}
+          disabled={!allComponentsSelected()}
+          className="w-full bg-green-600 hover:bg-green-700 text-white"
+        >
+          <CheckCircle className="w-4 h-4 mr-2" />
+          Finalize Script
+        </Button>
+        {!allComponentsSelected() && (
+          <p className="text-xs text-gray-500 mt-2 text-center">
+            Select all components to finalize your script
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Single Component Selection Display
+function SingleComponentSelectionDisplay({ 
+  componentType,
   components, 
   onSelection,
   onBack
 }: { 
-  components: Record<string, unknown>; 
-  onSelection: (type: string, component: Record<string, unknown>) => void;
+  componentType: string;
+  components: any[]; 
+  onSelection: (component: Record<string, unknown>) => void;
   onBack: () => void;
 }) {
-  console.log('🎨 Rendering ComponentSelectionDisplay with components:', components);
-  
+  const getDisplayTitle = (type: string) => {
+    switch (type) {
+      case 'hook': return 'Hooks';
+      case 'bridge': return 'Bridges';
+      case 'goldenNugget': return 'Golden Nuggets';
+      case 'wta': return 'Call to Action';
+      default: return 'Components';
+    }
+  };
+
   return (
     <div className="h-full bg-white border-l border-gray-200 flex flex-col">
       {/* Header */}
@@ -217,120 +370,64 @@ function ComponentSelectionDisplay({
         </Button>
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-gray-600" />
-          <span className="font-medium text-sm text-gray-800">Select Script Components</span>
+          <span className="font-medium text-sm text-gray-800">Select {getDisplayTitle(componentType)}</span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* Hooks Section */}
-        {components.hooks && Array.isArray(components.hooks) && components.hooks.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="font-medium text-base text-black">Hooks</h4>
-            <div className="grid gap-3">
-              {components.hooks.map((hook: Record<string, unknown>, index: number) => (
-                <button
-                  key={hook.id as string || index}
-                  onClick={() => onSelection('hook', hook)}
-                  className="text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
-                >
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="space-y-3">
+          {components.map((component: Record<string, unknown>, index: number) => (
+            <button
+              key={component.id as string || index}
+              onClick={() => onSelection(component)}
+              className="w-full text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+            >
+              {componentType === 'goldenNugget' ? (
+                <>
                   <div className="font-medium text-sm text-gray-900 mb-2">
-                    {(hook.preview as string) || (hook.content as string)?.substring(0, 80) + '...' || (hook.title as string)}
+                    {(component.title as string) || `Golden Nugget ${index + 1}`}
                   </div>
                   <div className="text-xs text-gray-600">
-                    {hook.content && hook.content !== hook.preview ? 
-                      ((hook.content as string).length > 120 ? (hook.content as string).substring(0, 120) + '...' : hook.content) : 
-                      'Click to select this hook'
-                    }
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Bridges Section */}
-        {components.bridges && Array.isArray(components.bridges) && components.bridges.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="font-medium text-base text-black">Bridges</h4>
-            <div className="grid gap-3">
-              {components.bridges.map((bridge: Record<string, unknown>, index: number) => (
-                <button
-                  key={bridge.id as string || index}
-                  onClick={() => onSelection('bridge', bridge)}
-                  className="text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
-                >
-                  <div className="font-medium text-sm text-gray-900 mb-2">
-                    {(bridge.preview as string) || (bridge.content as string)?.substring(0, 80) + '...' || (bridge.title as string)}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    {bridge.content && bridge.content !== bridge.preview ? 
-                      ((bridge.content as string).length > 120 ? (bridge.content as string).substring(0, 120) + '...' : bridge.content) : 
-                      'Click to select this bridge'
-                    }
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Golden Nuggets Section */}
-        {components.goldenNuggets && Array.isArray(components.goldenNuggets) && components.goldenNuggets.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="font-medium text-base text-black">Golden Nuggets</h4>
-            <div className="grid gap-3">
-              {components.goldenNuggets.map((nugget: Record<string, unknown>, index: number) => (
-                <button
-                  key={nugget.id as string || index}
-                  onClick={() => onSelection('goldenNugget', nugget)}
-                  className="text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
-                >
-                  <div className="font-medium text-sm text-gray-900 mb-2">
-                    {(nugget.title as string) || `Golden Nugget ${index + 1}`}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    {nugget.bulletPoints && Array.isArray(nugget.bulletPoints) && nugget.bulletPoints.length > 0 ? 
-                      (nugget.bulletPoints as string[]).slice(0, 2).join(' • ') + (nugget.bulletPoints.length > 2 ? '...' : '') :
-                      nugget.content ? 
-                        ((nugget.content as string).length > 120 ? (nugget.content as string).substring(0, 120) + '...' : nugget.content) :
+                    {component.bulletPoints && Array.isArray(component.bulletPoints) && component.bulletPoints.length > 0 ? 
+                      (component.bulletPoints as string[]).slice(0, 2).join(' • ') + (component.bulletPoints.length > 2 ? '...' : '') :
+                      component.content ? 
+                        ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : component.content) :
                         'Click to select this golden nugget'
                     }
                   </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* What to Ask (WTA) Section */}
-        {components.wtas && Array.isArray(components.wtas) && components.wtas.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="font-medium text-base text-black">Call to Action</h4>
-            <div className="grid gap-3">
-              {components.wtas.map((wta: Record<string, unknown>, index: number) => (
-                <button
-                  key={wta.id as string || index}
-                  onClick={() => onSelection('wta', wta)}
-                  className="text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
-                >
+                </>
+              ) : componentType === 'wta' ? (
+                <>
                   <div className="font-medium text-sm text-gray-900 mb-2 flex items-center gap-2">
-                    {(wta.preview as string) || (wta.content as string)?.substring(0, 80) + '...' || (wta.title as string)}
+                    {(component.preview as string) || (component.content as string)?.substring(0, 80) + '...' || (component.title as string)}
                     <span className="text-xs text-gray-500 px-2 py-1 rounded capitalize">
-                      {(wta.actionType as string) || 'engagement'}
+                      {(component.actionType as string) || 'engagement'}
                     </span>
                   </div>
                   <div className="text-xs text-gray-600">
-                    {wta.content && wta.content !== wta.preview ? 
-                      ((wta.content as string).length > 120 ? (wta.content as string).substring(0, 120) + '...' : wta.content) : 
+                    {component.content && component.content !== component.preview ? 
+                      ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : component.content) : 
                       'Click to select this call to action'
                     }
                   </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+                </>
+              ) : (
+                <>
+                  <div className="font-medium text-sm text-gray-900 mb-2">
+                    {(component.preview as string) || (component.content as string)?.substring(0, 80) + '...' || (component.title as string)}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    {component.content && component.content !== component.preview ? 
+                      ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : component.content) : 
+                      `Click to select this ${componentType}`
+                    }
+                  </div>
+                </>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -351,7 +448,9 @@ export function ScriptChatEditor({
   const [newMessage, setNewMessage] = useState("");
   const [hasStarted, setHasStarted] = useState(false);
   const [showComponentSelection, setShowComponentSelection] = useState(false);
+  const [selectedComponentType, setSelectedComponentType] = useState<string | null>(null);
   const [pendingComponents, setPendingComponents] = useState<Record<string, unknown> | null>(null);
+  const [selectedComponents, setSelectedComponents] = useState<Record<string, Record<string, unknown>>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -388,81 +487,24 @@ export function ScriptChatEditor({
 
   // Handle script state changes
   useEffect(() => {
-    if (scriptState.step && hasStarted) {
-      console.log('🔄 Script State Update:', {
-        step: scriptState.step,
-        sourcesCount,
-        extractedSourcesCount,
-        components: scriptState.components,
-        error: scriptState.error
-      });
-      updateChatForState(scriptState);
-    }
-  }, [scriptState.step, scriptState.error, sourcesCount, extractedSourcesCount, hasStarted]);
+    updateChatForState(scriptState);
+  }, [scriptState]);
 
   const updateChatForState = (state: Record<string, unknown>) => {
-    console.log('📝 Updating chat for state:', state.step);
-    const lastMessage = chatMessages[chatMessages.length - 1];
+    console.log('🔄 Updating chat for state:', state);
     
-    // Avoid duplicate progress messages
-    if (lastMessage?.type === 'progress' && 
-        ['gathering-sources', 'extracting-content', 'generating-components'].includes(state.step as string)) {
-      console.log('⏭️ Skipping duplicate progress message for:', state.step);
-      return;
-    }
-
-    switch (state.step) {
-      case 'gathering-sources':
-        if (lastMessage?.type !== 'progress') {
-          console.log('🔍 Adding progress message for gathering sources');
-          addProgressMessage();
-        }
-        break;
-      case 'extracting-content':
-        if (sourcesCount > 0 && lastMessage?.content !== `Great! I found ${sourcesCount} relevant sources. Now I'm analyzing the content to extract key insights.`) {
-          console.log('📊 Adding message for content extraction, sources:', sourcesCount);
-          addSystemMessage(`Great! I found ${sourcesCount} relevant sources. Now I'm analyzing the content to extract key insights.`);
-        }
-        break;
-      case 'generating-components':
-        if (extractedSourcesCount > 0 && lastMessage?.content !== `Perfect! I've analyzed ${extractedSourcesCount} sources and extracted valuable insights. Now I'm generating script components based on this research.`) {
-          console.log('⚙️ Adding message for component generation, extracted:', extractedSourcesCount);
-          addSystemMessage(`Perfect! I've analyzed ${extractedSourcesCount} sources and extracted valuable insights. Now I'm generating script components based on this research.`);
-        }
-        break;
-      case 'selecting-components':
-        if (state.components && lastMessage?.type !== 'component-selection') {
-          console.log('🎯 Adding component selection message. Components:', state.components);
-          console.log('📋 Component details:', {
-            hooks: (state.components as Record<string, unknown>).hooks ? Array.isArray((state.components as Record<string, unknown>).hooks) ? ((state.components as Record<string, unknown>).hooks as unknown[]).length : 0 : 0,
-            bridges: (state.components as Record<string, unknown>).bridges ? Array.isArray((state.components as Record<string, unknown>).bridges) ? ((state.components as Record<string, unknown>).bridges as unknown[]).length : 0 : 0,
-            goldenNuggets: (state.components as Record<string, unknown>).goldenNuggets ? Array.isArray((state.components as Record<string, unknown>).goldenNuggets) ? ((state.components as Record<string, unknown>).goldenNuggets as unknown[]).length : 0 : 0,
-            wtas: (state.components as Record<string, unknown>).wtas ? Array.isArray((state.components as Record<string, unknown>).wtas) ? ((state.components as Record<string, unknown>).wtas as unknown[]).length : 0 : 0
-          });
-          addSystemMessage("Excellent! I've generated several script components. Click any component below to review and select your preferred options:");
-          setPendingComponents(state.components as Record<string, unknown>);
-          addComponentSelectionMessage(state.components as Record<string, unknown>);
-        }
-        break;
-      case 'generating-script':
-        if (lastMessage?.content !== "Perfect! I'm now generating your final script with the selected components.") {
-          console.log('📜 Adding message for final script generation');
-          addSystemMessage("Perfect! I'm now generating your final script with the selected components.");
-        }
-        break;
-      case 'complete':
-        if (state.finalScript && lastMessage?.type !== 'script-complete') {
-          console.log('✅ Adding script completion message. Script length:', (state.finalScript as string)?.length || 0);
-          addSystemMessage("Your script is complete! Here's what I've created for you:");
-          addScriptCompleteMessage(state.finalScript as string);
-        }
-        break;
-      case 'error':
-        if (state.error) {
-          console.error('❌ Script generation error:', state.error);
-          addSystemMessage(`I encountered an issue: ${state.error}. Let me try a different approach. Could you provide more details about your script idea?`);
-        }
-        break;
+    if (state.step === 'gathering-sources') {
+      addProgressMessage();
+    } else if (state.step === 'extracting-content') {
+      addProgressMessage();
+    } else if (state.step === 'generating-components') {
+      addProgressMessage();
+    } else if (state.step === 'selecting-components' && state.components) {
+      console.log('📋 Adding script outline message with components:', state.components);
+      setPendingComponents(state.components as Record<string, unknown>);
+      addScriptOutlineMessage(state.components as Record<string, unknown>);
+    } else if (state.step === 'complete' && state.finalScript) {
+      addScriptCompleteMessage(state.finalScript as string);
     }
   };
 
@@ -479,8 +521,11 @@ export function ScriptChatEditor({
   };
 
   const addProgressMessage = () => {
+    const existingProgress = chatMessages.find(msg => msg.type === 'progress');
+    if (existingProgress) return;
+    
     const message: ChatMessage = {
-      id: `progress-${Date.now()}`,
+      id: 'progress',
       content: '',
       user: { name: "Script Assistant" },
       createdAt: new Date().toISOString(),
@@ -490,14 +535,14 @@ export function ScriptChatEditor({
     setChatMessages(prev => [...prev, message]);
   };
 
-  const addComponentSelectionMessage = (components: Record<string, unknown>) => {
+  const addScriptOutlineMessage = (components: Record<string, unknown>) => {
     const message: ChatMessage = {
-      id: `components-${Date.now()}`,
+      id: 'script-outline',
       content: '',
       user: { name: "Script Assistant" },
       createdAt: new Date().toISOString(),
       isOwnMessage: false,
-      type: 'component-selection',
+      type: 'script-outline',
       metadata: { components }
     };
     setChatMessages(prev => [...prev, message]);
@@ -505,7 +550,7 @@ export function ScriptChatEditor({
 
   const addScriptCompleteMessage = (script: string) => {
     const message: ChatMessage = {
-      id: `script-${Date.now()}`,
+      id: 'script-complete',
       content: script,
       user: { name: "Script Assistant" },
       createdAt: new Date().toISOString(),
@@ -520,7 +565,7 @@ export function ScriptChatEditor({
     
     setHasStarted(true);
     
-    // Add user message
+    // Add user message with black background
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       content: prompt,
@@ -559,7 +604,7 @@ export function ScriptChatEditor({
       // Auto-respond based on current state
       setTimeout(() => {
         if (scriptState.step === 'selecting-components') {
-          addSystemMessage("Please select your preferred components from the options above, then I'll generate your final script.");
+          addSystemMessage("Please select your preferred components from the outline above, then click 'Finalize Script' when ready.");
         } else if (scriptState.step === 'complete') {
           addSystemMessage("Your script is ready! Is there anything you'd like me to adjust or improve?");
         } else {
@@ -572,27 +617,48 @@ export function ScriptChatEditor({
   };
 
   const handleComponentSelect = (type: string, component: Record<string, unknown>) => {
+    setSelectedComponents(prev => ({
+      ...prev,
+      [type]: component
+    }));
     onComponentSelection(type, component);
-    addSystemMessage(`Great choice! I've selected "${component.title as string}" for the ${type} section.`);
+    addSystemMessage(`Great choice! I've selected "${component.title as string || component.preview as string || 'your option'}" for the ${type} section.`);
     setShowComponentSelection(false);
-    
-    // Check if we can generate the final script
-    if (canGenerateScript) {
-      setTimeout(() => {
-        addSystemMessage("All components selected! Generating your final script now...");
-        onFinalGeneration();
-      }, 1000);
-    }
+    setSelectedComponentType(null);
   };
 
-  const handleComponentSelectionClick = () => {
+  const handleComponentClick = (type: string) => {
     if (pendingComponents) {
+      setSelectedComponentType(type);
       setShowComponentSelection(true);
     }
   };
 
   const handleBackToChat = () => {
     setShowComponentSelection(false);
+    setSelectedComponentType(null);
+  };
+
+  const handleFinalizeScript = () => {
+    addSystemMessage("Excellent! Generating your final script now...");
+    onFinalGeneration();
+  };
+
+  const getComponentsForType = (type: string): any[] => {
+    if (!pendingComponents) return [];
+    
+    switch (type) {
+      case 'hook':
+        return (pendingComponents.hooks as any[]) || [];
+      case 'bridge':
+        return (pendingComponents.bridges as any[]) || [];
+      case 'goldenNugget':
+        return (pendingComponents.goldenNuggets as any[]) || [];
+      case 'wta':
+        return (pendingComponents.wtas as any[]) || [];
+      default:
+        return [];
+    }
   };
 
   return (
@@ -617,20 +683,14 @@ export function ScriptChatEditor({
                     extractedSourcesCount={extractedSourcesCount}
                   />
                 </div>
-              ) : message.type === 'component-selection' ? (
+              ) : message.type === 'script-outline' ? (
                 <div className="max-w-full">
-                  <button
-                    onClick={handleComponentSelectionClick}
-                    className="w-full text-left p-4 bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles className="w-4 h-4 text-gray-600" />
-                      <span className="font-medium text-sm text-gray-800">Click to Select Script Components</span>
-                    </div>
-                    <div className="text-xs text-gray-600">
-                      Review and choose your preferred hooks, bridges, golden nuggets, and calls to action
-                    </div>
-                  </button>
+                  <ScriptOutlineDisplay 
+                    components={message.metadata?.components as Record<string, unknown> || {}}
+                    selectedComponents={selectedComponents}
+                    onComponentClick={handleComponentClick}
+                    onFinalizeScript={handleFinalizeScript}
+                  />
                 </div>
               ) : message.type === 'script-complete' ? (
                 <div className="max-w-full">
@@ -652,7 +712,7 @@ export function ScriptChatEditor({
                     <div className={cn(
                       'py-3 px-4 rounded-lg text-sm w-fit',
                       message.isOwnMessage 
-                        ? 'bg-gray-200 text-gray-900' 
+                        ? 'bg-black text-white' 
                         : 'bg-gray-100 text-gray-900'
                     )}>
                       {message.content}
@@ -700,11 +760,12 @@ export function ScriptChatEditor({
       </div>
 
       {/* Component Selection Panel */}
-      {showComponentSelection && pendingComponents && (
+      {showComponentSelection && selectedComponentType && pendingComponents && (
         <div className="w-[60%] h-full">
-          <ComponentSelectionDisplay 
-            components={pendingComponents}
-            onSelection={handleComponentSelect}
+          <SingleComponentSelectionDisplay 
+            componentType={selectedComponentType}
+            components={getComponentsForType(selectedComponentType)}
+            onSelection={(component) => handleComponentSelect(selectedComponentType, component)}
             onBack={handleBackToChat}
           />
         </div>
