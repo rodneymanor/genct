@@ -51,20 +51,44 @@ function getPlatformFromUrl(url: string): 'instagram' | 'tiktok' | 'other' {
 // Helper function to find user by email alias (simplified - in real implementation you'd have user alias mapping)
 async function findUserByEmailAlias(emailAlias: string): Promise<string | null> {
   try {
-    // In a real implementation, you'd have a user_aliases collection
-    // For now, we'll use a simple mapping or return a default user
-    // This is where you'd implement the ImprovMX alias to user mapping
+    console.log('🔍 findUserByEmailAlias called with:', emailAlias);
     
-    // For demo purposes, let's assume the email alias contains the user ID
-    // In production, you'd query a user_aliases collection
+    // For demo purposes, handle the format: {userId}@gencapp.pro
+    if (emailAlias.includes('@gencapp.pro')) {
+      const userId = emailAlias.split('@')[0];
+      console.log('📧 Extracted userId from email:', userId, 'Length:', userId.length);
+      
+      // Validate that this is a real user ID by checking if they exist in auth
+      // In a real implementation, you'd have a proper user_aliases collection
+      // For now, we'll accept any format that looks like a valid user ID
+      if (userId && userId.length > 10) { // Basic validation for Firebase UID format
+        console.log('✅ Valid userId format, returning:', userId);
+        return userId;
+      } else {
+        console.log('❌ Invalid userId format or too short');
+      }
+    }
+    
+    // Handle specific known aliases
+    if (emailAlias === 'rodney@gencapp.pro') {
+      console.log('✅ Found known alias for rodney, returning hardcoded userId');
+      // Return the known user ID for the main user
+      return 'RDY3YfpuY5ppYEzj0kpGFFVCSHpr'; // This should match the actual user ID
+    }
+    
+    console.log('🔍 Checking database for emailAlias:', emailAlias);
+    // In a real implementation, you'd query a user_aliases collection
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('emailAlias', '==', emailAlias), limit(1));
     const querySnapshot = await getDocs(q);
     
     if (!querySnapshot.empty) {
-      return querySnapshot.docs[0].id;
+      const foundUserId = querySnapshot.docs[0].id;
+      console.log('✅ Found user in database:', foundUserId);
+      return foundUserId;
     }
     
+    console.log('❌ No user found for email alias');
     return null;
   } catch (error) {
     console.error('Error finding user by email alias:', error);
@@ -132,10 +156,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user by email alias
+    console.log('🔍 Looking for user with email alias:', emailData.to);
     const userId = await findUserByEmailAlias(emailData.to);
+    console.log('📧 Found user ID:', userId);
+    
     if (!userId) {
+      console.log('❌ No user found for email alias:', emailData.to);
       return NextResponse.json(
-        { error: 'User not found for email alias' },
+        { error: `User not found for email alias: ${emailData.to}` },
         { status: 404 }
       );
     }
@@ -257,32 +285,26 @@ export async function GET(request: NextRequest) {
     const q = query(
       emailRecordsRef,
       where('userId', '==', userId),
-      // orderBy('processedAt', 'desc'),
       limit(50)
     );
-
     const querySnapshot = await getDocs(q);
-    const records: any[] = [];
 
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      records.push({
-        id: doc.id,
-        ...data,
-        processedAt: data.processedAt?.toDate?.()?.toISOString() || data.processedAt,
-      });
-    });
+    const history = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      processedAt: doc.data().processedAt.toDate().toISOString(),
+    }));
 
     return NextResponse.json({
       success: true,
-      records,
+      history,
     });
 
   } catch (error) {
-    console.error('Error fetching email records:', error);
+    console.error('Error retrieving email history:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch email records' },
+      { error: 'Failed to retrieve email history' },
       { status: 500 }
     );
   }
-} 
+}
