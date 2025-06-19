@@ -9,7 +9,10 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "emulators": "firebase emulators:start",
+    "emulators:ui": "firebase emulators:start --only firestore,auth --ui",
+    "dev:emulators": "concurrently \"npm run emulators\" \"npm run dev\""
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
@@ -109,6 +112,7 @@
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/parser": "^8.26.0",
+    "concurrently": "^9.1.2",
     "eslint": "^9.28.0",
     "eslint-config-next": "^15.3.3",
     "eslint-plugin-import": "^2.31.0",
@@ -117,6 +121,7 @@
     "eslint-plugin-security": "^3.0.1",
     "eslint-plugin-sonarjs": "^3.0.2",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "firebase-tools": "^14.7.0",
     "globals": "^15.15.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",

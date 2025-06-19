@@ -23,21 +23,23 @@ export const db = getFirestore(app);
 // Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
 
-// Connect to emulators in development - DISABLED
-// if (process.env.NODE_ENV === 'development') {
-//   try {
-//     // Connect to Firestore emulator
-//     connectFirestoreEmulator(db, 'localhost', 8180);
-//   } catch (error) {
-//     // Emulator already connected
-//   }
+// Connect to emulators in development
+if (process.env.NODE_ENV === 'development') {
+  try {
+    // Connect to Firestore emulator
+    connectFirestoreEmulator(db, 'localhost', 8180);
+  } catch (error) {
+    // Emulator already connected
+    console.log('Firestore emulator already connected');
+  }
   
-//   try {
-//     // Connect to Auth emulator
-//     connectAuthEmulator(auth, 'http://localhost:9199');
-//   } catch (error) {
-//     // Emulator already connected
-//   }
-// }
+  try {
+    // Connect to Auth emulator
+    connectAuthEmulator(auth, 'http://localhost:9199');
+  } catch (error) {
+    // Emulator already connected
+    console.log('Auth emulator already connected');
+  }
+}
 
 export default app;
