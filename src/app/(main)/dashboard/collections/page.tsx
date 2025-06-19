@@ -31,6 +31,15 @@ import { Input } from "@/components/ui/input";
 // Mock data for collections
 const mockCollections = [
   {
+    id: "uncategorized",
+    title: "Uncategorized",
+    description: "Content that hasn't been organized into specific collections yet",
+    videoCount: 8,
+    thumbnail: "/api/placeholder/300/200",
+    color: "bg-gray-100",
+    tags: ["misc", "unsorted"]
+  },
+  {
     id: "1",
     title: "Tech Explained",
     description: "Educational content about technology and programming",
@@ -116,6 +125,43 @@ const mockVideos = [
   }
 ];
 
+// Mock data for uncategorized videos
+const mockUncategorizedVideos = [
+  {
+    id: "u1",
+    title: "Random Tech Talk",
+    description: "An interesting discussion about various technology topics that doesn't fit into a specific category yet.",
+    thumbnail: "/api/placeholder/400/300",
+    duration: "8:22",
+    views: "942",
+    likes: 67,
+    comments: 8,
+    publishedAt: "2024-01-16"
+  },
+  {
+    id: "u2",
+    title: "Quick Productivity Tip",
+    description: "A short video with a useful productivity tip that hasn't been categorized into a specific collection.",
+    thumbnail: "/api/placeholder/400/300",
+    duration: "3:45",
+    views: "1.2K",
+    likes: 89,
+    comments: 12,
+    publishedAt: "2024-01-14"
+  },
+  {
+    id: "u3",
+    title: "Behind the Scenes",
+    description: "A casual behind-the-scenes look at content creation process. Needs to be organized into a proper collection.",
+    thumbnail: "/api/placeholder/400/300",
+    duration: "11:30",
+    views: "756",
+    likes: 45,
+    comments: 6,
+    publishedAt: "2024-01-11"
+  }
+];
+
 export default function CollectionsPage() {
   const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,6 +174,16 @@ export default function CollectionsPage() {
     collection.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     collection.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Get videos based on selected collection
+  const getVideosForCollection = (collectionId: string) => {
+    if (collectionId === "uncategorized") {
+      return mockUncategorizedVideos;
+    }
+    return mockVideos;
+  };
+
+  const currentVideos = selectedCollection ? getVideosForCollection(selectedCollection) : [];
 
   // Collections List View
   if (!selectedCollection) {
@@ -262,7 +318,7 @@ export default function CollectionsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {mockVideos.map((video) => (
+        {currentVideos.map((video) => (
           <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow">
             <div className="grid md:grid-cols-2 gap-0">
               {/* Video Placeholder */}
@@ -324,7 +380,7 @@ export default function CollectionsPage() {
         ))}
       </div>
 
-      {mockVideos.length === 0 && (
+      {currentVideos.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <Video className="h-12 w-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold mb-2">No videos in this collection</h3>
