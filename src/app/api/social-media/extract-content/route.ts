@@ -167,22 +167,23 @@ async function fetchTikTokContent(videoId: string): Promise<SocialMediaContent |
       return null;
     }
 
-    // Check if we have the required data
-    if (!data.author || !data.desc) {
-      console.log('❌ TikTok API response missing required fields');
+    // Check if we have the required data structure
+    const awemeDetail = data.data?.aweme_detail;
+    if (!awemeDetail) {
+      console.log('❌ TikTok API response missing aweme_detail');
       return null;
     }
 
     return {
       platform: 'tiktok',
-      url: `https://tiktok.com/@${data.author?.unique_id}/video/${videoId}`,
-      title: data.desc || 'TikTok Video',
-      description: data.desc,
-      thumbnail: data.video?.cover,
-      author: data.author?.nickname,
-      likes: data.statistics?.digg_count,
-      views: data.statistics?.play_count,
-      duration: data.video?.duration,
+      url: `https://tiktok.com/@${awemeDetail.author?.unique_id || 'user'}/video/${videoId}`,
+      title: awemeDetail.desc || 'TikTok Video',
+      description: awemeDetail.desc,
+      thumbnail: awemeDetail.video?.cover?.url_list?.[0],
+      author: awemeDetail.author?.nickname || awemeDetail.author?.unique_id,
+      likes: awemeDetail.statistics?.digg_count,
+      views: awemeDetail.statistics?.play_count,
+      duration: awemeDetail.video?.duration,
       extractedAt: new Date().toISOString(),
     };
   } catch (error) {

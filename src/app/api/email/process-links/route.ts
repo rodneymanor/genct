@@ -176,6 +176,7 @@ export async function POST(request: NextRequest) {
       
       try {
         // Extract content using our existing API
+        console.log('🔗 Calling social media extraction API for URL:', url);
         const extractResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/social-media/extract-content`, {
           method: 'POST',
           headers: {
@@ -184,7 +185,29 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({ urls: [url] }),
         });
         
-        const extractData = await extractResponse.json();
+        console.log('📡 Social media API response status:', extractResponse.status);
+        console.log('📡 Social media API response headers:', Object.fromEntries(extractResponse.headers.entries()));
+        
+        if (!extractResponse.ok) {
+          console.log('❌ Social media API error status:', extractResponse.status);
+          const errorText = await extractResponse.text();
+          console.log('❌ Social media API error body:', errorText);
+          throw new Error(`Social media API error: ${extractResponse.status}`);
+        }
+        
+        const responseText = await extractResponse.text();
+        console.log('📄 Social media API raw response:', responseText.substring(0, 500));
+        
+        let extractData;
+        try {
+          extractData = JSON.parse(responseText);
+        } catch (parseError) {
+          console.log('❌ Failed to parse social media API response as JSON:', parseError);
+          console.log('📄 Full response text:', responseText);
+          throw parseError;
+        }
+        
+        console.log('✅ Social media API parsed data:', JSON.stringify(extractData, null, 2));
         
         if (extractData.success && extractData.extracted.length > 0) {
           processedLinks.push({
