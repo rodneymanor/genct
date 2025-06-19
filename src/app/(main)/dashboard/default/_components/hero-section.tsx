@@ -71,27 +71,26 @@ export function HeroSection({ className }: HeroSectionProps) {
   };
 
   return (
-    <div className={cn("flex flex-col items-center justify-center py-12 md:py-16 lg:py-20", className)}>
+    <div className={cn("flex flex-col items-center justify-center py-16 md:py-20 lg:py-24", className)}>
       {/* Hero Headline */}
-      <div className="mb-8 max-w-3xl text-center">
-        <h1 className="mb-4 text-3xl font-black tracking-tight md:text-4xl lg:text-5xl">
+      <div className="mb-12 max-w-4xl text-center">
+        <h1 className="mb-6 text-4xl font-black tracking-tight md:text-5xl lg:text-6xl xl:text-7xl">
           What will You <span className="text-emerald-500 font-black">Script Today</span>?
         </h1>
-        <p className="text-muted-foreground mb-8 text-lg md:text-xl">
-          Describe what you want to create and I&apos;ll help you craft compelling content that resonates with your
-          audience
+        <p className="text-muted-foreground text-xl md:text-2xl lg:text-2xl font-medium">
+          Describe your idea and I&apos;ll help you create compelling content
         </p>
       </div>
 
       {/* Main Input Section */}
-      <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
+      <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl">
         <div className="relative">
           <Textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[120px] w-full resize-none border-border px-6 py-4 pr-24 text-base transition-colors focus-visible:ring-2 md:min-h-[140px] md:text-lg"
+            className="focus-visible:ring-primary/50 hover:border-primary/30 min-h-[100px] w-full resize-none border-border px-5 py-4 pr-20 text-base transition-colors focus-visible:ring-2 md:min-h-[110px] md:text-lg"
             autoFocus
           />
 
@@ -100,13 +99,13 @@ export function HeroSection({ className }: HeroSectionProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="text-muted-foreground hover:text-primary absolute bottom-4 right-16"
+            className="text-muted-foreground hover:text-primary absolute bottom-3 right-14"
             onClick={() => {
               // TODO: Implement voice input
               console.log("Voice input clicked");
             }}
           >
-            <Mic className="h-5 w-5" />
+            <Mic className="h-4 w-4" />
           </Button>
 
           {/* Submit Button */}
@@ -114,7 +113,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             type="submit"
             size="icon"
             className={cn(
-              "absolute bottom-4 right-4 h-[38px] w-[38px] rounded-md border transition-all duration-200 ease-out outline-none",
+              "absolute bottom-3 right-3 h-[34px] w-[34px] rounded-md border transition-all duration-200 ease-out outline-none",
               "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-offset-1",
               trimmedValue
                 ? "bg-primary hover:bg-primary/90 text-primary-foreground border-border"
@@ -122,7 +121,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             )}
             disabled={!trimmedValue}
           >
-            <ArrowUp className="h-5 w-5" />
+            <ArrowUp className="h-4 w-4" />
           </Button>
         </div>
 
