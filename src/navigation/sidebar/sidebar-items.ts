@@ -1,14 +1,8 @@
 import {
   Home,
-  PenTool,
-  FileText,
-  Mic,
-  ScrollText,
-  Lightbulb,
-  Sparkles,
+  Library,
   FolderOpen,
   Settings,
-  Mail,
   type LucideIcon,
 } from "lucide-react";
 
@@ -40,44 +34,25 @@ export const sidebarItems: NavGroup[] = [
     id: 1,
     items: [
       {
-        title: "Dashboard",
+        title: "Home",
         url: "/dashboard/default",
         icon: Home,
       },
       {
-        title: "Scripts",
-        url: "/dashboard/scripts",
-        icon: ScrollText,
+        title: "Library",
+        url: "/dashboard/library",
+        icon: Library,
       },
       {
-        title: "Capture",
-        url: "/dashboard/capture",
-        icon: PenTool,
-        subItems: [
-          { title: "Notes", url: "/dashboard/capture/notes", icon: FileText },
-          { title: "Recordings", url: "/dashboard/capture/recordings", icon: Mic },
-        ],
-      },
-      {
-        title: "Inspiration",
-        url: "/dashboard/inspiration",
-        icon: Lightbulb,
-        subItems: [
-          { title: "AI Suggestions", url: "/dashboard/inspiration/ai-suggestions", icon: Sparkles },
-          { title: "Collections", url: "/dashboard/inspiration/collections", icon: FolderOpen },
-          { title: "Email Demo", url: "/dashboard/inspiration/email-demo", icon: Mail },
-        ],
+        title: "Collections",
+        url: "/dashboard/collections",
+        icon: FolderOpen,
       },
     ],
   },
   {
     id: 2,
     items: [
-      {
-        title: "Dock Demo",
-        url: "/dashboard/dock-demo",
-        icon: PenTool,
-      },
       {
         title: "Settings",
         url: "/dashboard/settings",
