@@ -11,7 +11,9 @@
     "format:check": "prettier --check .",
     "prepare": "husky",
     "emulators": "firebase emulators:start",
-    "emulators:ui": "firebase emulators:start --only firestore,auth --ui",
+    "emulators:firestore": "firebase emulators:start --only firestore",
+    "emulators:auth": "firebase emulators:start --only auth",
+    "emulators:ui": "firebase emulators:start --only firestore,auth",
     "dev:emulators": "concurrently \"npm run emulators\" \"npm run dev\""
   },
   "lint-staged": {

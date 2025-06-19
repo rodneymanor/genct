@@ -3,12 +3,20 @@
 import { cubicBezier, motion, AnimatePresence } from "motion/react";
 import { Mail, Copy, Check, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/auth-context";
 
 export function FloatingNotificationPanel() {
+  const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
-  const ideaEmail = "ideas@yourdomain.com"; // Replace with your actual email
+  
+  // Use user-specific email alias or default for demo
+  const ideaEmail = user?.email === "rodney@rodneymanor.com" 
+    ? "rodney@gencapp.pro" 
+    : user?.uid 
+    ? `${user.uid}@gencapp.pro` 
+    : "ideas@gencapp.pro";
 
   // Load visibility state from localStorage on mount
   useEffect(() => {

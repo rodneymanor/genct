@@ -5,13 +5,21 @@ import { Mail, Copy, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useAuth } from "@/contexts/auth-context";
 
 export function NotificationButton() {
+  const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [hasNotifications, setHasNotifications] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const ideaEmail = "ideas@yourdomain.com"; // Replace with your actual email
+  
+  // Use user-specific email alias or default for demo
+  const ideaEmail = user?.email === "rodney@rodneymanor.com" 
+    ? "rodney@gencapp.pro" 
+    : user?.uid 
+    ? `${user.uid}@gencapp.pro` 
+    : "ideas@gencapp.pro";
 
   // Simulate checking for new email notifications
   useEffect(() => {
@@ -158,6 +166,19 @@ export function NotificationButton() {
               <li>• Notifications appear when new items arrive</li>
             </ul>
           </div>
+
+          {/* User Info */}
+          {user && (
+            <div className="space-y-2 border-t border-border pt-3">
+              <h4 className="text-xs font-medium text-foreground">
+                Your Account
+              </h4>
+              <div className="text-xs text-foreground-light">
+                <p>Logged in as: {user.email}</p>
+                <p>Emails to {ideaEmail} will be processed automatically</p>
+              </div>
+            </div>
+          )}
 
           {/* Recent Activity */}
           {hasNotifications && (
