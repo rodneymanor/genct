@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { Send, Clock, CheckCircle, Loader2, Sparkles, ArrowLeft } from "lucide-react";
+import { Send, Clock, CheckCircle, Loader2, Sparkles, ArrowLeft, Check, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -231,14 +231,14 @@ function ScriptOutlineDisplay({
   };
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+    <div className="bg-white rounded-lg p-4 space-y-4">
       <div className="flex items-center gap-2 mb-3">
         <Sparkles className="w-4 h-4 text-gray-600" />
         <span className="font-medium text-sm text-gray-800">Script Outline</span>
       </div>
 
       {/* Hook Section */}
-      {components.hooks && Array.isArray(components.hooks) && components.hooks.length > 0 && (
+      {components.hooks && Array.isArray(components.hooks) && components.hooks.length > 0 ? (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Hook</h4>
           <button
@@ -246,19 +246,19 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
-              {getSelectedOrFirst('hook', components.hooks)?.preview || 
-               getSelectedOrFirst('hook', components.hooks)?.content?.substring(0, 80) + '...' || 
-               getSelectedOrFirst('hook', components.hooks)?.title}
+              {(getSelectedOrFirst('hook', components.hooks)?.preview as string) || 
+               ((getSelectedOrFirst('hook', components.hooks)?.content as string)?.substring(0, 80) + '...') || 
+               (getSelectedOrFirst('hook', components.hooks)?.title as string)}
             </div>
             <div className="text-xs text-gray-600 mt-1">
               {selectedComponents.hook ? 'Selected' : 'Click to choose from options'}
             </div>
           </button>
         </div>
-      )}
+      ) : null}
 
       {/* Bridge Section */}
-      {components.bridges && Array.isArray(components.bridges) && components.bridges.length > 0 && (
+      {components.bridges && Array.isArray(components.bridges) && components.bridges.length > 0 ? (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Bridge</h4>
           <button
@@ -266,19 +266,19 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
-              {getSelectedOrFirst('bridge', components.bridges)?.preview || 
-               getSelectedOrFirst('bridge', components.bridges)?.content?.substring(0, 80) + '...' || 
-               getSelectedOrFirst('bridge', components.bridges)?.title}
+              {(getSelectedOrFirst('bridge', components.bridges)?.preview as string) || 
+               ((getSelectedOrFirst('bridge', components.bridges)?.content as string)?.substring(0, 80) + '...') || 
+               (getSelectedOrFirst('bridge', components.bridges)?.title as string)}
             </div>
             <div className="text-xs text-gray-600 mt-1">
               {selectedComponents.bridge ? 'Selected' : 'Click to choose from options'}
             </div>
           </button>
         </div>
-      )}
+      ) : null}
 
       {/* Golden Nugget Section */}
-      {components.goldenNuggets && Array.isArray(components.goldenNuggets) && components.goldenNuggets.length > 0 && (
+      {components.goldenNuggets && Array.isArray(components.goldenNuggets) && components.goldenNuggets.length > 0 ? (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Golden Nugget</h4>
           <button
@@ -286,18 +286,18 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm">
-              {getSelectedOrFirst('goldenNugget', components.goldenNuggets)?.title || 
-               `Golden Nugget 1`}
+              {(getSelectedOrFirst('goldenNugget', components.goldenNuggets)?.title as string) || 
+               'Golden Nugget 1'}
             </div>
             <div className="text-xs text-gray-600 mt-1">
               {selectedComponents.goldenNugget ? 'Selected' : 'Click to choose from options'}
             </div>
           </button>
         </div>
-      )}
+      ) : null}
 
       {/* Call to Action Section */}
-      {components.wtas && Array.isArray(components.wtas) && components.wtas.length > 0 && (
+      {components.wtas && Array.isArray(components.wtas) && components.wtas.length > 0 ? (
         <div className="space-y-2">
           <h4 className="font-medium text-sm text-black">Call to Action</h4>
           <button
@@ -305,11 +305,11 @@ function ScriptOutlineDisplay({
             className="w-full text-left p-3 bg-gray-100 rounded border hover:border-gray-300 hover:bg-gray-200 transition-colors"
           >
             <div className="font-medium text-sm flex items-center gap-2">
-              {getSelectedOrFirst('wta', components.wtas)?.preview || 
-               getSelectedOrFirst('wta', components.wtas)?.content?.substring(0, 80) + '...' || 
-               getSelectedOrFirst('wta', components.wtas)?.title}
+              {(getSelectedOrFirst('wta', components.wtas)?.preview as string) || 
+               ((getSelectedOrFirst('wta', components.wtas)?.content as string)?.substring(0, 80) + '...') || 
+               (getSelectedOrFirst('wta', components.wtas)?.title as string)}
               <span className="text-xs text-gray-500 px-2 py-1 rounded capitalize">
-                {getSelectedOrFirst('wta', components.wtas)?.actionType || 'engagement'}
+                {(getSelectedOrFirst('wta', components.wtas)?.actionType as string) || 'engagement'}
               </span>
             </div>
             <div className="text-xs text-gray-600 mt-1">
@@ -317,7 +317,7 @@ function ScriptOutlineDisplay({
             </div>
           </button>
         </div>
-      )}
+      ) : null}
 
       {/* Finalize Script Button */}
       <div className="pt-4 border-t border-gray-200">
@@ -351,6 +351,8 @@ function SingleComponentSelectionDisplay({
   onSelection: (component: Record<string, unknown>) => void;
   onBack: () => void;
 }) {
+  const [selectedComponent, setSelectedComponent] = useState<Record<string, unknown> | null>(null);
+
   const getDisplayTitle = (type: string) => {
     switch (type) {
       case 'hook': return 'Hooks';
@@ -361,11 +363,26 @@ function SingleComponentSelectionDisplay({
     }
   };
 
+  const handleComponentClick = (component: Record<string, unknown>) => {
+    setSelectedComponent(component);
+  };
+
+  const handleConfirm = () => {
+    if (selectedComponent) {
+      onSelection(selectedComponent);
+    }
+  };
+
+  const handleCancel = () => {
+    setSelectedComponent(null);
+    onBack();
+  };
+
   return (
     <div className="h-full bg-white border-l border-gray-200 flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b border-gray-200">
-        <Button variant="ghost" size="sm" onClick={onBack}>
+        <Button variant="ghost" size="sm" onClick={handleCancel}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex items-center gap-2">
@@ -380,8 +397,13 @@ function SingleComponentSelectionDisplay({
           {components.map((component: Record<string, unknown>, index: number) => (
             <button
               key={component.id as string || index}
-              onClick={() => onSelection(component)}
-              className="w-full text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+              onClick={() => handleComponentClick(component)}
+              className={cn(
+                "w-full text-left p-4 rounded-lg border transition-colors",
+                selectedComponent === component
+                  ? "bg-blue-50 border-blue-300 ring-2 ring-blue-500"
+                  : "bg-gray-50 hover:bg-gray-100 border-gray-200 hover:border-gray-300"
+              )}
             >
               {componentType === 'goldenNugget' ? (
                 <>
@@ -392,7 +414,7 @@ function SingleComponentSelectionDisplay({
                     {component.bulletPoints && Array.isArray(component.bulletPoints) && component.bulletPoints.length > 0 ? 
                       (component.bulletPoints as string[]).slice(0, 2).join(' • ') + (component.bulletPoints.length > 2 ? '...' : '') :
                       component.content ? 
-                        ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : component.content) :
+                        ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : (component.content as string)) :
                         'Click to select this golden nugget'
                     }
                   </div>
@@ -400,14 +422,14 @@ function SingleComponentSelectionDisplay({
               ) : componentType === 'wta' ? (
                 <>
                   <div className="font-medium text-sm text-gray-900 mb-2 flex items-center gap-2">
-                    {(component.preview as string) || (component.content as string)?.substring(0, 80) + '...' || (component.title as string)}
+                    {(component.preview as string) || ((component.content as string)?.substring(0, 80) + '...') || (component.title as string)}
                     <span className="text-xs text-gray-500 px-2 py-1 rounded capitalize">
                       {(component.actionType as string) || 'engagement'}
                     </span>
                   </div>
                   <div className="text-xs text-gray-600">
                     {component.content && component.content !== component.preview ? 
-                      ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : component.content) : 
+                      ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : (component.content as string)) : 
                       'Click to select this call to action'
                     }
                   </div>
@@ -415,11 +437,11 @@ function SingleComponentSelectionDisplay({
               ) : (
                 <>
                   <div className="font-medium text-sm text-gray-900 mb-2">
-                    {(component.preview as string) || (component.content as string)?.substring(0, 80) + '...' || (component.title as string)}
+                    {(component.preview as string) || ((component.content as string)?.substring(0, 80) + '...') || (component.title as string)}
                   </div>
                   <div className="text-xs text-gray-600">
                     {component.content && component.content !== component.preview ? 
-                      ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : component.content) : 
+                      ((component.content as string).length > 120 ? (component.content as string).substring(0, 120) + '...' : (component.content as string)) : 
                       `Click to select this ${componentType}`
                     }
                   </div>
@@ -429,6 +451,29 @@ function SingleComponentSelectionDisplay({
           ))}
         </div>
       </div>
+
+      {/* Action Buttons */}
+      {selectedComponent && (
+        <div className="border-t border-gray-200 p-4">
+          <div className="flex gap-2">
+            <Button
+              onClick={handleConfirm}
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Check className="w-4 h-4 mr-2" />
+              Use This Component
+            </Button>
+            <Button
+              onClick={() => setSelectedComponent(null)}
+              variant="outline"
+              className="flex-1"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -452,14 +497,22 @@ export function ScriptChatEditor({
   const [pendingComponents, setPendingComponents] = useState<Record<string, unknown> | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<Record<string, Record<string, unknown>>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (autoScrollEnabled) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
+
+  // Disable auto-scroll when component selection panel is open
+  useEffect(() => {
+    setAutoScrollEnabled(!showComponentSelection);
+  }, [showComponentSelection]);
 
   // Initialize with welcome message
   useEffect(() => {
@@ -622,7 +675,7 @@ export function ScriptChatEditor({
       [type]: component
     }));
     onComponentSelection(type, component);
-    addSystemMessage(`Great choice! I've selected "${component.title as string || component.preview as string || 'your option'}" for the ${type} section.`);
+    addSystemMessage(`Great choice! I've selected "${(component.title as string) || (component.preview as string) || 'your option'}" for the ${type} section.`);
     setShowComponentSelection(false);
     setSelectedComponentType(null);
   };
