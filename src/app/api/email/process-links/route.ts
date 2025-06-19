@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
       
       try {
         // Extract content using our existing API
-        const extractResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/social-media/extract-content`, {
+        const extractResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/social-media/extract-content`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
 
     if (itemsToAdd.length > 0) {
       // Add items to collection using our existing API
-      const addResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/collections/${collectionId}/items`, {
+      const addResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/collections/${collectionId}/items`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
