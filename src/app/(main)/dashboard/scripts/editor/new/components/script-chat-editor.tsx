@@ -498,6 +498,7 @@ export function ScriptChatEditor({
   const [selectedComponents, setSelectedComponents] = useState<Record<string, Record<string, unknown>>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+  const lastProcessedStateRef = useRef<string>('');
 
   const scrollToBottom = () => {
     if (autoScrollEnabled) {
@@ -540,7 +541,11 @@ export function ScriptChatEditor({
 
   // Handle script state changes
   useEffect(() => {
-    updateChatForState(scriptState);
+    const stateKey = `${scriptState.step}-${JSON.stringify(scriptState.components || {})}-${scriptState.finalScript || ''}`;
+    if (lastProcessedStateRef.current !== stateKey) {
+      lastProcessedStateRef.current = stateKey;
+      updateChatForState(scriptState);
+    }
   }, [scriptState]);
 
   const updateChatForState = (state: Record<string, unknown>) => {
@@ -563,7 +568,7 @@ export function ScriptChatEditor({
 
   const addSystemMessage = (content: string) => {
     const message: ChatMessage = {
-      id: Date.now().toString(),
+      id: `system-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       content,
       user: { name: "Script Assistant" },
       createdAt: new Date().toISOString(),
@@ -574,43 +579,55 @@ export function ScriptChatEditor({
   };
 
   const addProgressMessage = () => {
-    const existingProgress = chatMessages.find(msg => msg.type === 'progress');
-    if (existingProgress) return;
-    
-    const message: ChatMessage = {
-      id: 'progress',
-      content: '',
-      user: { name: "Script Assistant" },
-      createdAt: new Date().toISOString(),
-      isOwnMessage: false,
-      type: 'progress'
-    };
-    setChatMessages(prev => [...prev, message]);
+    setChatMessages(prev => {
+      const existingProgress = prev.find(msg => msg.type === 'progress');
+      if (existingProgress) return prev;
+      
+      const message: ChatMessage = {
+        id: `progress-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        content: '',
+        user: { name: "Script Assistant" },
+        createdAt: new Date().toISOString(),
+        isOwnMessage: false,
+        type: 'progress'
+      };
+      return [...prev, message];
+    });
   };
 
   const addScriptOutlineMessage = (components: Record<string, unknown>) => {
-    const message: ChatMessage = {
-      id: 'script-outline',
-      content: '',
-      user: { name: "Script Assistant" },
-      createdAt: new Date().toISOString(),
-      isOwnMessage: false,
-      type: 'script-outline',
-      metadata: { components }
-    };
-    setChatMessages(prev => [...prev, message]);
+    setChatMessages(prev => {
+      // Remove any existing script outline messages to prevent duplicates
+      const filtered = prev.filter(msg => msg.type !== 'script-outline');
+      
+      const message: ChatMessage = {
+        id: `script-outline-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        content: '',
+        user: { name: "Script Assistant" },
+        createdAt: new Date().toISOString(),
+        isOwnMessage: false,
+        type: 'script-outline',
+        metadata: { components }
+      };
+      return [...filtered, message];
+    });
   };
 
   const addScriptCompleteMessage = (script: string) => {
-    const message: ChatMessage = {
-      id: 'script-complete',
-      content: script,
-      user: { name: "Script Assistant" },
-      createdAt: new Date().toISOString(),
-      isOwnMessage: false,
-      type: 'script-complete'
-    };
-    setChatMessages(prev => [...prev, message]);
+    setChatMessages(prev => {
+      // Remove any existing script complete messages to prevent duplicates
+      const filtered = prev.filter(msg => msg.type !== 'script-complete');
+      
+      const message: ChatMessage = {
+        id: `script-complete-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        content: script,
+        user: { name: "Script Assistant" },
+        createdAt: new Date().toISOString(),
+        isOwnMessage: false,
+        type: 'script-complete'
+      };
+      return [...filtered, message];
+    });
   };
 
   const handleStartGeneration = (prompt: string) => {
@@ -620,7 +637,7 @@ export function ScriptChatEditor({
     
     // Add user message with black background
     const userMessage: ChatMessage = {
-      id: Date.now().toString(),
+      id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       content: prompt,
       user: { name: "You" },
       createdAt: new Date().toISOString(),
@@ -645,7 +662,7 @@ export function ScriptChatEditor({
     } else {
       // Handle regular chat during process
       const userMessage: ChatMessage = {
-        id: Date.now().toString(),
+        id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         content: newMessage.trim(),
         user: { name: "You" },
         createdAt: new Date().toISOString(),
