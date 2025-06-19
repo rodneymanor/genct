@@ -4,14 +4,16 @@ import { useState, useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { Save, Eye, Sparkles, ArrowLeft, RefreshCw } from "lucide-react";
+import { Save, Eye, Sparkles, ArrowLeft, RefreshCw, MessageSquare } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useScriptwriting } from "@/hooks/use-scriptwriting";
 
+import { ScriptChatEditor } from "./components/script-chat-editor";
 import { ScriptComplete } from "./components/script-complete";
 import { ScriptComponentSelection } from "./components/script-component-selection";
 import { ScriptError } from "./components/script-error";
@@ -26,6 +28,8 @@ export default function ScriptEditorPage() {
   const [isPreview, setIsPreview] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState("Just now");
+  const [activeTab, setActiveTab] = useState("chat");
+  const [scriptUpdates, setScriptUpdates] = useState<any[]>([]);
 
   const {
     state,
@@ -43,9 +47,12 @@ export default function ScriptEditorPage() {
   useEffect(() => {
     if (promptFromUrl && state.step === "idle") {
       setScriptTitle("New Script");
-      startScriptwriting(promptFromUrl);
+      // For chat mode, we don't auto-start the traditional workflow
+      if (activeTab !== "chat") {
+        startScriptwriting(promptFromUrl);
+      }
     }
-  }, [promptFromUrl, state.step, startScriptwriting]);
+  }, [promptFromUrl, state.step, startScriptwriting, activeTab]);
 
   const handleSave = () => {
     setIsSaving(true);
@@ -72,10 +79,19 @@ export default function ScriptEditorPage() {
   const handleStartOver = () => {
     reset();
     setScriptTitle("");
+    setScriptUpdates([]);
   };
 
-  // Main render content function
-  const renderContent = () => {
+  const handleScriptUpdate = (update: any) => {
+    setScriptUpdates(prev => [...prev, update]);
+  };
+
+  // Generate room name based on script title or prompt
+  const roomName = scriptTitle || promptFromUrl || "script-editor-room";
+  const username = "Script Writer";
+
+  // Main render content function for traditional workflow
+  const renderTraditionalContent = () => {
     switch (state.step) {
       case "gathering-sources":
       case "extracting-content":
@@ -124,12 +140,17 @@ export default function ScriptEditorPage() {
           <div>
             <h1 className="text-2xl font-bold">Script Editor</h1>
             <p className="text-muted-foreground text-sm">
-              {state.step === "complete" ? `Last saved: ${lastSaved}` : "AI-powered script generation with research"}
+              {activeTab === "chat" 
+                ? "Interactive chat-based script creation"
+                : state.step === "complete" 
+                ? `Last saved: ${lastSaved}` 
+                : "AI-powered script generation with research"
+              }
             </p>
           </div>
         </div>
         <div className="flex gap-2">
-          {state.step === "complete" && (
+          {state.step === "complete" && activeTab === "traditional" && (
             <>
               <Button onClick={handleSave} disabled={isSaving} variant="outline" size="sm">
                 <Save className="mr-2 h-4 w-4" />
@@ -141,18 +162,22 @@ export default function ScriptEditorPage() {
               </Button>
             </>
           )}
-          {state.step === "selecting-components" && (
+          {state.step === "selecting-components" && activeTab === "traditional" && (
             <Button onClick={generateFinalScript} disabled={!canGenerateScript || isGenerating}>
               <Sparkles className="mr-2 h-4 w-4" />
               {isGenerating ? "Generating..." : "Generate Script"}
             </Button>
           )}
-          {state.step !== "idle" && state.step !== "complete" && (
-            <Button onClick={handleStartOver} variant="outline" size="sm">
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Start Over
+          {activeTab === "chat" && scriptUpdates.length > 0 && (
+            <Button onClick={handleSave} disabled={isSaving} variant="outline" size="sm">
+              <Save className="mr-2 h-4 w-4" />
+              {isSaving ? "Saving..." : "Save"}
             </Button>
           )}
+          <Button onClick={handleStartOver} variant="outline" size="sm">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Start Over
+          </Button>
         </div>
       </div>
 
@@ -171,8 +196,49 @@ export default function ScriptEditorPage() {
         </CardContent>
       </Card>
 
-      {/* Main Content */}
-      {renderContent()}
+      {/* Main Content with Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="chat" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Chat Editor
+          </TabsTrigger>
+          <TabsTrigger value="traditional" className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            Traditional
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="chat" className="mt-6">
+          <Card>
+            <CardContent className="p-6">
+              <ScriptChatEditor
+                roomName={roomName}
+                username={username}
+                onScriptUpdate={handleScriptUpdate}
+              />
+              
+              {/* Script Updates Summary */}
+              {scriptUpdates.length > 0 && (
+                <div className="mt-6 space-y-2">
+                  <h3 className="font-semibold">Script Components Selected:</h3>
+                  <div className="grid gap-2">
+                    {scriptUpdates.map((update, index) => (
+                      <div key={index} className="rounded-md border p-3 text-sm">
+                        <span className="font-medium">{update.componentId}:</span> {update.content}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="traditional" className="mt-6">
+          {renderTraditionalContent()}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
