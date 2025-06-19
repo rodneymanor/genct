@@ -234,40 +234,96 @@ export class ScriptwritingEngine {
 
   // Transform API response to our component structure
   private transformComponentsResponse(data: any): ScriptComponents {
-    return {
-      hooks: data.hooks?.map((hook: any, index: number) => ({
-        id: `hook-${index}`,
-        title: `Hook ${index + 1}`,
-        content: hook,
-        preview: this.createPreview(hook)
-      })) || [],
-      bridges: data.bridges?.map((bridge: any, index: number) => ({
-        id: `bridge-${index}`,
-        title: `Bridge ${index + 1}`,
-        content: bridge,
-        preview: this.createPreview(bridge)
-      })) || [],
-      goldenNuggets: data.golden_nuggets?.map((nugget: any, index: number) => ({
-        id: `nugget-${index}`,
-        title: nugget.title || `Golden Nugget ${index + 1}`,
-        content: nugget.bullet_points?.join('\n• ') || nugget.content || '',
-        bulletPoints: nugget.bullet_points || [],
-        preview: this.createPreview(nugget.title)
-      })) || [],
-      wtas: data.wtas?.map((wta: any, index: number) => ({
-        id: `wta-${index}`,
-        title: `Call to Action ${index + 1}`,
-        actionType: this.determineActionType(wta),
-        content: wta,
-        preview: this.createPreview(wta)
-      })) || []
+    console.log('🔄 Transforming API response:', data);
+    
+    const components = {
+      hooks: data.hooks?.map((hook: any, index: number) => {
+        const title = this.createTitleFromContent(hook, 'Hook');
+        const component = {
+          id: `hook-${index}`,
+          title: title,
+          content: hook,
+          preview: this.createPreview(hook)
+        };
+        console.log(`🪝 Hook ${index + 1}:`, component);
+        return component;
+      }) || [],
+      bridges: data.bridges?.map((bridge: any, index: number) => {
+        const title = this.createTitleFromContent(bridge, 'Bridge');
+        const component = {
+          id: `bridge-${index}`,
+          title: title,
+          content: bridge,
+          preview: this.createPreview(bridge)
+        };
+        console.log(`🌉 Bridge ${index + 1}:`, component);
+        return component;
+      }) || [],
+      goldenNuggets: data.golden_nuggets?.map((nugget: any, index: number) => {
+        const title = nugget.title || this.createTitleFromContent(nugget.content || nugget.bullet_points?.join(' '), 'Golden Nugget');
+        const component = {
+          id: `nugget-${index}`,
+          title: title,
+          content: nugget.bullet_points?.join('\n• ') || nugget.content || '',
+          bulletPoints: nugget.bullet_points || [],
+          preview: this.createPreview(nugget.title || nugget.content)
+        };
+        console.log(`💎 Golden Nugget ${index + 1}:`, component);
+        return component;
+      }) || [],
+      wtas: data.wtas?.map((wta: any, index: number) => {
+        const title = this.createTitleFromContent(wta, 'Call to Action');
+        const component = {
+          id: `wta-${index}`,
+          title: title,
+          actionType: this.determineActionType(wta),
+          content: wta,
+          preview: this.createPreview(wta)
+        };
+        console.log(`📢 WTA ${index + 1}:`, component);
+        return component;
+      }) || []
     };
+
+    console.log('✅ Final transformed components:', {
+      hooks: components.hooks.length,
+      bridges: components.bridges.length,
+      goldenNuggets: components.goldenNuggets.length,
+      wtas: components.wtas.length
+    });
+
+    return components;
+  }
+
+  // Create meaningful titles from content
+  private createTitleFromContent(content: string, fallbackPrefix: string): string {
+    if (!content) return `${fallbackPrefix} Option`;
+    
+    // Extract first meaningful sentence or phrase
+    const cleanContent = content.replace(/[^\w\s?!.]/g, ' ').trim();
+    const sentences = cleanContent.split(/[.!?]+/);
+    const firstSentence = sentences[0]?.trim();
+    
+    if (firstSentence && firstSentence.length > 10 && firstSentence.length < 60) {
+      return firstSentence;
+    }
+    
+    // If first sentence is too long or short, try to extract key words
+    const words = cleanContent.split(/\s+/).slice(0, 8);
+    const title = words.join(' ');
+    
+    if (title.length > 50) {
+      return title.substring(0, 47) + '...';
+    }
+    
+    return title || `${fallbackPrefix} Option`;
   }
 
   // Create preview text for components
   private createPreview(content: string): string {
     if (!content) return '';
-    return content.length > 100 ? content.substring(0, 100) + '...' : content;
+    const cleanContent = content.replace(/[^\w\s?!.,]/g, ' ').trim();
+    return cleanContent.length > 100 ? cleanContent.substring(0, 97) + '...' : cleanContent;
   }
 
   // Determine action type from WTA content

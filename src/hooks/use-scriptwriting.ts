@@ -43,6 +43,8 @@ export function useScriptwriting() {
 
   // Start the complete scriptwriting workflow
   const startScriptwriting = useCallback(async (videoIdea: string) => {
+    console.log('🚀 Starting scriptwriting process for:', videoIdea);
+    
     setState(prev => ({
       ...prev,
       step: 'gathering-sources',
@@ -56,23 +58,31 @@ export function useScriptwriting() {
 
     try {
       // Step 1: Gather sources
+      console.log('📚 Step 1: Gathering sources...');
       setState(prev => ({ ...prev, step: 'gathering-sources' }));
       const sources = await engine.gatherSources(videoIdea);
+      console.log('✅ Sources gathered:', sources.length, sources);
       
       setState(prev => ({ ...prev, sources }));
 
       // Step 2: Extract content from sources
+      console.log('🔍 Step 2: Extracting content from sources...');
       setState(prev => ({ ...prev, step: 'extracting-content' }));
       const sourcesWithContent = await engine.extractContentFromSources(sources);
+      console.log('✅ Content extracted from sources:', sourcesWithContent.length, sourcesWithContent);
       
       setState(prev => ({ ...prev, sources: sourcesWithContent }));
 
       // Step 3: Generate script components
+      console.log('⚙️ Step 3: Generating script components...');
       setState(prev => ({ ...prev, step: 'generating-components' }));
       const components = await engine.generateScriptComponents(videoIdea, sourcesWithContent);
+      console.log('✅ Components generated:', components);
       
       // Step 4: Auto-select components
+      console.log('🎯 Step 4: Auto-selecting best components...');
       const autoSelected = engine.autoSelectComponents(components);
+      console.log('✅ Auto-selected components:', autoSelected);
 
       setState(prev => ({
         ...prev,
@@ -81,7 +91,10 @@ export function useScriptwriting() {
         selectedComponents: autoSelected,
         isLoading: false
       }));
+      
+      console.log('🎉 Scriptwriting process completed successfully!');
     } catch (error) {
+      console.error('❌ Scriptwriting process failed:', error);
       setState(prev => ({
         ...prev,
         step: 'error',
@@ -130,6 +143,7 @@ export function useScriptwriting() {
     type: keyof SelectedComponents,
     component: any
   ) => {
+    console.log(`🔄 Updating selected ${type}:`, component);
     setState(prev => ({
       ...prev,
       selectedComponents: {
@@ -141,7 +155,10 @@ export function useScriptwriting() {
 
   // Generate final script from selected components
   const generateFinalScript = useCallback(async () => {
+    console.log('📜 Generating final script with selected components:', state.selectedComponents);
+    
     if (!engine.validateSelection(state.selectedComponents)) {
+      console.error('❌ Invalid component selection:', state.selectedComponents);
       setState(prev => ({
         ...prev,
         error: 'Please select all required components'
@@ -161,8 +178,10 @@ export function useScriptwriting() {
         state.videoIdea,
         state.selectedComponents
       );
+      console.log('✅ Final script generated:', finalScript.length, 'characters');
 
       const analysis = engine.analyzeScript(finalScript);
+      console.log('📊 Script analysis:', analysis);
 
       setState(prev => ({
         ...prev,
@@ -172,6 +191,7 @@ export function useScriptwriting() {
         isLoading: false
       }));
     } catch (error) {
+      console.error('❌ Final script generation failed:', error);
       setState(prev => ({
         ...prev,
         step: 'error',

@@ -1,13 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-
-import { Send, Sparkles, Clock, CheckCircle, Loader2, ArrowLeft } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-
+import { Send, Clock, CheckCircle, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
 interface ChatMessage {
@@ -16,15 +12,15 @@ interface ChatMessage {
   user: { name: string };
   createdAt: string;
   isOwnMessage?: boolean;
-  type?: 'message' | 'system' | 'progress' | 'script-component' | 'component-selection' | 'script-complete';
-  metadata?: any;
+  type?: 'message' | 'system' | 'progress' | 'component-selection' | 'script-complete';
+  metadata?: Record<string, unknown>;
 }
 
 interface ScriptChatEditorProps {
   initialPrompt?: string;
-  scriptState: any;
+  scriptState: Record<string, unknown>;
   onStartGeneration: (prompt: string) => void;
-  onComponentSelection: (type: string, component: any) => void;
+  onComponentSelection: (type: string, component: Record<string, unknown>) => void;
   onFinalGeneration: () => void;
   sourcesCount: number;
   extractedSourcesCount: number;
@@ -203,33 +199,120 @@ function ComponentSelectionDisplay({
   components, 
   onSelection 
 }: { 
-  components: any[]; 
+  components: any; 
   onSelection: (type: string, component: any) => void; 
 }) {
+  console.log('🎨 Rendering ComponentSelectionDisplay with components:', components);
+  
   return (
-    <div className="bg-blue-50 rounded-lg p-4 space-y-3">
+    <div className="bg-blue-50 rounded-lg p-4 space-y-4">
       <div className="flex items-center gap-2 mb-3">
         <Sparkles className="w-4 h-4 text-blue-600" />
         <span className="font-medium text-sm text-blue-800">Select Script Components</span>
       </div>
       
-      {Object.entries(components).map(([type, options]: [string, any]) => (
-        <div key={type} className="space-y-2">
-          <h4 className="font-medium text-sm capitalize text-blue-800">{type}</h4>
+      {/* Hooks Section */}
+      {components.hooks && components.hooks.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-blue-800">Hooks</h4>
           <div className="grid gap-2">
-            {options.map((option: any, index: number) => (
+            {components.hooks.map((hook: any, index: number) => (
               <button
-                key={index}
-                onClick={() => onSelection(type, option)}
+                key={hook.id || index}
+                onClick={() => onSelection('hook', hook)}
                 className="text-left p-3 bg-white rounded border hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
-                <div className="font-medium text-sm">{option.title}</div>
-                <div className="text-xs text-gray-600 mt-1">{option.description}</div>
+                <div className="font-medium text-sm">{hook.preview || hook.content?.substring(0, 80) + '...' || hook.title}</div>
+                <div className="text-xs text-gray-600 mt-1">
+                  {hook.content && hook.content !== hook.preview ? 
+                    (hook.content.length > 120 ? hook.content.substring(0, 120) + '...' : hook.content) : 
+                    'Click to select this hook'
+                  }
+                </div>
               </button>
             ))}
           </div>
         </div>
-      ))}
+      )}
+
+      {/* Bridges Section */}
+      {components.bridges && components.bridges.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-blue-800">Bridges</h4>
+          <div className="grid gap-2">
+            {components.bridges.map((bridge: any, index: number) => (
+              <button
+                key={bridge.id || index}
+                onClick={() => onSelection('bridge', bridge)}
+                className="text-left p-3 bg-white rounded border hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <div className="font-medium text-sm">{bridge.preview || bridge.content?.substring(0, 80) + '...' || bridge.title}</div>
+                <div className="text-xs text-gray-600 mt-1">
+                  {bridge.content && bridge.content !== bridge.preview ? 
+                    (bridge.content.length > 120 ? bridge.content.substring(0, 120) + '...' : bridge.content) : 
+                    'Click to select this bridge'
+                  }
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Golden Nuggets Section */}
+      {components.goldenNuggets && components.goldenNuggets.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-blue-800">Golden Nuggets</h4>
+          <div className="grid gap-2">
+            {components.goldenNuggets.map((nugget: any, index: number) => (
+              <button
+                key={nugget.id || index}
+                onClick={() => onSelection('goldenNugget', nugget)}
+                className="text-left p-3 bg-white rounded border hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <div className="font-medium text-sm">{nugget.title || `Golden Nugget ${index + 1}`}</div>
+                <div className="text-xs text-gray-600 mt-1">
+                  {nugget.bulletPoints && nugget.bulletPoints.length > 0 ? 
+                    nugget.bulletPoints.slice(0, 2).join(' • ') + (nugget.bulletPoints.length > 2 ? '...' : '') :
+                    nugget.content ? 
+                      (nugget.content.length > 120 ? nugget.content.substring(0, 120) + '...' : nugget.content) :
+                      'Click to select this golden nugget'
+                  }
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* What to Ask (WTA) Section */}
+      {components.wtas && components.wtas.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-medium text-sm text-blue-800">Call to Action</h4>
+          <div className="grid gap-2">
+            {components.wtas.map((wta: any, index: number) => (
+              <button
+                key={wta.id || index}
+                onClick={() => onSelection('wta', wta)}
+                className="text-left p-3 bg-white rounded border hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <div className="font-medium text-sm flex items-center gap-2">
+                  {wta.preview || wta.content?.substring(0, 80) + '...' || wta.title}
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded capitalize">
+                    {wta.actionType || 'engagement'}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-600 mt-1">
+                  {wta.content && wta.content !== wta.preview ? 
+                    (wta.content.length > 120 ? wta.content.substring(0, 120) + '...' : wta.content) : 
+                    'Click to select this call to action'
+                  }
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -285,54 +368,76 @@ export function ScriptChatEditor({
   // Handle script state changes
   useEffect(() => {
     if (scriptState.step && hasStarted) {
+      console.log('🔄 Script State Update:', {
+        step: scriptState.step,
+        sourcesCount,
+        extractedSourcesCount,
+        components: scriptState.components,
+        error: scriptState.error
+      });
       updateChatForState(scriptState);
     }
   }, [scriptState.step, scriptState.error, sourcesCount, extractedSourcesCount, hasStarted]);
 
   const updateChatForState = (state: any) => {
+    console.log('📝 Updating chat for state:', state.step);
     const lastMessage = chatMessages[chatMessages.length - 1];
     
     // Avoid duplicate progress messages
     if (lastMessage?.type === 'progress' && 
         ['gathering-sources', 'extracting-content', 'generating-components'].includes(state.step)) {
+      console.log('⏭️ Skipping duplicate progress message for:', state.step);
       return;
     }
 
     switch (state.step) {
       case 'gathering-sources':
         if (lastMessage?.type !== 'progress') {
+          console.log('🔍 Adding progress message for gathering sources');
           addProgressMessage();
         }
         break;
       case 'extracting-content':
         if (sourcesCount > 0 && lastMessage?.content !== `Great! I found ${sourcesCount} relevant sources. Now I'm analyzing the content to extract key insights.`) {
+          console.log('📊 Adding message for content extraction, sources:', sourcesCount);
           addSystemMessage(`Great! I found ${sourcesCount} relevant sources. Now I'm analyzing the content to extract key insights.`);
         }
         break;
       case 'generating-components':
         if (extractedSourcesCount > 0 && lastMessage?.content !== `Perfect! I've analyzed ${extractedSourcesCount} sources and extracted valuable insights. Now I'm generating script components based on this research.`) {
+          console.log('⚙️ Adding message for component generation, extracted:', extractedSourcesCount);
           addSystemMessage(`Perfect! I've analyzed ${extractedSourcesCount} sources and extracted valuable insights. Now I'm generating script components based on this research.`);
         }
         break;
       case 'selecting-components':
         if (state.components && lastMessage?.type !== 'component-selection') {
+          console.log('🎯 Adding component selection message. Components:', state.components);
+          console.log('📋 Component details:', {
+            hooks: state.components.hooks?.length || 0,
+            bridges: state.components.bridges?.length || 0,
+            goldenNuggets: state.components.goldenNuggets?.length || 0,
+            wtas: state.components.wtas?.length || 0
+          });
           addSystemMessage("Excellent! I've generated several script components. Please select your preferred options for each section:");
           addComponentSelectionMessage(state.components);
         }
         break;
       case 'generating-script':
         if (lastMessage?.content !== "Perfect! I'm now generating your final script with the selected components.") {
+          console.log('📜 Adding message for final script generation');
           addSystemMessage("Perfect! I'm now generating your final script with the selected components.");
         }
         break;
       case 'complete':
         if (state.finalScript && lastMessage?.type !== 'script-complete') {
+          console.log('✅ Adding script completion message. Script length:', state.finalScript?.length || 0);
           addSystemMessage("Your script is complete! Here's what I've created for you:");
           addScriptCompleteMessage(state.finalScript);
         }
         break;
       case 'error':
         if (state.error) {
+          console.error('❌ Script generation error:', state.error);
           addSystemMessage(`I encountered an issue: ${state.error}. Let me try a different approach. Could you provide more details about your script idea?`);
         }
         break;
