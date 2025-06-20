@@ -14,8 +14,12 @@ export function Topbar() {
   const isCollapsed = state === "collapsed";
 
   return (
-    <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-2 bg-background border-b border-border-strong transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-      <div className="flex w-full items-center gap-2 px-4 lg:px-6">
+    <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-2 bg-background border-b border-border-strong transition-all duration-200 ease-linear">
+      <div className={`flex w-full items-center gap-2 px-4 lg:px-6 transition-all duration-200 ease-linear ${
+        isCollapsed 
+          ? "md:pl-[calc(var(--sidebar-width-icon)+1rem)]" 
+          : "md:pl-[calc(var(--sidebar-width)+1rem)]"
+      }`}>
         {/* Logo */}
         <div className="flex items-center">
           <Image
