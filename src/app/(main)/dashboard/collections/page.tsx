@@ -2,397 +2,256 @@
 
 import { useState } from "react";
 
-import { 
-  FolderOpen, 
-  Plus, 
-  ArrowLeft, 
-  Play, 
-  Heart, 
-  MessageCircle, 
-  Share, 
-  MoreHorizontal,
-  Video,
-  Users,
-  Calendar,
-  Eye
-} from "lucide-react";
+import { ChevronRight, Search, Grid3X3, List, Filter } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-// Mock data for collections
-const mockCollections = [
-  {
-    id: "uncategorized",
-    title: "Uncategorized",
-    description: "Content that hasn't been organized into specific collections yet",
-    videoCount: 8,
-    thumbnail: "/api/placeholder/300/200",
-    color: "bg-gray-100",
-    tags: ["misc", "unsorted"]
-  },
-  {
-    id: "1",
-    title: "Tech Explained",
-    description: "Educational content about technology and programming",
-    videoCount: 24,
-    thumbnail: "/api/placeholder/300/200",
-    color: "bg-blue-100",
-    tags: ["tech", "education"]
-  },
-  {
-    id: "2",
-    title: "Wellness Tips",
-    description: "Health and wellness advice for daily life",
-    videoCount: 18,
-    thumbnail: "/api/placeholder/300/200",
-    color: "bg-green-100",
-    tags: ["wellness", "health"]
-  },
-  {
-    id: "3",
-    title: "Creative Inspiration",
-    description: "Creative projects and artistic inspiration",
-    videoCount: 32,
-    thumbnail: "/api/placeholder/300/200",
-    color: "bg-purple-100",
-    tags: ["creative", "art"]
-  },
-  {
-    id: "4",
-    title: "Business Growth",
-    description: "Strategies for business development and growth",
-    videoCount: 15,
-    thumbnail: "/api/placeholder/300/200",
-    color: "bg-orange-100",
-    tags: ["business", "growth"]
-  }
-];
+// Mock data for collections in different categories
+const collectionsData = {
+  shared: [
+    {
+      id: "shared-1",
+      title: "Team Projects",
+      thumbnail: "/api/placeholder/400/300",
+      videoCount: 12,
+      isSelected: false
+    },
+    {
+      id: "shared-2", 
+      title: "Client Presentations",
+      thumbnail: "/api/placeholder/400/300",
+      videoCount: 8,
+      isSelected: false
+    }
+  ],
+  favorites: [
+    {
+      id: "fav-1",
+      title: "Best Tutorials",
+      thumbnail: "/api/placeholder/400/300", 
+      videoCount: 24,
+      isSelected: true // Default selected
+    },
+    {
+      id: "fav-2",
+      title: "Creative Inspiration",
+      thumbnail: "/api/placeholder/400/300",
+      videoCount: 16,
+      isSelected: false
+    }
+  ],
+  private: [
+    {
+      id: "private-1",
+      title: "Personal Archive",
+      thumbnail: "/api/placeholder/400/300",
+      videoCount: 45,
+      isSelected: false
+    },
+    {
+      id: "private-2",
+      title: "Work in Progress",
+      thumbnail: "/api/placeholder/400/300",
+      videoCount: 7,
+      isSelected: false
+    }
+  ]
+};
 
-// Mock data for videos in a collection
-const mockVideos = [
-  {
-    id: "1",
-    title: "Introduction to React Hooks",
-    description: "Learn the basics of React Hooks and how to use them in your applications. This comprehensive guide covers useState, useEffect, and custom hooks.",
-    thumbnail: "/api/placeholder/400/300",
-    duration: "12:34",
-    views: "2.3K",
-    likes: 156,
-    comments: 23,
-    publishedAt: "2024-01-15"
-  },
-  {
-    id: "2",
-    title: "Advanced TypeScript Patterns",
-    description: "Explore advanced TypeScript patterns and techniques that will help you write better, more maintainable code.",
-    thumbnail: "/api/placeholder/400/300",
-    duration: "18:45",
-    views: "1.8K",
-    likes: 124,
-    comments: 15,
-    publishedAt: "2024-01-12"
-  },
-  {
-    id: "3",
-    title: "Building Scalable APIs",
-    description: "Best practices for building scalable and maintainable APIs using modern frameworks and design patterns.",
-    thumbnail: "/api/placeholder/400/300",
-    duration: "25:12",
-    views: "3.1K",
-    likes: 234,
-    comments: 45,
-    publishedAt: "2024-01-10"
-  },
-  {
-    id: "4",
-    title: "Database Optimization Tips",
-    description: "Learn how to optimize your database queries and improve performance with these practical tips and techniques.",
-    thumbnail: "/api/placeholder/400/300",
-    duration: "15:30",
-    views: "1.5K",
-    likes: 89,
-    comments: 12,
-    publishedAt: "2024-01-08"
-  }
-];
-
-// Mock data for uncategorized videos
-const mockUncategorizedVideos = [
-  {
-    id: "u1",
-    title: "Random Tech Talk",
-    description: "An interesting discussion about various technology topics that doesn't fit into a specific category yet.",
-    thumbnail: "/api/placeholder/400/300",
-    duration: "8:22",
-    views: "942",
-    likes: 67,
-    comments: 8,
-    publishedAt: "2024-01-16"
-  },
-  {
-    id: "u2",
-    title: "Quick Productivity Tip",
-    description: "A short video with a useful productivity tip that hasn't been categorized into a specific collection.",
-    thumbnail: "/api/placeholder/400/300",
-    duration: "3:45",
-    views: "1.2K",
-    likes: 89,
-    comments: 12,
-    publishedAt: "2024-01-14"
-  },
-  {
-    id: "u3",
-    title: "Behind the Scenes",
-    description: "A casual behind-the-scenes look at content creation process. Needs to be organized into a proper collection.",
-    thumbnail: "/api/placeholder/400/300",
-    duration: "11:30",
-    views: "756",
-    likes: 45,
-    comments: 6,
-    publishedAt: "2024-01-11"
-  }
-];
+// Mock video data for the selected collection
+const mockVideos = Array.from({ length: 12 }, (_, i) => ({
+  id: `video-${i + 1}`,
+  title: `Video Title ${i + 1}`,
+  thumbnail: `/api/placeholder/400/300?random=${i}`,
+  duration: `${Math.floor(Math.random() * 20) + 1}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+  views: `${(Math.random() * 10).toFixed(1)}K`,
+  uploadDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString()
+}));
 
 export default function CollectionsPage() {
-  const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<'shared' | 'favorites' | 'private'>('favorites');
+  const [selectedCollection, setSelectedCollection] = useState('fav-1');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const selectedCollectionData = selectedCollection 
-    ? mockCollections.find(c => c.id === selectedCollection)
-    : null;
+  const currentCollections = collectionsData[selectedCategory];
+  const selectedCollectionData = currentCollections.find(c => c.id === selectedCollection);
 
-  const filteredCollections = mockCollections.filter(collection =>
-    collection.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    collection.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Get videos based on selected collection
-  const getVideosForCollection = (collectionId: string) => {
-    if (collectionId === "uncategorized") {
-      return mockUncategorizedVideos;
-    }
-    return mockVideos;
-  };
-
-  const currentVideos = selectedCollection ? getVideosForCollection(selectedCollection) : [];
-
-  // Collections List View
-  if (!selectedCollection) {
-    return (
-      <div className="mx-auto w-full max-w-[1200px] px-4 @lg:px-6 @xl:px-12 @2xl:px-20 @3xl:px-24 my-8 flex flex-col gap-8">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-2xl font-bold tracking-tight">Collections</h1>
-            <p className="text-muted-foreground">
-              Organize your content into themed collections for easy discovery.
-            </p>
-          </div>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            New Collection
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
-            <Input
-              placeholder="Search collections..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-sm"
-            />
-          </div>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredCollections.map((collection) => (
-            <Card 
-              key={collection.id} 
-              className="hover:shadow-lg transition-all cursor-pointer group"
-              onClick={() => setSelectedCollection(collection.id)}
-            >
-              <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg relative overflow-hidden">
-                <div className={`absolute inset-0 ${collection.color} opacity-20`} />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <FolderOpen className="h-12 w-12 text-gray-400" />
-                </div>
-                <div className="absolute top-3 right-3">
-                  <Badge variant="secondary" className="bg-black/50 text-white">
-                    {collection.videoCount} videos
-                  </Badge>
-                </div>
-              </div>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                    {collection.title}
-                  </CardTitle>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Share className="h-4 w-4 mr-2" />
-                        Share
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <CardDescription className="line-clamp-2">
-                  {collection.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-1">
-                    {collection.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Video className="h-4 w-4" />
-                    {collection.videoCount}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {filteredCollections.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <FolderOpen className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No collections found</h3>
-            <p className="text-muted-foreground mb-4">
-              {searchQuery ? "Try adjusting your search terms" : "Create your first collection to get started"}
-            </p>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Collection
-            </Button>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Video Feed View
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 @lg:px-6 @xl:px-12 @2xl:px-20 @3xl:px-24 my-8 flex flex-col gap-8">
-      <div className="flex items-center gap-4">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => setSelectedCollection(null)}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Collections
-        </Button>
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight">
-            {selectedCollectionData?.title}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {selectedCollectionData?.videoCount} videos • {selectedCollectionData?.description}
-          </p>
+    <div className="h-full flex">
+      {/* Left Sidebar - 20% */}
+      <div className="w-1/5 border-r border-border bg-muted/30 flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b border-border">
+          <h1 className="text-xl font-semibold text-foreground">Collections</h1>
+        </div>
+
+        {/* Categories */}
+        <div className="flex-1 p-4 space-y-6">
+          {/* Shared Section */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              <span>Shared</span>
+            </div>
+            <div className="space-y-1">
+              {collectionsData.shared.map((collection) => (
+                <button
+                  key={collection.id}
+                  onClick={() => {
+                    setSelectedCategory('shared');
+                    setSelectedCollection(collection.id);
+                  }}
+                  className={`w-full text-left p-2 rounded-md text-sm transition-colors hover:bg-muted ${
+                    selectedCategory === 'shared' && selectedCollection === collection.id
+                      ? 'bg-primary/10 text-primary font-medium'
+                      : 'text-foreground'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{collection.title}</span>
+                    <span className="text-xs text-muted-foreground">{collection.videoCount}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Favorites Section */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              <span>Favorites</span>
+            </div>
+            <div className="space-y-1">
+              {collectionsData.favorites.map((collection) => (
+                <button
+                  key={collection.id}
+                  onClick={() => {
+                    setSelectedCategory('favorites');
+                    setSelectedCollection(collection.id);
+                  }}
+                  className={`w-full text-left p-2 rounded-md text-sm transition-colors hover:bg-muted ${
+                    selectedCategory === 'favorites' && selectedCollection === collection.id
+                      ? 'bg-primary/10 text-primary font-medium'
+                      : 'text-foreground'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{collection.title}</span>
+                    <span className="text-xs text-muted-foreground">{collection.videoCount}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Private Section */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              <span>Private</span>
+            </div>
+            <div className="space-y-1">
+              {collectionsData.private.map((collection) => (
+                <button
+                  key={collection.id}
+                  onClick={() => {
+                    setSelectedCategory('private');
+                    setSelectedCollection(collection.id);
+                  }}
+                  className={`w-full text-left p-2 rounded-md text-sm transition-colors hover:bg-muted ${
+                    selectedCategory === 'private' && selectedCollection === collection.id
+                      ? 'bg-primary/10 text-primary font-medium'
+                      : 'text-foreground'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{collection.title}</span>
+                    <span className="text-xs text-muted-foreground">{collection.videoCount}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {currentVideos.map((video) => (
-          <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="grid md:grid-cols-2 gap-0">
-              {/* Video Placeholder */}
-              <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Button size="lg" className="rounded-full">
-                    <Play className="h-6 w-6 ml-1" />
-                  </Button>
-                </div>
-                <div className="absolute bottom-3 right-3">
-                  <Badge variant="secondary" className="bg-black/70 text-white text-xs">
-                    {video.duration}
-                  </Badge>
-                </div>
+      {/* Right Main Content - 80% */}
+      <div className="w-4/5 flex flex-col">
+        {/* Top Bar */}
+        <div className="p-6 border-b border-border bg-background">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search videos..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
               </div>
-
-              {/* Video Info */}
-              <div className="p-4 flex flex-col justify-between">
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-lg leading-tight line-clamp-2">
-                    {video.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-3">
-                    {video.description}
-                  </p>
-                </div>
-
-                <div className="space-y-3 mt-4">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      {video.views}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(video.publishedAt).toLocaleDateString()}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Button variant="ghost" size="sm" className="h-8 px-2">
-                        <Heart className="h-4 w-4 mr-1" />
-                        {video.likes}
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-8 px-2">
-                        <MessageCircle className="h-4 w-4 mr-1" />
-                        {video.comments}
-                      </Button>
-                    </div>
-                    <Button variant="ghost" size="sm">
-                      <Share className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
+              <div className="text-sm text-muted-foreground">
+                {selectedCollectionData?.videoCount} videos
               </div>
             </div>
-          </Card>
-        ))}
-      </div>
-
-      {currentVideos.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Video className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No videos in this collection</h3>
-          <p className="text-muted-foreground mb-4">
-            Start adding videos to build your collection
-          </p>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Video
-          </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Filter className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* Video Grid */}
+        <div className="flex-1 p-6">
+          <div className="grid grid-cols-3 gap-4">
+            {mockVideos.map((video) => (
+              <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                {/* Video Thumbnail */}
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute bottom-2 right-2">
+                    <Badge variant="secondary" className="bg-black/70 text-white text-xs">
+                      {video.duration}
+                    </Badge>
+                  </div>
+                  <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Badge variant="secondary" className="bg-primary/90 text-primary-foreground text-xs">
+                      {video.views} views
+                    </Badge>
+                  </div>
+                </div>
+                
+                {/* Video Info */}
+                <div className="p-3">
+                  <h3 className="font-medium text-sm line-clamp-2 text-foreground group-hover:text-primary transition-colors">
+                    {video.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {new Date(video.uploadDate).toLocaleDateString()}
+                  </p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 } 
