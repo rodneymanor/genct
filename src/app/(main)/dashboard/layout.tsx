@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const defaultOpen = false;
 
-  const sidebarVariant = await getSidebarVariant();
+  const sidebarVariant = "sidebar"; // Force sidebar variant instead of inset
   const sidebarCollapsible = await getSidebarCollapsible();
   const contentLayout = await getContentLayout();
 
