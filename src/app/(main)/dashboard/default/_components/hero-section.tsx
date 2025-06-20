@@ -219,7 +219,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                   Script Builder
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-7xl h-[90vh] p-0">
+              <DialogContent className="w-[800px] max-w-[90vw] h-[90vh] p-0">
                 <div className="flex flex-col h-full">
                   {/* Header */}
                   <div className="flex justify-between items-center border-b py-2 px-4 bg-muted/30 flex-shrink-0">
