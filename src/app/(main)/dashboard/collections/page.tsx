@@ -83,9 +83,9 @@ export default function CollectionsPage() {
   return (
     <div className="h-full flex">
       {/* Left Sidebar - 20% */}
-      <div className="w-1/5 border-r border-border bg-muted/30 flex flex-col">
+      <div className="w-1/5 border-r bg-muted/30 flex flex-col" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
         {/* Header */}
-        <div className="p-6 border-b border-border">
+        <div className="p-6 border-b" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
           <h1 className="text-xl font-semibold text-foreground">Collections</h1>
         </div>
 
@@ -180,16 +180,21 @@ export default function CollectionsPage() {
       {/* Right Main Content - 80% */}
       <div className="w-4/5 flex flex-col">
         {/* Top Bar */}
-        <div className="p-6 border-b border-border bg-background">
+        <div className="p-6 border-b bg-background" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search 
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" 
+                  strokeWidth={1.5}
+                  style={{ color: 'rgb(223, 223, 223)' }}
+                />
                 <Input
                   placeholder="Search videos..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
+                  style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}
                 />
               </div>
               <div className="text-sm text-muted-foreground">
@@ -202,17 +207,29 @@ export default function CollectionsPage() {
                 size="sm"
                 onClick={() => setViewMode('grid')}
               >
-                <Grid3X3 className="h-4 w-4" />
+                <Grid3X3 
+                  className="h-4 w-4" 
+                  strokeWidth={1.5}
+                  style={{ color: 'rgb(223, 223, 223)' }}
+                />
               </Button>
               <Button
                 variant={viewMode === 'list' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('list')}
               >
-                <List className="h-4 w-4" />
+                <List 
+                  className="h-4 w-4" 
+                  strokeWidth={1.5}
+                  style={{ color: 'rgb(223, 223, 223)' }}
+                />
               </Button>
               <Button variant="ghost" size="sm">
-                <Filter className="h-4 w-4" />
+                <Filter 
+                  className="h-4 w-4" 
+                  strokeWidth={1.5}
+                  style={{ color: 'rgb(223, 223, 223)' }}
+                />
               </Button>
             </div>
           </div>
@@ -222,7 +239,11 @@ export default function CollectionsPage() {
         <div className="flex-1 p-6">
           <div className="grid grid-cols-3 gap-4">
             {mockVideos.map((video) => (
-              <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+              <Card 
+                key={video.id} 
+                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
+                style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}
+              >
                 {/* Video Thumbnail */}
                 <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

@@ -42,7 +42,7 @@ export default function HelpNotificationsButtons() {
 
   return (
     <TooltipProvider>
-      <div className="overflow-hidden inline-flex items-center rounded-full border">
+      <div className="overflow-hidden inline-flex items-center rounded-full border" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
         {/* Help Button */}
         <Popover>
           <Tooltip>
@@ -53,7 +53,11 @@ export default function HelpNotificationsButtons() {
                   size="sm"
                   className="relative justify-center cursor-pointer inline-flex items-center text-center font-normal ease-out duration-200 outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border-transparent text-xs px-2.5 py-1 rounded-none w-[32px] h-[30px] group pointer-events-auto hover:bg-muted data-[state=open]:bg-muted"
                 >
-                  <CircleHelp className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <CircleHelp 
+                    className="h-[18px] w-[18px] group-hover:text-foreground transition-colors" 
+                    strokeWidth={1.5}
+                    style={{ color: 'rgb(223, 223, 223)' }}
+                  />
                 </Button>
               </PopoverTrigger>
             </TooltipTrigger>
@@ -61,20 +65,20 @@ export default function HelpNotificationsButtons() {
               <p>Help</p>
             </TooltipContent>
           </Tooltip>
-          <PopoverContent className="w-80">
+          <PopoverContent className="w-80" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Help & Support</h4>
               <p className="text-sm text-muted-foreground">
                 Get help with your account, billing, and technical issues.
               </p>
               <div className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button variant="outline" size="sm" className="w-full justify-start" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
                   Documentation
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button variant="outline" size="sm" className="w-full justify-start" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
                   Contact Support
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button variant="outline" size="sm" className="w-full justify-start" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
                   Community Forum
                 </Button>
               </div>
@@ -92,7 +96,11 @@ export default function HelpNotificationsButtons() {
                   size="sm"
                   className="relative justify-center cursor-pointer inline-flex items-center text-center font-normal ease-out duration-200 outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border-transparent text-xs py-1 rounded-none h-[30px] w-[32px] group px-1 pointer-events-auto hover:bg-muted data-[state=open]:bg-muted"
                 >
-                  <Inbox className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <Inbox 
+                    className="h-[18px] w-[18px] group-hover:text-foreground transition-colors" 
+                    strokeWidth={1.5}
+                    style={{ color: 'rgb(223, 223, 223)' }}
+                  />
                 </Button>
               </PopoverTrigger>
             </TooltipTrigger>
@@ -100,12 +108,12 @@ export default function HelpNotificationsButtons() {
               <p>Notifications</p>
             </TooltipContent>
           </Tooltip>
-          <PopoverContent className="w-80">
+          <PopoverContent className="w-80" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Notifications</h4>
               <p className="text-sm text-muted-foreground">You have no new notifications.</p>
               <div className="space-y-2">
-                <div className="flex items-center space-x-2 p-2 rounded-md border">
+                <div className="flex items-center space-x-2 p-2 rounded-md border" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <div className="flex-1">
                     <p className="text-sm font-medium">Welcome to the platform!</p>
@@ -134,7 +142,11 @@ export default function HelpNotificationsButtons() {
                   size="sm"
                   className="relative justify-center cursor-pointer inline-flex items-center text-center font-normal ease-out duration-200 outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border-transparent text-xs py-1 rounded-none h-[30px] w-[32px] group px-1 pointer-events-auto hover:bg-muted data-[state=open]:bg-muted"
                 >
-                  <Mail className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <Mail 
+                    className="h-[18px] w-[18px] group-hover:text-foreground transition-colors" 
+                    strokeWidth={1.5}
+                    style={{ color: 'rgb(223, 223, 223)' }}
+                  />
                   {unreadEmailCount > 0 && (
                     <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                       {unreadEmailCount > 9 ? '9+' : unreadEmailCount}
@@ -147,12 +159,15 @@ export default function HelpNotificationsButtons() {
               <p>Email Inbox</p>
             </TooltipContent>
           </Tooltip>
-          <PopoverContent className="w-96 max-h-[500px] bg-background border border-border shadow-lg" align="end">
+          <PopoverContent className="w-96 max-h-[500px] bg-background shadow-lg" align="end" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
             <div className="space-y-4">
               {/* Header */}
-              <div className="flex items-center gap-3 pb-3 border-b border-border">
+              <div className="flex items-center gap-3 pb-3 border-b" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
                 <div className="relative">
-                  <Mail className="h-5 w-5 text-primary" />
+                  <Mail 
+                    className="h-5 w-5 text-primary" 
+                    strokeWidth={1.5}
+                  />
                   {unreadEmailCount > 0 && (
                     <div className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                       {unreadEmailCount > 9 ? '9+' : unreadEmailCount}
@@ -170,7 +185,7 @@ export default function HelpNotificationsButtons() {
               </div>
 
               {/* Email Setup Section */}
-              <div className="space-y-3 p-3 border border-border rounded-lg bg-muted/30">
+              <div className="space-y-3 p-3 rounded-lg bg-muted/30" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-medium text-foreground">
                     Your Email Address
@@ -180,21 +195,29 @@ export default function HelpNotificationsButtons() {
                     variant="outline"
                     onClick={handleCopyEmail}
                     className="h-6 px-2 text-xs"
+                    style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}
                   >
                     {copied ? (
                       <>
-                        <Check className="h-3 w-3 mr-1 text-green-500" />
+                        <Check 
+                          className="h-3 w-3 mr-1 text-green-500" 
+                          strokeWidth={1.5}
+                        />
                         Copied
                       </>
                     ) : (
                       <>
-                        <Copy className="h-3 w-3 mr-1" />
+                        <Copy 
+                          className="h-3 w-3 mr-1" 
+                          strokeWidth={1.5}
+                          style={{ color: 'rgb(223, 223, 223)' }}
+                        />
                         Copy
                       </>
                     )}
                   </Button>
                 </div>
-                <div className="rounded-md border border-border bg-background px-3 py-2">
+                <div className="rounded-md px-3 py-2 bg-background" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
                   <span className="text-sm font-mono text-foreground">
                     {ideaEmail}
                   </span>
@@ -215,7 +238,11 @@ export default function HelpNotificationsButtons() {
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {emailNotifications.length === 0 ? (
                   <div className="text-center py-6">
-                    <Mail className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
+                    <Mail 
+                      className="h-8 w-8 mx-auto mb-3" 
+                      strokeWidth={1.5}
+                      style={{ color: 'rgb(223, 223, 223)' }}
+                    />
                     <p className="text-sm text-muted-foreground">
                       No emails yet
                     </p>
@@ -227,11 +254,12 @@ export default function HelpNotificationsButtons() {
                   emailNotifications.map((notification) => (
                     <div
                       key={notification.id}
-                      className={`p-3 rounded-lg border transition-colors ${
+                      className={`p-3 rounded-lg transition-colors ${
                         notification.read 
-                          ? 'border-border bg-background' 
+                          ? 'bg-background' 
                           : 'border-primary/30 bg-primary/5'
                       }`}
+                      style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}
                     >
                       <div className="flex items-start gap-3">
                         <div className={`w-2 h-2 rounded-full mt-2 ${
@@ -266,7 +294,6 @@ export default function HelpNotificationsButtons() {
                   ))
                 )}
               </div>
-
 
             </div>
           </PopoverContent>
