@@ -235,13 +235,13 @@ export function HeroSection({ className }: HeroSectionProps) {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="absolute bottom-3 left-16 z-10 h-8 px-2 text-xs bg-background/80 backdrop-blur-sm border border-border/50 hover:bg-background/90"
+                  className="text-muted-foreground hover:text-primary h-7 px-2 text-xs font-medium border border-border/50 hover:border-border"
                 >
-                  <FileText className="h-3 w-3 mr-1" />
+                  <FileText className="h-3 w-3 mr-1.5" />
                   Script Builder
                 </Button>
               </DialogTrigger>
-              <DialogContent className="relative bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-2xl shadow-xl w-11/12 max-w-6xl h-[85vh] flex flex-col p-0">
+              <DialogContent className="relative bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-2xl shadow-xl w-[900px] max-w-[90vw] h-[85vh] flex flex-col p-0">
                 <DialogHeader className="sr-only">
                   <DialogTitle>Script Builder</DialogTitle>
                 </DialogHeader>
