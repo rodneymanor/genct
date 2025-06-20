@@ -81,11 +81,11 @@ export default function CollectionsPage() {
   const selectedCollectionData = currentCollections.find(c => c.id === selectedCollection);
 
   return (
-    <div className="h-full flex">
+    <div className="h-full flex" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
       {/* Left Sidebar - 20% */}
-      <div className="w-1/5 border-r bg-muted/30 flex flex-col" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
-        {/* Header */}
-        <div className="p-6 border-b" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
+      <div className="w-1/5 bg-muted/30 flex flex-col">
+        {/* Sidebar Header */}
+        <div className="p-6 border-b" style={{ borderWidth: '0 0 1px 0', borderColor: 'rgb(223, 223, 223)', borderStyle: 'solid' }}>
           <h1 className="text-xl font-semibold text-foreground">Collections</h1>
         </div>
 
@@ -177,10 +177,13 @@ export default function CollectionsPage() {
         </div>
       </div>
 
+      {/* Vertical Divider */}
+      <div className="w-px bg-transparent" style={{ backgroundColor: 'rgb(223, 223, 223)' }}></div>
+
       {/* Right Main Content - 80% */}
       <div className="w-4/5 flex flex-col">
-        {/* Top Bar */}
-        <div className="p-6 border-b bg-background" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
+        {/* Main Content Header */}
+        <div className="p-6 border-b bg-background" style={{ borderWidth: '0 0 1px 0', borderColor: 'rgb(223, 223, 223)', borderStyle: 'solid' }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="relative flex-1 max-w-md">
@@ -236,7 +239,7 @@ export default function CollectionsPage() {
         </div>
 
         {/* Video Grid */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 bg-background">
           <div className="grid grid-cols-3 gap-4">
             {mockVideos.map((video) => (
               <Card 
