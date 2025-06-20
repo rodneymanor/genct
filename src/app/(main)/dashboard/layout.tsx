@@ -17,28 +17,29 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
 
   return (
     <AuthGuard>
-      <SidebarProvider defaultOpen={defaultOpen}>
-        <div className="flex min-h-screen">
-          <AppSidebar variant={sidebarVariant} collapsible={sidebarCollapsible} />
-          <div className="flex flex-1 flex-col">
-            {/* Topbar outside SidebarInset for full-width border */}
-            <Topbar />
+      <div className="flex min-h-screen flex-col">
+        {/* Topbar spans full width above everything */}
+        <Topbar />
+        
+        {/* Sidebar and content area below the topbar */}
+        <SidebarProvider defaultOpen={defaultOpen}>
+          <div className="flex flex-1">
+            <AppSidebar variant={sidebarVariant} collapsible={sidebarCollapsible} />
             <SidebarInset
               className={cn(
                 contentLayout === "centered" && "!mx-auto max-w-screen-2xl",
                 // Adds right margin for inset sidebar in centered layout up to 113rem.
                 // On wider screens with collapsed sidebar, removes margin and sets margin auto for alignment.
                 "max-[113rem]:peer-data-[variant=inset]:!mr-2 min-[101rem]:peer-data-[variant=inset]:peer-data-[state=collapsed]:!mr-auto",
-                // Remove default margins since topbar is now outside
-                "!m-0"
+                "flex-1"
               )}
             >
               <div className="flex-1">{children}</div>
               <FloatingEmailTooltip />
             </SidebarInset>
           </div>
-        </div>
-      </SidebarProvider>
+        </SidebarProvider>
+      </div>
     </AuthGuard>
   );
 }
