@@ -4,7 +4,7 @@ import { ContentDropdown } from "./content-dropdown";
 
 export function SidebarHeader() {
   return (
-    <div className="flex flex-col gap-1 bg-muted">
+    <div className="flex flex-col gap-1 bg-muted rounded-lg">
       {/* Content Dropdown (Plus button) */}
       <input
         id="plus-menu-file-input"

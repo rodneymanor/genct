@@ -3,10 +3,20 @@ import { ReactNode } from "react";
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
 import { Topbar } from "@/app/(main)/dashboard/_components/topbar";
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { FloatingEmailTooltip } from "@/components/ui/floating-email-tooltip";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getSidebarVariant, getSidebarCollapsible, getContentLayout } from "@/lib/layout-preferences";
 import { cn } from "@/lib/utils";
+
+// Placeholder Quick Action Button Component
+function QuickActionButton() {
+  return (
+    <div className="fixed bottom-6 right-6 z-40">
+      <div className="h-12 w-12 rounded-full bg-muted border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
+        <span className="text-xs text-muted-foreground font-medium">QA</span>
+      </div>
+    </div>
+  );
+}
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const defaultOpen = false;
@@ -35,7 +45,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               )}
             >
               <div className="flex-1">{children}</div>
-              <FloatingEmailTooltip />
+              <QuickActionButton />
             </SidebarInset>
           </div>
         </SidebarProvider>
