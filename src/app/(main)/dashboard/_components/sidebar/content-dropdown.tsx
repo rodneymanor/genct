@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { Plus, FileText, Mic, ScrollText, FolderOpen } from "lucide-react";
+import { CirclePlus, FileText, Mic, ScrollText, FolderOpen } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,9 +38,9 @@ export function ContentDropdown() {
         <Button
           variant="ghost"
           size="sm"
-          className="relative inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/20 bg-background/50 text-foreground/80 transition-all duration-200 hover:border-foreground/50 hover:bg-accent/50 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:outline-none data-[state=open]:bg-accent data-[state=open]:border-foreground/50"
+          className="relative inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted text-foreground/80 transition-all duration-200 hover:bg-muted/80 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:outline-none data-[state=open]:bg-muted/80"
         >
-          <Plus className="h-4 w-4" strokeWidth={1.5} />
+          <CirclePlus className="h-4 w-4" strokeWidth={1.5} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
