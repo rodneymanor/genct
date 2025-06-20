@@ -7,6 +7,12 @@ import { useRouter } from "next/navigation";
 import { Sparkles, Mic, ArrowUp, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +64,16 @@ export function HeroSection({ className }: HeroSectionProps) {
     }
   };
 
+  const handleVoiceAction = (action: string) => {
+    console.log('Voice action:', action);
+    // Placeholder for voice functionality
+  };
+
+  const handleScriptBuilderAction = (action: string) => {
+    console.log('Script Builder action:', action);
+    // Placeholder for script builder functionality
+  };
+
   const trimmedValue = value.trim();
 
   const scrollToCards = () => {
@@ -84,6 +100,71 @@ export function HeroSection({ className }: HeroSectionProps) {
 
       {/* Main Input Section */}
       <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl">
+        {/* Dropdown Buttons Row */}
+        <div className="flex items-center justify-center gap-3 mb-4">
+          {/* Voice Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2 px-3 py-2 h-9 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Mic className="h-4 w-4" />
+                <span className="text-sm">Voice</span>
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuItem onClick={() => handleVoiceAction('record')}>
+                <Mic className="h-4 w-4 mr-2" />
+                Start Recording
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleVoiceAction('upload')}>
+                <Mic className="h-4 w-4 mr-2" />
+                Upload Audio File
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleVoiceAction('settings')}>
+                <Mic className="h-4 w-4 mr-2" />
+                Voice Settings
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Script Builder Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2 px-3 py-2 h-9 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span className="text-sm">Script Builder</span>
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuItem onClick={() => handleScriptBuilderAction('template')}>
+                <Sparkles className="h-4 w-4 mr-2" />
+                Use Template
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleScriptBuilderAction('guided')}>
+                <Sparkles className="h-4 w-4 mr-2" />
+                Guided Builder
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleScriptBuilderAction('components')}>
+                <Sparkles className="h-4 w-4 mr-2" />
+                Script Components
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleScriptBuilderAction('ai-assist')}>
+                <Sparkles className="h-4 w-4 mr-2" />
+                AI Assistant
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
         <div className="relative">
           <Textarea
             value={value}
