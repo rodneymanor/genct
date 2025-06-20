@@ -243,7 +243,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                   {/* Main Content */}
                   <div className="flex flex-1 min-h-0">
                     {/* Left Panel - Component Selection */}
-                    <div className="w-2/3 border-r overflow-y-auto p-6">
+                    <div className="w-2/3 border-r overflow-y-auto p-6 bg-background">
                       <div className="space-y-6">
                         {/* Hooks Section */}
                         <div>
@@ -253,7 +253,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                               <div
                                 key={hook.id}
                                 onClick={() => addComponent(hook, "Hook")}
-                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-40 transition-colors"
+                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-40 transition-colors bg-background"
                               >
                                 <h5 className="text-sm font-medium">{hook.title}</h5>
                                 <p className="text-xs text-muted-foreground mt-1">{hook.description}</p>
@@ -270,7 +270,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                               <div
                                 key={bridge.id}
                                 onClick={() => addComponent(bridge, "Bridge")}
-                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors"
+                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
                               >
                                 <h5 className="text-sm font-medium">{bridge.title}</h5>
                                 <p className="text-xs text-muted-foreground mt-1">{bridge.description}</p>
@@ -287,7 +287,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                               <div
                                 key={nugget.id}
                                 onClick={() => addComponent(nugget, "Nugget")}
-                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-44 transition-colors"
+                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-44 transition-colors bg-background"
                               >
                                 <h5 className="text-sm font-medium">{nugget.title}</h5>
                                 <p className="text-xs text-muted-foreground mt-1">{nugget.description}</p>
@@ -304,7 +304,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                               <div
                                 key={wta.id}
                                 onClick={() => addComponent(wta, "WTA")}
-                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors"
+                                className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
                               >
                                 <h5 className="text-sm font-medium">{wta.title}</h5>
                                 <p className="text-xs text-muted-foreground mt-1">{wta.description}</p>
@@ -316,7 +316,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                     </div>
 
                     {/* Right Panel - Assembly & Templates */}
-                    <div className="w-1/3 flex flex-col">
+                    <div className="w-1/3 flex flex-col bg-background">
                       {/* Script Assembly */}
                       <div className="flex-grow flex flex-col p-4">
                         <h3 className="text-sm font-semibold mb-4 flex-shrink-0">Script Assembly</h3>
@@ -366,7 +366,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                           {savedTemplates.map((template) => (
                             <div
                               key={template.id}
-                              className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border transition-colors"
+                              className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border transition-colors bg-background"
                             >
                               <h5 className="text-sm font-medium">{template.title}</h5>
                               <p className="text-xs text-muted-foreground mt-1">{template.components} components</p>
