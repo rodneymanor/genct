@@ -9,7 +9,7 @@ import { ArrowUp, Volume2, FileText, Check, ChevronsUpDown, RotateCcw, X } from 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -258,11 +258,6 @@ export function HeroSection({ className }: HeroSectionProps) {
                       Reset
                     </button>
                   </div>
-                  <DialogClose asChild>
-                    <button className="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 rounded-full p-1">
-                      <X className="w-3 h-3" />
-                    </button>
-                  </DialogClose>
                 </div>
 
                 {/* Main Content */}
