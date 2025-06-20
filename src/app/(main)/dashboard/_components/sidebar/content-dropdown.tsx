@@ -37,8 +37,7 @@ export function ContentDropdown() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
-          className="relative inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted text-foreground/80 transition-all duration-200 hover:bg-muted/80 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:outline-none data-[state=open]:bg-muted/80"
+          className="h-8 w-8 p-2 rounded-md bg-muted text-foreground/80 transition-all duration-200 hover:bg-muted/80 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:outline-none data-[state=open]:bg-muted/80"
         >
           <CirclePlus className="h-4 w-4" strokeWidth={1.5} />
         </Button>
