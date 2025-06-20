@@ -267,21 +267,7 @@ export default function HelpNotificationsButtons() {
                 )}
               </div>
 
-              {/* User Account Info */}
-              {user && (
-                <div className="pt-3 border-t border-border bg-muted/20 rounded-lg p-3">
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-medium text-foreground">
-                      Account Status
-                    </h4>
-                    <div className="text-xs text-muted-foreground space-y-1">
-                      <p>✓ Logged in as: {user.email}</p>
-                      <p>✓ Email processing: Active</p>
-                      <p>✓ Inbox: {ideaEmail}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+
             </div>
           </PopoverContent>
         </Popover>
