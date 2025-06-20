@@ -4,9 +4,9 @@ import { ContentDropdown } from "./content-dropdown";
 
 export function SidebarHeader() {
   return (
-    <div className="flex flex-col gap-2 p-2">
+    <div className="flex flex-col gap-3 p-1.5">
       {/* Content Dropdown (Plus button) */}
-      <div className="flex items-center">
+      <div className="flex items-center justify-center">
         <input
           id="plus-menu-file-input"
           type="file"
