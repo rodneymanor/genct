@@ -241,7 +241,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                   Script Builder
                 </Button>
               </DialogTrigger>
-              <DialogContent className="relative bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-2xl shadow-xl w-[900px] max-w-[90vw] h-[85vh] flex flex-col p-0">
+              <DialogContent className="!top-[50%] !left-[50%] !translate-x-[-50%] !translate-y-[-50%] !max-w-none !w-11/12 !h-[85vh] !p-0 relative bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-2xl shadow-xl flex flex-col" style={{ maxWidth: '900px' }}>
                 <DialogHeader className="sr-only">
                   <DialogTitle>Script Builder</DialogTitle>
                 </DialogHeader>
