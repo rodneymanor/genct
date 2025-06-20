@@ -31,9 +31,9 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
         {/* Topbar spans full width above everything */}
         <Topbar />
         
-        {/* Sidebar and content area below the topbar with top padding */}
+        {/* Sidebar and content area below the topbar */}
         <SidebarProvider defaultOpen={defaultOpen}>
-          <div className="flex flex-1 pt-12">
+          <div className="flex flex-1">
             <AppSidebar variant={sidebarVariant} collapsible={sidebarCollapsible} />
             <SidebarInset
               className={cn(
