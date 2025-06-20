@@ -12,9 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSidebar } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export function ContentDropdown() {
   const router = useRouter();
+  const { state } = useSidebar();
 
   const handleCreateScript = () => {
     router.push("/dashboard/scripts/editor/new");
@@ -37,10 +40,23 @@ export function ContentDropdown() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
-          className="relative inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted text-foreground/80 transition-all duration-200 hover:bg-muted/80 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:outline-none data-[state=open]:bg-muted/80"
+          className={cn(
+            // Base styles matching SidebarMenuButton
+            "flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground",
+            // Icon mode responsive styles - match exactly what SidebarMenuButton uses
+            "group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
+            // Icon and text styling
+            "[&>svg]:size-4 [&>svg]:shrink-0"
+          )}
         >
           <CirclePlus className="h-4 w-4" strokeWidth={1.5} />
+          <span className={cn(
+            "truncate",
+            // Hide text when collapsed to icon mode
+            state === "collapsed" && "sr-only"
+          )}>
+            New Content
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
