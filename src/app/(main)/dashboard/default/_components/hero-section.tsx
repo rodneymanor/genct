@@ -9,7 +9,7 @@ import { ArrowUp, Volume2, FileText, Check, ChevronsUpDown, RotateCcw, X } from 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -220,6 +220,9 @@ export function HeroSection({ className }: HeroSectionProps) {
                 </Button>
               </DialogTrigger>
               <DialogContent className="w-[800px] max-w-[90vw] h-[90vh] p-0">
+                <DialogHeader className="sr-only">
+                  <DialogTitle>Script Builder</DialogTitle>
+                </DialogHeader>
                 <div className="flex flex-col h-full">
                   {/* Header */}
                   <div className="flex justify-between items-center border-b py-2 px-4 bg-muted/30 flex-shrink-0">
