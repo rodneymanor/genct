@@ -244,10 +244,8 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm relative"
+          className="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
         >
-          {/* Custom border that extends only to topbar height */}
-          <div className="absolute top-0 right-0 w-px h-12 bg-border-strong z-50 group-data-[variant=floating]:hidden group-data-[variant=inset]:hidden" />
           {children}
         </div>
       </div>
