@@ -45,17 +45,21 @@ const scriptComponents = {
     { id: "question-hook", title: "Question Hook", description: "Engages audience with curiosity", content: "Have you ever wondered why..." },
     { id: "statistic-hook", title: "Statistic Hook", description: "Uses compelling data", content: "Did you know that 90% of..." },
     { id: "quote-hook", title: "Quote Hook", description: "Starts with a powerful quote", content: "As Einstein once said..." },
+    { id: "story-hook", title: "Story Hook", description: "Opens with a compelling narrative", content: "Picture this scenario..." },
   ],
   bridges: [
     { id: "problem-solution", title: "Problem-Solution Bridge", description: "Connects problem to solution", content: "Now that we've identified the problem..." },
     { id: "storytelling", title: "Storytelling Bridge", description: "Uses a narrative to connect", content: "Let me tell you a story..." },
+    { id: "transition", title: "Smooth Transition", description: "Seamlessly moves between topics", content: "This brings us to the next point..." },
   ],
   nuggets: [
     { id: "expert-insight", title: "Expert Insight", description: "Provides valuable information", content: "Industry experts reveal that..." },
     { id: "key-takeaway", title: "Key Takeaway", description: "Summarizes the main point", content: "The most important thing to remember..." },
+    { id: "pro-tip", title: "Pro Tip", description: "Shares insider knowledge", content: "Here's what professionals don't tell you..." },
   ],
   wta: [
     { id: "clear-cta", title: "Clear Call to Action", description: "Direct action for audience", content: "Here's what you need to do next..." },
+    { id: "soft-cta", title: "Soft Call to Action", description: "Gentle encouragement to act", content: "If you're ready to take the next step..." },
   ],
 };
 
@@ -66,7 +70,7 @@ const savedTemplates = [
     components: [
       { ...scriptComponents.hooks[0] },
       { ...scriptComponents.bridges[0] },
-      { ...scriptComponents.wtas[0] }
+      { ...scriptComponents.wta[0] }
     ]
   },
   {
@@ -74,7 +78,7 @@ const savedTemplates = [
     components: [
       { ...scriptComponents.hooks[1] },
       { ...scriptComponents.nuggets[0] },
-      { ...scriptComponents.wtas[1] }
+      { ...scriptComponents.wta[1] }
     ]
   },
   {
@@ -83,7 +87,7 @@ const savedTemplates = [
       { ...scriptComponents.hooks[2] },
       { ...scriptComponents.bridges[1] },
       { ...scriptComponents.nuggets[1] },
-      { ...scriptComponents.wtas[0] }
+      { ...scriptComponents.wta[0] }
     ]
   }
 ];
