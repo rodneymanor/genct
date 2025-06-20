@@ -225,7 +225,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                 </DialogHeader>
                 <div className="flex flex-col h-full">
                   {/* Header */}
-                  <div className="flex justify-between items-center border-b py-2 px-4 bg-muted/30 flex-shrink-0">
+                  <div className="flex justify-between items-center border-b py-2 px-4 bg-background flex-shrink-0">
                     <div className="flex items-center space-x-3">
                       <h2 className="text-xs uppercase font-medium text-muted-foreground">Script Builder</h2>
                       <Button
