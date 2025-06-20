@@ -241,13 +241,13 @@ export function HeroSection({ className }: HeroSectionProps) {
                   Script Builder
                 </Button>
               </DialogTrigger>
-              <DialogContent className="!fixed !top-1/2 !left-1/2 !transform !-translate-x-1/2 !-translate-y-1/2 !max-w-6xl !w-11/12 !h-[85vh] !p-0 !z-50 relative bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-2xl shadow-xl flex flex-col">
+              <DialogContent className="!fixed !top-1/2 !left-1/2 !transform !-translate-x-1/2 !-translate-y-1/2 !max-w-6xl !w-11/12 !h-[85vh] !p-0 !z-50 relative bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-2xl shadow-xl flex flex-col overflow-hidden">
                 <DialogHeader className="sr-only">
                   <DialogTitle>Script Builder</DialogTitle>
                 </DialogHeader>
                 
                 {/* Header */}
-                <div className="flex justify-between items-center border-b border-neutral-200 dark:border-neutral-800 py-2 px-4 bg-neutral-100 dark:bg-neutral-900 rounded-t-2xl">
+                <div className="flex justify-between items-center border-b border-neutral-200 dark:border-neutral-800 py-3 px-4 bg-neutral-100 dark:bg-neutral-900 rounded-t-2xl">
                   <div className="flex items-center space-x-3">
                     <h2 className="text-xs uppercase font-medium text-neutral-700 dark:text-neutral-300">Script Builder</h2>
                     <button 
@@ -258,12 +258,18 @@ export function HeroSection({ className }: HeroSectionProps) {
                       Reset
                     </button>
                   </div>
+                  <button 
+                    onClick={() => setScriptBuilderOpen(false)}
+                    className="flex items-center justify-center text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 rounded-full p-1"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
                 </div>
 
                 {/* Main Content */}
-                <div className="flex flex-col md:flex-row flex-1 h-full overflow-hidden">
+                <div className="flex flex-col md:flex-row flex-1 h-full overflow-hidden rounded-b-2xl">
                   {/* Left Panel - Component Selection */}
-                  <div className="w-full md:w-2/3 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background">
+                  <div className="w-full md:w-2/3 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
                     <div className="space-y-6">
                       {/* Hooks Section */}
                       <div>
@@ -336,7 +342,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                   </div>
 
                   {/* Right Panel - Script Assembly */}
-                  <div className="w-full md:w-1/3 flex flex-col h-full bg-background">
+                  <div className="w-full md:w-1/3 flex flex-col h-full bg-background rounded-br-2xl">
                     <div className="p-6 border-b border-neutral-200 dark:border-neutral-800">
                       <h3 className="text-sm font-medium mb-4">Script Assembly</h3>
                       <div className="space-y-2">
