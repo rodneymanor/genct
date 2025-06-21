@@ -270,19 +270,19 @@ export function HeroSection({ className }: HeroSectionProps) {
                 <div className="flex flex-col md:flex-row flex-1 h-full overflow-hidden rounded-b-2xl">
                   {/* Left Panel - Component Selection */}
                   <div className="w-full md:w-2/3 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
-                    <div className="space-y-6">
+                    <div className="p-6 space-y-8">
                       {/* Hooks Section */}
                       <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-3 font-medium">Hooks</h4>
-                        <div className="flex items-center space-x-3 overflow-x-auto pb-4">
+                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">Hooks</h4>
+                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
                           {scriptComponents.hooks.map((hook) => (
                             <div
                               key={hook.id}
                               onClick={() => addComponent(hook)}
-                              className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-40 transition-colors bg-background"
+                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-40 transition-colors bg-background"
                             >
-                              <h5 className="text-sm font-medium">{hook.title}</h5>
-                              <p className="text-xs text-muted-foreground mt-1">{hook.description}</p>
+                              <h5 className="text-sm font-medium mb-2">{hook.title}</h5>
+                              <p className="text-xs text-muted-foreground">{hook.description}</p>
                             </div>
                           ))}
                         </div>
@@ -290,16 +290,16 @@ export function HeroSection({ className }: HeroSectionProps) {
 
                       {/* Bridges Section */}
                       <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-3 font-medium">Bridges</h4>
-                        <div className="flex items-center space-x-3 overflow-x-auto pb-4">
+                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">Bridges</h4>
+                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
                           {scriptComponents.bridges.map((bridge) => (
                             <div
                               key={bridge.id}
                               onClick={() => addComponent(bridge)}
-                              className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
+                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
                             >
-                              <h5 className="text-sm font-medium">{bridge.title}</h5>
-                              <p className="text-xs text-muted-foreground mt-1">{bridge.description}</p>
+                              <h5 className="text-sm font-medium mb-2">{bridge.title}</h5>
+                              <p className="text-xs text-muted-foreground">{bridge.description}</p>
                             </div>
                           ))}
                         </div>
@@ -307,16 +307,16 @@ export function HeroSection({ className }: HeroSectionProps) {
 
                       {/* Golden Nuggets Section */}
                       <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-3 font-medium">Golden Nuggets</h4>
-                        <div className="flex items-center space-x-3 overflow-x-auto pb-4">
+                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">Golden Nuggets</h4>
+                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
                           {scriptComponents.nuggets.map((nugget) => (
                             <div
                               key={nugget.id}
                               onClick={() => addComponent(nugget)}
-                              className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-44 transition-colors bg-background"
+                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-44 transition-colors bg-background"
                             >
-                              <h5 className="text-sm font-medium">{nugget.title}</h5>
-                              <p className="text-xs text-muted-foreground mt-1">{nugget.description}</p>
+                              <h5 className="text-sm font-medium mb-2">{nugget.title}</h5>
+                              <p className="text-xs text-muted-foreground">{nugget.description}</p>
                             </div>
                           ))}
                         </div>
@@ -324,16 +324,16 @@ export function HeroSection({ className }: HeroSectionProps) {
 
                       {/* WTA Section */}
                       <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-3 font-medium">What To Action (WTA)</h4>
-                        <div className="flex items-center space-x-3 overflow-x-auto pb-4">
+                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">What To Action (WTA)</h4>
+                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
                           {scriptComponents.wta.map((wta) => (
                             <div
                               key={wta.id}
                               onClick={() => addComponent(wta)}
-                              className="p-3 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
+                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
                             >
-                              <h5 className="text-sm font-medium">{wta.title}</h5>
-                              <p className="text-xs text-muted-foreground mt-1">{wta.description}</p>
+                              <h5 className="text-sm font-medium mb-2">{wta.title}</h5>
+                              <p className="text-xs text-muted-foreground">{wta.description}</p>
                             </div>
                           ))}
                         </div>
@@ -344,23 +344,24 @@ export function HeroSection({ className }: HeroSectionProps) {
                   {/* Right Panel - Script Assembly */}
                   <div className="w-full md:w-1/3 flex flex-col h-full bg-background rounded-br-2xl">
                     <div className="p-6 border-b border-neutral-200 dark:border-neutral-800">
-                      <h3 className="text-sm font-medium mb-4">Script Assembly</h3>
-                      <div className="space-y-2">
+                      <h3 className="text-sm font-medium mb-6">Script Assembly</h3>
+                      <div className="space-y-3">
                         {selectedComponents.map((component, index) => (
-                          <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-lg">
-                            <span className="text-sm">{component.title}</span>
+                          <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                            <span className="text-sm font-medium">{component.title}</span>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => removeComponent(index)}
-                              className="h-6 w-6 p-0 hover:bg-destructive/10 hover:text-destructive"
+                              className="h-7 w-7 p-0 hover:bg-destructive/10 hover:text-destructive"
                             >
                               <X className="h-3 w-3" />
                             </Button>
                           </div>
                         ))}
                         {selectedComponents.length === 0 && (
-                          <div className="text-center py-8 text-muted-foreground text-sm">
+                          <div className="text-center py-12 text-muted-foreground text-sm">
+                            <div className="mb-2 opacity-50">📝</div>
                             Click components to add them here
                           </div>
                         )}
@@ -368,12 +369,12 @@ export function HeroSection({ className }: HeroSectionProps) {
                     </div>
                     
                     <div className="flex-1 p-6 overflow-y-auto">
-                      <h3 className="text-sm font-medium mb-4">Saved Templates</h3>
-                      <div className="space-y-2">
+                      <h3 className="text-sm font-medium mb-6">Saved Templates</h3>
+                      <div className="space-y-3">
                         {savedTemplates.map((template, index) => (
-                          <div key={index} className="p-3 border rounded-lg bg-background hover:bg-muted/50 cursor-pointer">
-                            <div className="font-medium text-sm">{template.name}</div>
-                            <div className="text-xs text-muted-foreground mt-1">
+                          <div key={index} className="p-4 border rounded-lg bg-background hover:bg-muted/50 cursor-pointer transition-colors">
+                            <div className="font-medium text-sm mb-1">{template.name}</div>
+                            <div className="text-xs text-muted-foreground">
                               {template.components.length} components
                             </div>
                           </div>
