@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { ArrowUp, Volume2, FileText, Check, ChevronsUpDown, RotateCcw, X, Save } from "lucide-react";
+import { ArrowUp, Volume2, FileText, Check, ChevronsUpDown, RotateCcw, X, Save, ChevronDown, ChevronUp, Link, FileAudio } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,20 @@ export function HeroSection({ className }: HeroSectionProps) {
   const [selectedTemplates, setSelectedTemplates] = useState<Record<string, ScriptTemplate>>({});
   const [customScriptTemplate, setCustomScriptTemplate] = useState<string>("");
   const [isUsingCustomScript, setIsUsingCustomScript] = useState<boolean>(false);
+  
+  // Adapt from content states
+  const [adaptFromUrlOpen, setAdaptFromUrlOpen] = useState<boolean>(false);
+  const [adaptFromTranscriptOpen, setAdaptFromTranscriptOpen] = useState<boolean>(false);
+  const [urlInput, setUrlInput] = useState<string>("");
+  const [transcriptInput, setTranscriptInput] = useState<string>("");
+  const [isProcessingUrl, setIsProcessingUrl] = useState<boolean>(false);
+  const [isProcessingTranscript, setIsProcessingTranscript] = useState<boolean>(false);
+  const [adaptedContent, setAdaptedContent] = useState<{
+    hook: string;
+    bridge: string;
+    nugget: string;
+    wta: string;
+  } | null>(null);
 
   const fullPlaceholder = isUsingCustomScript 
     ? "Describe your script idea and I'll use your custom template to create compelling content..."
@@ -130,6 +144,99 @@ export function HeroSection({ className }: HeroSectionProps) {
   const clearCustomScript = () => {
     setCustomScriptTemplate("");
     setIsUsingCustomScript(false);
+  };
+
+  const handleUrlSubmit = async () => {
+    if (!urlInput.trim()) return;
+    
+    setIsProcessingUrl(true);
+    try {
+      // Call API to process URL and extract content
+      const response = await fetch('/api/scriptwriting/extract-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          type: 'url',
+          content: urlInput.trim()
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAdaptedContent(data);
+        setUrlInput("");
+        setAdaptFromUrlOpen(false);
+      } else {
+        console.error('Failed to process URL');
+      }
+    } catch (error) {
+      console.error('Error processing URL:', error);
+    } finally {
+      setIsProcessingUrl(false);
+    }
+  };
+
+  const handleTranscriptSubmit = async () => {
+    if (!transcriptInput.trim()) return;
+    
+    setIsProcessingTranscript(true);
+    try {
+      // Call API to process transcript and extract components
+      const response = await fetch('/api/scriptwriting/extract-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          type: 'transcript',
+          content: transcriptInput.trim()
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAdaptedContent(data);
+        setTranscriptInput("");
+        setAdaptFromTranscriptOpen(false);
+      } else {
+        console.error('Failed to process transcript');
+      }
+    } catch (error) {
+      console.error('Error processing transcript:', error);
+    } finally {
+      setIsProcessingTranscript(false);
+    }
+  };
+
+  const useAdaptedContent = () => {
+    if (adaptedContent) {
+      const scriptContent = [
+        adaptedContent.hook,
+        adaptedContent.bridge,
+        adaptedContent.nugget,
+        adaptedContent.wta
+      ].filter(Boolean).join('\n\n');
+      
+      setAssembledScript(scriptContent);
+      setAdaptedContent(null);
+    }
+  };
+
+  const saveAdaptedAsTemplate = () => {
+    if (adaptedContent) {
+      const scriptContent = [
+        adaptedContent.hook,
+        adaptedContent.bridge,
+        adaptedContent.nugget,
+        adaptedContent.wta
+      ].filter(Boolean).join('\n\n');
+      
+      const templateName = `Adapted Template ${savedTemplates.length + 1}`;
+      setSavedTemplates(prev => [...prev, { name: templateName, content: scriptContent }]);
+      setAdaptedContent(null);
+    }
   };
 
   const saveCurrentTemplate = () => {
@@ -316,6 +423,80 @@ export function HeroSection({ className }: HeroSectionProps) {
                   {/* Left Panel - Template Library */}
                   <div className="w-full md:w-3/4 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
                     <div className="p-6 space-y-8">
+                      {/* Adapt from Content Section */}
+                      <div className="space-y-4">
+                        {/* Adapt from URL */}
+                        <div className="border border-border rounded-lg">
+                          <button
+                            onClick={() => setAdaptFromUrlOpen(!adaptFromUrlOpen)}
+                            className="w-full flex items-center justify-between p-4 hover:bg-accent transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Link className="h-4 w-4 text-primary" />
+                              <span className="text-sm font-medium">Adapt from URL</span>
+                            </div>
+                            {adaptFromUrlOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </button>
+                          {adaptFromUrlOpen && (
+                            <div className="p-4 border-t border-border">
+                              <div className="flex gap-2">
+                                <input
+                                  type="url"
+                                  value={urlInput}
+                                  onChange={(e) => setUrlInput(e.target.value)}
+                                  placeholder="Enter URL to analyze..."
+                                  className="flex-1 px-3 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                />
+                                <Button
+                                  onClick={handleUrlSubmit}
+                                  disabled={!urlInput.trim() || isProcessingUrl}
+                                  size="sm"
+                                  className="text-xs"
+                                >
+                                  {isProcessingUrl ? "Processing..." : "Submit"}
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Adapt from Transcript */}
+                        <div className="border border-border rounded-lg">
+                          <button
+                            onClick={() => setAdaptFromTranscriptOpen(!adaptFromTranscriptOpen)}
+                            className="w-full flex items-center justify-between p-4 hover:bg-accent transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              <FileAudio className="h-4 w-4 text-primary" />
+                              <span className="text-sm font-medium">Adapt from Transcript</span>
+                            </div>
+                            {adaptFromTranscriptOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </button>
+                          {adaptFromTranscriptOpen && (
+                            <div className="p-4 border-t border-border">
+                              <div className="space-y-2">
+                                <Textarea
+                                  value={transcriptInput}
+                                  onChange={(e) => setTranscriptInput(e.target.value)}
+                                  placeholder="Paste your transcript here..."
+                                  className="min-h-[100px] text-sm resize-none"
+                                />
+                                <div className="flex justify-end">
+                                  <Button
+                                    onClick={handleTranscriptSubmit}
+                                    disabled={!transcriptInput.trim() || isProcessingTranscript}
+                                    size="sm"
+                                    className="text-xs"
+                                  >
+                                    {isProcessingTranscript ? "Processing..." : "Submit"}
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
                       {/* Render each category */}
                       {Object.entries(scriptTemplates).map(([categoryKey, templates]) => (
                         <div key={categoryKey}>
@@ -351,6 +532,48 @@ export function HeroSection({ className }: HeroSectionProps) {
                   {/* Right Panel - Script Editor */}
                   <div className="w-full md:w-1/4 flex flex-col h-full bg-background rounded-br-2xl">
                     <div className="flex-1 p-4 flex flex-col">
+                      {/* Adapted Content Display */}
+                      {adaptedContent && (
+                        <div className="mb-4 p-4 border border-primary/20 bg-primary/5 rounded-lg">
+                          <h3 className="text-xs font-medium text-primary mb-3">Adapted Content</h3>
+                          <div className="space-y-3 text-xs">
+                            <div>
+                              <div className="font-medium text-primary/80 mb-1">Hook:</div>
+                              <div className="text-foreground/80">{adaptedContent.hook}</div>
+                            </div>
+                            <div>
+                              <div className="font-medium text-primary/80 mb-1">Bridge:</div>
+                              <div className="text-foreground/80">{adaptedContent.bridge}</div>
+                            </div>
+                            <div>
+                              <div className="font-medium text-primary/80 mb-1">Golden Nugget:</div>
+                              <div className="text-foreground/80">{adaptedContent.nugget}</div>
+                            </div>
+                            <div>
+                              <div className="font-medium text-primary/80 mb-1">WTA:</div>
+                              <div className="text-foreground/80">{adaptedContent.wta}</div>
+                            </div>
+                          </div>
+                          <div className="flex gap-2 mt-3">
+                            <Button
+                              onClick={useAdaptedContent}
+                              size="sm"
+                              className="text-xs flex-1"
+                            >
+                              Use Content
+                            </Button>
+                            <Button
+                              onClick={saveAdaptedAsTemplate}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs flex-1"
+                            >
+                              Save as Template
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="flex flex-col space-y-2 mb-4">
                         <h3 className="text-xs font-medium">Script Assembly</h3>
                         {assembledScript && (
