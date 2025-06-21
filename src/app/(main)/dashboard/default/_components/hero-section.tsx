@@ -424,7 +424,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                   <div className="w-full md:w-3/4 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
                     <div className="p-6 space-y-8">
                       {/* Adapt from Content Section */}
-                      <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Adapt from URL */}
                         <div className="border border-border rounded-lg">
                           <button
