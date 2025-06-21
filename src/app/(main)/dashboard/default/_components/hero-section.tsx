@@ -41,14 +41,18 @@ export function HeroSection({ className }: HeroSectionProps) {
   const [assembledScript, setAssembledScript] = useState<string>("");
   const [savedTemplates, setSavedTemplates] = useState<{ name: string; content: string }[]>([]);
   const [selectedTemplates, setSelectedTemplates] = useState<Record<string, ScriptTemplate>>({});
+  const [customScriptTemplate, setCustomScriptTemplate] = useState<string>("");
+  const [isUsingCustomScript, setIsUsingCustomScript] = useState<boolean>(false);
 
-  const fullPlaceholder =
-    "What would you like to create today? Describe your content idea, topic, or let me know what you're working on...";
+  const fullPlaceholder = isUsingCustomScript 
+    ? "Describe your script idea and I'll use your custom template to create compelling content..."
+    : "What would you like to create today? Describe your content idea, topic, or let me know what you're working on...";
 
   // Typewriter effect for placeholder
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     let currentIndex = 0;
+    setPlaceholder(""); // Reset placeholder when it changes
 
     const typeWriter = () => {
       if (currentIndex < fullPlaceholder.length) {
@@ -63,13 +67,20 @@ export function HeroSection({ className }: HeroSectionProps) {
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, []);
+  }, [fullPlaceholder]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedValue = value.trim();
     if (trimmedValue) {
-      const encodedPrompt = encodeURIComponent(trimmedValue);
+      let encodedPrompt = encodeURIComponent(trimmedValue);
+      
+      // If using custom script template, append it to the URL
+      if (isUsingCustomScript && customScriptTemplate) {
+        const encodedTemplate = encodeURIComponent(customScriptTemplate);
+        encodedPrompt += `&template=${encodedTemplate}`;
+      }
+      
       router.push(`/dashboard/scripts/editor/new?prompt=${encodedPrompt}`);
     }
   };
@@ -116,6 +127,11 @@ export function HeroSection({ className }: HeroSectionProps) {
     setSelectedTemplates({});
   };
 
+  const clearCustomScript = () => {
+    setCustomScriptTemplate("");
+    setIsUsingCustomScript(false);
+  };
+
   const saveCurrentTemplate = () => {
     if (assembledScript.trim()) {
       const templateName = `Template ${savedTemplates.length + 1}`;
@@ -131,9 +147,21 @@ export function HeroSection({ className }: HeroSectionProps) {
 
   const submitWithTemplate = () => {
     if (assembledScript.trim()) {
-      const encodedPrompt = encodeURIComponent(assembledScript);
-      router.push(`/dashboard/scripts/editor/new?prompt=${encodedPrompt}`);
+      // Store the template and set custom script mode
+      setCustomScriptTemplate(assembledScript);
+      setIsUsingCustomScript(true);
+      
+      // Close the dialog and clear the main input
       setScriptBuilderOpen(false);
+      setValue("");
+      
+      // Focus back on the main input
+      setTimeout(() => {
+        const textarea = document.querySelector('textarea[placeholder*="Describe your idea"]') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.focus();
+        }
+      }, 100);
     }
   };
 
@@ -150,6 +178,27 @@ export function HeroSection({ className }: HeroSectionProps) {
           Describe your idea and I&apos;ll help you create compelling content
         </p>
       </div>
+
+      {/* Custom Script Indicator */}
+      {isUsingCustomScript && (
+        <div className="mx-auto w-full max-w-2xl mb-4">
+          <div className="flex items-center justify-between p-3 bg-primary/5 border border-primary/20 rounded-lg">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-primary">Custom Script Template Active</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearCustomScript}
+              className="h-6 px-2 text-xs text-primary hover:text-primary/80"
+            >
+              <X className="h-3 w-3 mr-1" />
+              Clear
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Main Input Section */}
       <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl">
@@ -205,15 +254,29 @@ export function HeroSection({ className }: HeroSectionProps) {
             </Popover>
 
             {/* Script Builder Dialog */}
-            <Dialog open={scriptBuilderOpen} onOpenChange={setScriptBuilderOpen}>
+            <Dialog 
+              open={scriptBuilderOpen} 
+              onOpenChange={(open) => {
+                setScriptBuilderOpen(open);
+                // When opening the dialog in custom script mode, load the current template
+                if (open && isUsingCustomScript && customScriptTemplate && !assembledScript) {
+                  setAssembledScript(customScriptTemplate);
+                }
+              }}
+            >
               <DialogTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="text-muted-foreground hover:text-primary h-7 px-2 text-xs font-medium border border-border/50 hover:border-border"
+                  className={cn(
+                    "h-7 px-2 text-xs font-medium border border-border/50 hover:border-border",
+                    isUsingCustomScript 
+                      ? "text-primary border-primary/50 bg-primary/5" 
+                      : "text-muted-foreground hover:text-primary"
+                  )}
                 >
                   <FileText className="h-3 w-3 mr-1.5" />
-                  Script Builder
+                  {isUsingCustomScript ? "Custom Script" : "Script Builder"}
                 </Button>
               </DialogTrigger>
               <DialogContent className="!fixed !top-1/2 !left-1/2 !transform !-translate-x-1/2 !-translate-y-1/2 !max-w-6xl !w-11/12 !h-[85vh] !p-0 !z-50 relative bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-2xl shadow-xl flex flex-col overflow-hidden">
