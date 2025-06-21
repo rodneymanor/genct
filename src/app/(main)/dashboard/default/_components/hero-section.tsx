@@ -40,6 +40,7 @@ export function HeroSection({ className }: HeroSectionProps) {
   const [scriptBuilderOpen, setScriptBuilderOpen] = useState(false);
   const [assembledScript, setAssembledScript] = useState<string>("");
   const [savedTemplates, setSavedTemplates] = useState<{ name: string; content: string }[]>([]);
+  const [selectedTemplates, setSelectedTemplates] = useState<Record<string, ScriptTemplate>>({});
 
   const fullPlaceholder =
     "What would you like to create today? Describe your content idea, topic, or let me know what you're working on...";
@@ -89,16 +90,30 @@ export function HeroSection({ className }: HeroSectionProps) {
   };
 
   const addTemplateToScript = (template: ScriptTemplate) => {
-    setAssembledScript(prev => {
-      if (prev) {
-        return prev + "\n\n" + template.content;
-      }
-      return template.content;
-    });
+    // Update selected templates (one per category)
+    setSelectedTemplates(prev => ({
+      ...prev,
+      [template.category]: template
+    }));
+    
+    // Rebuild the script from selected templates in order
+    const updatedTemplates = {
+      ...selectedTemplates,
+      [template.category]: template
+    };
+    
+    // Build script in category order: hooks, bridges, nuggets, wtas
+    const orderedCategories = ['hooks', 'bridges', 'nuggets', 'wtas'];
+    const scriptParts = orderedCategories
+      .filter(category => updatedTemplates[category])
+      .map(category => updatedTemplates[category].content);
+    
+    setAssembledScript(scriptParts.join('\n\n'));
   };
 
   const clearScript = () => {
     setAssembledScript("");
+    setSelectedTemplates({});
   };
 
   const saveCurrentTemplate = () => {
@@ -110,6 +125,8 @@ export function HeroSection({ className }: HeroSectionProps) {
 
   const loadTemplate = (template: { name: string; content: string }) => {
     setAssembledScript(template.content);
+    // Clear selected templates when loading a saved template
+    setSelectedTemplates({});
   };
 
   const submitWithTemplate = () => {
@@ -234,7 +251,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                 {/* Main Content */}
                 <div className="flex flex-col md:flex-row flex-1 h-full overflow-hidden rounded-b-2xl">
                   {/* Left Panel - Template Library */}
-                  <div className="w-full md:w-1/2 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
+                  <div className="w-full md:w-3/4 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
                     <div className="p-6 space-y-8">
                       {/* Render each category */}
                       {Object.entries(scriptTemplates).map(([categoryKey, templates]) => (
@@ -242,18 +259,26 @@ export function HeroSection({ className }: HeroSectionProps) {
                           <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">
                             {getCategoryDisplayName(categoryKey)}
                           </h4>
-                          <div className="space-y-3">
-                            {templates.map((template) => (
-                              <div
-                                key={template.id}
-                                onClick={() => addTemplateToScript(template)}
-                                className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border transition-colors bg-background"
-                              >
-                                <p className="text-sm text-foreground leading-relaxed">
-                                  {template.content}
-                                </p>
-                              </div>
-                            ))}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            {templates.map((template) => {
+                              const isSelected = selectedTemplates[categoryKey]?.id === template.id;
+                              return (
+                                <div
+                                  key={template.id}
+                                  onClick={() => addTemplateToScript(template)}
+                                  className={cn(
+                                    "aspect-square p-4 border rounded-xl cursor-pointer transition-all duration-200 flex items-center justify-center text-center",
+                                    isSelected 
+                                      ? "border-primary bg-primary/5 shadow-md" 
+                                      : "border-border hover:border-primary/50 hover:bg-accent bg-background"
+                                  )}
+                                >
+                                  <p className="text-xs text-foreground leading-relaxed overflow-hidden">
+                                    {template.content.length > 120 ? template.content.substring(0, 120) + '...' : template.content}
+                                  </p>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       ))}
@@ -261,15 +286,15 @@ export function HeroSection({ className }: HeroSectionProps) {
                   </div>
 
                   {/* Right Panel - Script Editor */}
-                  <div className="w-full md:w-1/2 flex flex-col h-full bg-background rounded-br-2xl">
-                    <div className="flex-1 p-6 flex flex-col">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium">Script Assembly</h3>
+                  <div className="w-full md:w-1/4 flex flex-col h-full bg-background rounded-br-2xl">
+                    <div className="flex-1 p-4 flex flex-col">
+                      <div className="flex flex-col space-y-2 mb-4">
+                        <h3 className="text-xs font-medium">Script Assembly</h3>
                         {assembledScript && (
                           <Button
                             onClick={submitWithTemplate}
                             size="sm"
-                            className="text-xs"
+                            className="text-xs w-full"
                           >
                             Submit Script
                           </Button>
@@ -279,24 +304,24 @@ export function HeroSection({ className }: HeroSectionProps) {
                       <Textarea
                         value={assembledScript}
                         onChange={(e) => setAssembledScript(e.target.value)}
-                        placeholder="Click templates from the left to build your script here..."
-                        className="flex-1 min-h-[300px] resize-none text-sm leading-relaxed"
+                        placeholder="Click templates to build your script..."
+                        className="flex-1 min-h-[300px] resize-none text-xs leading-relaxed"
                       />
                     </div>
                     
                     {savedTemplates.length > 0 && (
-                      <div className="border-t border-neutral-200 dark:border-neutral-800 p-6">
-                        <h3 className="text-sm font-medium mb-4">Saved Templates</h3>
+                      <div className="border-t border-neutral-200 dark:border-neutral-800 p-4">
+                        <h3 className="text-xs font-medium mb-3">Saved Templates</h3>
                         <div className="space-y-2">
                           {savedTemplates.map((template, index) => (
                             <div 
                               key={index} 
                               onClick={() => loadTemplate(template)}
-                              className="p-3 border rounded-lg bg-background hover:bg-muted/50 cursor-pointer transition-colors"
+                              className="p-2 border rounded-lg bg-background hover:bg-muted/50 cursor-pointer transition-colors"
                             >
-                              <div className="font-medium text-sm">{template.name}</div>
-                              <div className="text-xs text-muted-foreground mt-1 truncate">
-                                {template.content.substring(0, 60)}...
+                              <div className="font-medium text-xs">{template.name}</div>
+                              <div className="text-[10px] text-muted-foreground mt-1 truncate">
+                                {template.content.substring(0, 40)}...
                               </div>
                             </div>
                           ))}
