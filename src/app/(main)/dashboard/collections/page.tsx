@@ -12,49 +12,49 @@ import { Input } from "@/components/ui/input";
 // Mock data for collections in different categories
 const collectionsData = {
   shared: [
-    {
+  {
       id: "shared-1",
       title: "Team Projects",
-      thumbnail: "/api/placeholder/400/300",
+    thumbnail: "/api/placeholder/400/300",
       videoCount: 12,
       isSelected: false
-    },
-    {
+  },
+  {
       id: "shared-2", 
       title: "Client Presentations",
-      thumbnail: "/api/placeholder/400/300",
+    thumbnail: "/api/placeholder/400/300",
       videoCount: 8,
       isSelected: false
     }
   ],
   favorites: [
-    {
+  {
       id: "fav-1",
       title: "Best Tutorials",
-      thumbnail: "/api/placeholder/400/300", 
+    thumbnail: "/api/placeholder/400/300",
       videoCount: 24,
       isSelected: true // Default selected
-    },
-    {
+  },
+  {
       id: "fav-2",
       title: "Creative Inspiration",
-      thumbnail: "/api/placeholder/400/300",
+    thumbnail: "/api/placeholder/400/300",
       videoCount: 16,
       isSelected: false
-    }
+  }
   ],
   private: [
-    {
+  {
       id: "private-1",
       title: "Personal Archive",
-      thumbnail: "/api/placeholder/400/300",
+    thumbnail: "/api/placeholder/400/300",
       videoCount: 45,
       isSelected: false
-    },
-    {
+  },
+  {
       id: "private-2",
       title: "Work in Progress",
-      thumbnail: "/api/placeholder/400/300",
+    thumbnail: "/api/placeholder/400/300",
       videoCount: 7,
       isSelected: false
     }
@@ -80,7 +80,7 @@ export default function CollectionsPage() {
   const currentCollections = collectionsData[selectedCategory];
   const selectedCollectionData = currentCollections.find(c => c.id === selectedCollection);
 
-  return (
+    return (
     <div className="h-full flex" style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}>
       {/* Left Sidebar - 20% */}
       <div className="w-1/5 bg-muted/30 flex flex-col">
@@ -95,11 +95,11 @@ export default function CollectionsPage() {
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
               <span>Shared</span>
-            </div>
+          </div>
             <div className="space-y-1">
               {collectionsData.shared.map((collection) => (
                 <button
-                  key={collection.id}
+              key={collection.id} 
                   onClick={() => {
                     setSelectedCategory('shared');
                     setSelectedCollection(collection.id);
@@ -113,17 +113,17 @@ export default function CollectionsPage() {
                   <div className="flex items-center justify-between">
                     <span>{collection.title}</span>
                     <span className="text-xs text-muted-foreground">{collection.videoCount}</span>
-                  </div>
+                </div>
                 </button>
               ))}
-            </div>
-          </div>
+                </div>
+              </div>
 
           {/* Favorites Section */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
               <span>Favorites</span>
-            </div>
+                </div>
             <div className="space-y-1">
               {collectionsData.favorites.map((collection) => (
                 <button
@@ -138,7 +138,7 @@ export default function CollectionsPage() {
                       : 'text-foreground'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between">
                     <span>{collection.title}</span>
                     <span className="text-xs text-muted-foreground">{collection.videoCount}</span>
                   </div>
@@ -171,8 +171,8 @@ export default function CollectionsPage() {
                     <span className="text-xs text-muted-foreground">{collection.videoCount}</span>
                   </div>
                 </button>
-              ))}
-            </div>
+          ))}
+        </div>
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@ export default function CollectionsPage() {
         {/* Main Content Header */}
         <div className="p-6 border-b bg-background" style={{ borderWidth: '0 0 1px 0', borderColor: 'rgb(223, 223, 223)', borderStyle: 'solid' }}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4">
               <div className="relative flex-1 max-w-md">
                 <Search 
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" 
@@ -216,9 +216,9 @@ export default function CollectionsPage() {
                   style={{ color: 'rgb(223, 223, 223)' }}
                 />
               </Button>
-              <Button
+        <Button 
                 variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="sm"
+          size="sm"
                 onClick={() => setViewMode('list')}
               >
                 <List 
@@ -233,10 +233,10 @@ export default function CollectionsPage() {
                   strokeWidth={1.5}
                   style={{ color: 'rgb(223, 223, 223)' }}
                 />
-              </Button>
+        </Button>
             </div>
-          </div>
         </div>
+      </div>
 
         {/* Video Grid */}
         <div className="flex-1 p-6 bg-background">
@@ -248,21 +248,21 @@ export default function CollectionsPage() {
                 style={{ borderWidth: '1px', borderColor: 'rgb(223, 223, 223)' }}
               >
                 {/* Video Thumbnail */}
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+              <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute bottom-2 right-2">
-                    <Badge variant="secondary" className="bg-black/70 text-white text-xs">
-                      {video.duration}
-                    </Badge>
-                  </div>
+                  <Badge variant="secondary" className="bg-black/70 text-white text-xs">
+                    {video.duration}
+                  </Badge>
+                </div>
                   <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Badge variant="secondary" className="bg-primary/90 text-primary-foreground text-xs">
                       {video.views} views
                     </Badge>
                   </div>
-                </div>
-                
-                {/* Video Info */}
+              </div>
+
+              {/* Video Info */}
                 <div className="p-3">
                   <h3 className="font-medium text-sm line-clamp-2 text-foreground group-hover:text-primary transition-colors">
                     {video.title}
@@ -270,10 +270,10 @@ export default function CollectionsPage() {
                   <p className="text-xs text-muted-foreground mt-1">
                     {new Date(video.uploadDate).toLocaleDateString()}
                   </p>
-                </div>
-              </Card>
-            ))}
-          </div>
+            </div>
+          </Card>
+        ))}
+      </div>
         </div>
       </div>
     </div>

@@ -4,3 +4,5 @@ WARNING: Please consider reporting this to the maintainers of class akka.util.Un
 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
 15:45:22.546 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
 15:45:22.608 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9100
+19:51:33.819 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+19:51:33.865 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.

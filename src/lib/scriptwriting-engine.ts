@@ -41,6 +41,231 @@ export interface ScriptWTA {
   preview: string;
 }
 
+// Predefined Script Templates
+export const SCRIPT_TEMPLATES = {
+  hooks: [
+    {
+      id: 'hook-1',
+      title: 'Unexpected Source',
+      content: 'I learned this [Effective Strategy] from an [Unexpected Source].',
+      preview: 'Learn from unexpected sources to grab attention'
+    },
+    {
+      id: 'hook-2',
+      title: 'Number Hacks',
+      content: 'Here are [Number] hacks to [Achieve a Desired Outcome].',
+      preview: 'Promise specific number of valuable tips'
+    },
+    {
+      id: 'hook-3',
+      title: 'Common Belief Challenge',
+      content: 'If I told you that [Common Belief] is wrong, you might not believe me. But what if...',
+      preview: 'Challenge conventional wisdom'
+    },
+    {
+      id: 'hook-4',
+      title: 'Starting from Zero',
+      content: 'How to achieve [Desired Outcome] when you\'re starting from zero.',
+      preview: 'Appeal to beginners and those starting fresh'
+    },
+    {
+      id: 'hook-5',
+      title: 'Secret Revelation',
+      content: 'The secret to [Topic] is not what you think.',
+      preview: 'Reveal hidden truths about the topic'
+    },
+    {
+      id: 'hook-6',
+      title: 'Impossible Choice',
+      content: 'You can\'t have [Desirable Thing A] and [Desirable Thing B] at the same time.',
+      preview: 'Present a compelling either/or scenario'
+    },
+    {
+      id: 'hook-7',
+      title: 'Fear as Advantage',
+      content: 'What if the thing you fear most about [Topic] is actually your greatest advantage?',
+      preview: 'Reframe fears as opportunities'
+    },
+    {
+      id: 'hook-8',
+      title: 'Stop Learning, Start Doing',
+      content: 'The fastest way to learn [Skill] is to stop trying to learn and start doing [Action].',
+      preview: 'Encourage action over passive learning'
+    },
+    {
+      id: 'hook-9',
+      title: 'Struggling Reasons',
+      content: 'You are likely struggling with [Topic] because of one of these [Number] reasons.',
+      preview: 'Address common pain points directly'
+    },
+    {
+      id: 'hook-10',
+      title: 'Lesson Learned',
+      content: 'A lesson I wish I learned earlier is that anything truly [Adjective] takes far longer than you expect.',
+      preview: 'Share hard-earned wisdom about expectations'
+    }
+  ],
+  bridges: [
+    {
+      id: 'bridge-1',
+      title: 'Common Ineffective Action',
+      content: 'Most people try to solve this by [Common but Ineffective Action].',
+      preview: 'Identify what doesn\'t work before revealing what does'
+    },
+    {
+      id: 'bridge-2',
+      title: 'Conditioned Belief',
+      content: 'The problem is, we are conditioned to believe that [Common Misconception].',
+      preview: 'Expose underlying misconceptions'
+    },
+    {
+      id: 'bridge-3',
+      title: 'Negative to Positive',
+      content: 'But you can turn a [Negative Aspect] into a [Positive Advantage]. Here\'s how.',
+      preview: 'Transform disadvantages into advantages'
+    },
+    {
+      id: 'bridge-4',
+      title: 'Unexpected Method',
+      content: 'The path to [Desired Outcome] isn\'t about [Expected Method], but about [Unexpected Method].',
+      preview: 'Surprise with unconventional approaches'
+    },
+    {
+      id: 'bridge-5',
+      title: 'Core Principle',
+      content: 'The only thing that truly matters for [Achieving Goal] is your ability to [Core Principle].',
+      preview: 'Focus on the most important element'
+    },
+    {
+      id: 'bridge-6',
+      title: 'Internal Conflict',
+      content: 'These two ideas seem to contradict each other, and that internal conflict is the source of your [Negative Emotion].',
+      preview: 'Address cognitive dissonance'
+    },
+    {
+      id: 'bridge-7',
+      title: 'Simple Word Solution',
+      content: 'The solution lies in understanding one simple word: "but".',
+      preview: 'Build suspense with simplicity'
+    },
+    {
+      id: 'bridge-8',
+      title: 'Find Someone Who Does',
+      content: 'The secret isn\'t learning a new skill, but in finding someone who already does it.',
+      preview: 'Leverage existing expertise'
+    }
+  ],
+  goldenNuggets: [
+    {
+      id: 'nugget-1',
+      title: 'The "But" Reversal',
+      content: 'The "But" Reversal: To be more persuasive, state the negatives first. Say "[Topic] is [Challenge 1] and [Challenge 2], but it delivers [Superior Result]." This magnifies the benefit.',
+      bulletPoints: [],
+      preview: 'Boost persuasion by addressing negatives first'
+    },
+    {
+      id: 'nugget-2',
+      title: 'The Identity Shift',
+      content: 'The Identity Shift: To change your actions, first change your identity. Don\'t just do the work of a [Desired Role]; decide that you are a [Desired Role]. Actions will follow the new identity.',
+      bulletPoints: [],
+      preview: 'Change behavior by changing identity'
+    },
+    {
+      id: 'nugget-3',
+      title: 'The Price of Admission',
+      content: 'The Price of Admission: [Desired Outcome] is the result of [Difficult Prerequisite]. You cannot have one without the other. Stop avoiding the challenge that creates the growth you want.',
+      bulletPoints: [],
+      preview: 'Accept difficult prerequisites for success'
+    },
+    {
+      id: 'nugget-4',
+      title: 'The Power of Endurance',
+      content: 'The Power of Endurance: Success is often a game of volume and resilience. Your key advantage is your willingness to [Take Action] more times than anyone else.',
+      bulletPoints: [],
+      preview: 'Outperform through persistence and volume'
+    },
+    {
+      id: 'nugget-5',
+      title: 'The Constraint Principle',
+      content: 'The Constraint Principle: You would be amazed at what you can endure when you have a clear endpoint. The fact that you feel [Negative Emotion] is proof that you are still in the game.',
+      bulletPoints: [],
+      preview: 'Use constraints to build endurance'
+    },
+    {
+      id: 'nugget-6',
+      title: 'The Foundation First',
+      content: 'The Foundation First: True growth happens below the surface. If you build your [Goal] without first building the [Required Foundation] (e.g., character, systems), it will collapse.',
+      bulletPoints: [],
+      preview: 'Build strong foundations before pursuing goals'
+    },
+    {
+      id: 'nugget-7',
+      title: 'The Focus Imperative',
+      content: 'The Focus Imperative: You have limited resources (time, effort, money). You must focus them on a single point to achieve a breakthrough. Stop diversifying your efforts before you\'ve had a single major success.',
+      bulletPoints: [],
+      preview: 'Concentrate resources for maximum impact'
+    },
+    {
+      id: 'nugget-8',
+      title: 'The "Never Stop" Commitment',
+      content: 'The "Never Stop" Commitment: You don\'t need to know if you will succeed. You only need to commit to never stopping. On a long enough timeline, persistence guarantees progress.',
+      bulletPoints: [],
+      preview: 'Commit to persistence over prediction'
+    },
+    {
+      id: 'nugget-9',
+      title: 'The Higher Standard',
+      content: 'The Higher Standard: The primary difference between those who succeed and those who don\'t is having a higher minimum standard for what they will accept in their lives. Say "no" to good opportunities to save your energy for great ones.',
+      bulletPoints: [],
+      preview: 'Raise standards to achieve excellence'
+    }
+  ],
+  wtas: [
+    {
+      id: 'wta-1',
+      title: 'Distance to Goal',
+      actionType: 'engagement' as const,
+      content: 'That\'s how far you really are from the [Desired Outcome] you\'ve been putting off.',
+      preview: 'Reveal proximity to achieving goals'
+    },
+    {
+      id: 'wta-2',
+      title: 'Principle Application',
+      actionType: 'engagement' as const,
+      content: 'And that\'s how you can use [The Principle] to achieve [Your Goal].',
+      preview: 'Connect principle to personal application'
+    },
+    {
+      id: 'wta-3',
+      title: 'Might As Well',
+      actionType: 'engagement' as const,
+      content: 'So you might as well [Take the First Step].',
+      preview: 'Encourage immediate action'
+    },
+    {
+      id: 'wta-4',
+      title: 'Determine and Disregard',
+      actionType: 'engagement' as const,
+      content: 'If you can determine the [Required Effort] to get the [Desired Outcome], you can disregard all other distractions.',
+      preview: 'Focus on what matters, ignore distractions'
+    },
+    {
+      id: 'wta-5',
+      title: 'Authentic Choice',
+      actionType: 'engagement' as const,
+      content: 'Remember, it\'s better to be [Disliked] for who you are than [Liked] for who you are not.',
+      preview: 'Choose authenticity over approval'
+    },
+    {
+      id: 'wta-6',
+      title: 'Make the Choice',
+      actionType: 'engagement' as const,
+      content: 'Stop trying to have both [Thing A] and [Thing B] when one is the price for the other. Choose.',
+      preview: 'Force decision between competing priorities'
+    }
+  ]
+};
+
 export interface ScriptComponents {
   hooks: ScriptHook[];
   bridges: ScriptBridge[];
@@ -134,20 +359,13 @@ export class ScriptwritingEngine {
   // Step 3: Generate script components from video idea and sources
   async generateScriptComponents(videoIdea: string, sources: Source[]): Promise<ScriptComponents> {
     try {
-      const response = await fetch('/api/scriptwriting/generate-components', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ videoIdea, sources }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate script components');
-      }
-
-      const data = await response.json();
-      return this.transformComponentsResponse(data);
+      // Instead of generating via AI, return the predefined templates
+      return {
+        hooks: SCRIPT_TEMPLATES.hooks,
+        bridges: SCRIPT_TEMPLATES.bridges,
+        goldenNuggets: SCRIPT_TEMPLATES.goldenNuggets,
+        wtas: SCRIPT_TEMPLATES.wtas
+      };
     } catch (error) {
       console.error('Error generating script components:', error);
       throw error;
@@ -396,5 +614,15 @@ export class ScriptwritingEngine {
         isTextExtracted: true
       }
     ];
+  }
+
+  // Helper function to get all predefined templates
+  static getTemplates(): ScriptComponents {
+    return {
+      hooks: SCRIPT_TEMPLATES.hooks,
+      bridges: SCRIPT_TEMPLATES.bridges,
+      goldenNuggets: SCRIPT_TEMPLATES.goldenNuggets,
+      wtas: SCRIPT_TEMPLATES.wtas
+    };
   }
 } 

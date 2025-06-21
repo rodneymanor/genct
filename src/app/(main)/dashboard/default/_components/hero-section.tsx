@@ -262,7 +262,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                     onClick={() => setScriptBuilderOpen(false)}
                     className="flex items-center justify-center text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 rounded-full p-1"
                   >
-                    <X className="w-3 h-3" />
+                    
                   </button>
                 </div>
 
