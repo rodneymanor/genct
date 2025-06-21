@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { ArrowUp, Volume2, FileText, Check, ChevronsUpDown, RotateCcw, X } from "lucide-react";
+import { ArrowUp, Volume2, FileText, Check, ChevronsUpDown, RotateCcw, X, Save } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,19 +12,11 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { scriptTemplates, getCategoryDisplayName, type ScriptTemplate } from "@/data/script-templates";
 import { cn } from "@/lib/utils";
 
 interface HeroSectionProps {
   className?: string;
-}
-
-interface ScriptComponent {
-  id: string;
-  title: string;
-  description: string;
-  content: string;
-  type?: string;
-  order?: number;
 }
 
 // Voice options for the ComboBox
@@ -39,59 +31,6 @@ const voices = [
   { value: "persuasive", label: "Persuasive" },
 ];
 
-// Script components data
-const scriptComponents = {
-  hooks: [
-    { id: "question-hook", title: "Question Hook", description: "Engages audience with curiosity", content: "Have you ever wondered why..." },
-    { id: "statistic-hook", title: "Statistic Hook", description: "Uses compelling data", content: "Did you know that 90% of..." },
-    { id: "quote-hook", title: "Quote Hook", description: "Starts with a powerful quote", content: "As Einstein once said..." },
-    { id: "story-hook", title: "Story Hook", description: "Opens with a compelling narrative", content: "Picture this scenario..." },
-  ],
-  bridges: [
-    { id: "problem-solution", title: "Problem-Solution Bridge", description: "Connects problem to solution", content: "Now that we've identified the problem..." },
-    { id: "storytelling", title: "Storytelling Bridge", description: "Uses a narrative to connect", content: "Let me tell you a story..." },
-    { id: "transition", title: "Smooth Transition", description: "Seamlessly moves between topics", content: "This brings us to the next point..." },
-  ],
-  nuggets: [
-    { id: "expert-insight", title: "Expert Insight", description: "Provides valuable information", content: "Industry experts reveal that..." },
-    { id: "key-takeaway", title: "Key Takeaway", description: "Summarizes the main point", content: "The most important thing to remember..." },
-    { id: "pro-tip", title: "Pro Tip", description: "Shares insider knowledge", content: "Here's what professionals don't tell you..." },
-  ],
-  wta: [
-    { id: "clear-cta", title: "Clear Call to Action", description: "Direct action for audience", content: "Here's what you need to do next..." },
-    { id: "soft-cta", title: "Soft Call to Action", description: "Gentle encouragement to act", content: "If you're ready to take the next step..." },
-  ],
-};
-
-// Sample saved templates
-const savedTemplates = [
-  {
-    name: "Marketing Script",
-    components: [
-      { ...scriptComponents.hooks[0] },
-      { ...scriptComponents.bridges[0] },
-      { ...scriptComponents.wta[0] }
-    ]
-  },
-  {
-    name: "Educational Content",
-    components: [
-      { ...scriptComponents.hooks[1] },
-      { ...scriptComponents.nuggets[0] },
-      { ...scriptComponents.wta[1] }
-    ]
-  },
-  {
-    name: "Product Demo",
-    components: [
-      { ...scriptComponents.hooks[2] },
-      { ...scriptComponents.bridges[1] },
-      { ...scriptComponents.nuggets[1] },
-      { ...scriptComponents.wta[0] }
-    ]
-  }
-];
-
 export function HeroSection({ className }: HeroSectionProps) {
   const router = useRouter();
   const [value, setValue] = useState("");
@@ -99,9 +38,8 @@ export function HeroSection({ className }: HeroSectionProps) {
   const [selectedVoices, setSelectedVoices] = useState<string[]>(voices.map(v => v.value)); // All voices pre-selected
   const [voiceComboOpen, setVoiceComboOpen] = useState(false);
   const [scriptBuilderOpen, setScriptBuilderOpen] = useState(false);
-  const [selectedComponents, setSelectedComponents] = useState<ScriptComponent[]>([
-    { ...scriptComponents.hooks[0], type: "Hook", order: 1 }
-  ]);
+  const [assembledScript, setAssembledScript] = useState<string>("");
+  const [savedTemplates, setSavedTemplates] = useState<{ name: string; content: string }[]>([]);
 
   const fullPlaceholder =
     "What would you like to create today? Describe your content idea, topic, or let me know what you're working on...";
@@ -150,16 +88,36 @@ export function HeroSection({ className }: HeroSectionProps) {
     );
   };
 
-  const addComponent = (component: ScriptComponent) => {
-    setSelectedComponents([...selectedComponents, component]);
+  const addTemplateToScript = (template: ScriptTemplate) => {
+    setAssembledScript(prev => {
+      if (prev) {
+        return prev + "\n\n" + template.content;
+      }
+      return template.content;
+    });
   };
 
-  const removeComponent = (index: number) => {
-    setSelectedComponents(selectedComponents.filter((_, i) => i !== index));
+  const clearScript = () => {
+    setAssembledScript("");
   };
 
-  const resetComponents = () => {
-    setSelectedComponents([]);
+  const saveCurrentTemplate = () => {
+    if (assembledScript.trim()) {
+      const templateName = `Template ${savedTemplates.length + 1}`;
+      setSavedTemplates(prev => [...prev, { name: templateName, content: assembledScript }]);
+    }
+  };
+
+  const loadTemplate = (template: { name: string; content: string }) => {
+    setAssembledScript(template.content);
+  };
+
+  const submitWithTemplate = () => {
+    if (assembledScript.trim()) {
+      const encodedPrompt = encodeURIComponent(assembledScript);
+      router.push(`/dashboard/scripts/editor/new?prompt=${encodedPrompt}`);
+      setScriptBuilderOpen(false);
+    }
   };
 
   const trimmedValue = value.trim();
@@ -251,11 +209,18 @@ export function HeroSection({ className }: HeroSectionProps) {
                   <div className="flex items-center space-x-3">
                     <h2 className="text-xs uppercase font-medium text-neutral-700 dark:text-neutral-300">Script Builder</h2>
                     <button 
-                      onClick={resetComponents}
+                      onClick={clearScript}
                       className="text-[10px] text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 rounded-md px-2 py-0.5 flex items-center"
                     >
                       <RotateCcw className="w-2 h-2 mr-1 opacity-50" />
-                      Reset
+                      Clear
+                    </button>
+                    <button 
+                      onClick={saveCurrentTemplate}
+                      className="text-[10px] text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 rounded-md px-2 py-0.5 flex items-center"
+                    >
+                      <Save className="w-2 h-2 mr-1 opacity-50" />
+                      Save
                     </button>
                   </div>
                   <button 
@@ -268,119 +233,76 @@ export function HeroSection({ className }: HeroSectionProps) {
 
                 {/* Main Content */}
                 <div className="flex flex-col md:flex-row flex-1 h-full overflow-hidden rounded-b-2xl">
-                  {/* Left Panel - Component Selection */}
-                  <div className="w-full md:w-2/3 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
+                  {/* Left Panel - Template Library */}
+                  <div className="w-full md:w-1/2 md:border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto bg-background rounded-bl-2xl">
                     <div className="p-6 space-y-8">
-                      {/* Hooks Section */}
-                      <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">Hooks</h4>
-                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
-                          {scriptComponents.hooks.map((hook) => (
-                            <div
-                              key={hook.id}
-                              onClick={() => addComponent(hook)}
-                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-40 transition-colors bg-background"
-                            >
-                              <h5 className="text-sm font-medium mb-2">{hook.title}</h5>
-                              <p className="text-xs text-muted-foreground">{hook.description}</p>
-                            </div>
-                          ))}
+                      {/* Render each category */}
+                      {Object.entries(scriptTemplates).map(([categoryKey, templates]) => (
+                        <div key={categoryKey}>
+                          <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">
+                            {getCategoryDisplayName(categoryKey)}
+                          </h4>
+                          <div className="space-y-3">
+                            {templates.map((template) => (
+                              <div
+                                key={template.id}
+                                onClick={() => addTemplateToScript(template)}
+                                className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border transition-colors bg-background"
+                              >
+                                <p className="text-sm text-foreground leading-relaxed">
+                                  {template.content}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-
-                      {/* Bridges Section */}
-                      <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">Bridges</h4>
-                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
-                          {scriptComponents.bridges.map((bridge) => (
-                            <div
-                              key={bridge.id}
-                              onClick={() => addComponent(bridge)}
-                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
-                            >
-                              <h5 className="text-sm font-medium mb-2">{bridge.title}</h5>
-                              <p className="text-xs text-muted-foreground">{bridge.description}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Golden Nuggets Section */}
-                      <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">Golden Nuggets</h4>
-                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
-                          {scriptComponents.nuggets.map((nugget) => (
-                            <div
-                              key={nugget.id}
-                              onClick={() => addComponent(nugget)}
-                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-44 transition-colors bg-background"
-                            >
-                              <h5 className="text-sm font-medium mb-2">{nugget.title}</h5>
-                              <p className="text-xs text-muted-foreground">{nugget.description}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* WTA Section */}
-                      <div>
-                        <h4 className="text-xs uppercase text-muted-foreground mb-4 font-medium px-1">What To Action (WTA)</h4>
-                        <div className="flex items-center space-x-4 overflow-x-auto pb-4 px-1">
-                          {scriptComponents.wta.map((wta) => (
-                            <div
-                              key={wta.id}
-                              onClick={() => addComponent(wta)}
-                              className="p-4 border rounded-lg cursor-pointer hover:bg-accent border-border flex-shrink-0 w-48 transition-colors bg-background"
-                            >
-                              <h5 className="text-sm font-medium mb-2">{wta.title}</h5>
-                              <p className="text-xs text-muted-foreground">{wta.description}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Right Panel - Script Assembly */}
-                  <div className="w-full md:w-1/3 flex flex-col h-full bg-background rounded-br-2xl">
-                    <div className="p-6 border-b border-neutral-200 dark:border-neutral-800">
-                      <h3 className="text-sm font-medium mb-6">Script Assembly</h3>
-                      <div className="space-y-3">
-                        {selectedComponents.map((component, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                            <span className="text-sm font-medium">{component.title}</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeComponent(index)}
-                              className="h-7 w-7 p-0 hover:bg-destructive/10 hover:text-destructive"
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                        {selectedComponents.length === 0 && (
-                          <div className="text-center py-12 text-muted-foreground text-sm">
-                            <div className="mb-2 opacity-50">📝</div>
-                            Click components to add them here
-                          </div>
+                  {/* Right Panel - Script Editor */}
+                  <div className="w-full md:w-1/2 flex flex-col h-full bg-background rounded-br-2xl">
+                    <div className="flex-1 p-6 flex flex-col">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-sm font-medium">Script Assembly</h3>
+                        {assembledScript && (
+                          <Button
+                            onClick={submitWithTemplate}
+                            size="sm"
+                            className="text-xs"
+                          >
+                            Submit Script
+                          </Button>
                         )}
                       </div>
+                      
+                      <Textarea
+                        value={assembledScript}
+                        onChange={(e) => setAssembledScript(e.target.value)}
+                        placeholder="Click templates from the left to build your script here..."
+                        className="flex-1 min-h-[300px] resize-none text-sm leading-relaxed"
+                      />
                     </div>
                     
-                    <div className="flex-1 p-6 overflow-y-auto">
-                      <h3 className="text-sm font-medium mb-6">Saved Templates</h3>
-                      <div className="space-y-3">
-                        {savedTemplates.map((template, index) => (
-                          <div key={index} className="p-4 border rounded-lg bg-background hover:bg-muted/50 cursor-pointer transition-colors">
-                            <div className="font-medium text-sm mb-1">{template.name}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {template.components.length} components
+                    {savedTemplates.length > 0 && (
+                      <div className="border-t border-neutral-200 dark:border-neutral-800 p-6">
+                        <h3 className="text-sm font-medium mb-4">Saved Templates</h3>
+                        <div className="space-y-2">
+                          {savedTemplates.map((template, index) => (
+                            <div 
+                              key={index} 
+                              onClick={() => loadTemplate(template)}
+                              className="p-3 border rounded-lg bg-background hover:bg-muted/50 cursor-pointer transition-colors"
+                            >
+                              <div className="font-medium text-sm">{template.name}</div>
+                              <div className="text-xs text-muted-foreground mt-1 truncate">
+                                {template.content.substring(0, 60)}...
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </DialogContent>
